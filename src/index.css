@@ -1,0 +1,308 @@
+@import url('https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700&family=Syne+Mono&display=swap');
+@import "tailwindcss";
+
+@theme {
+  --font-sans: "Syne", "Inter", system-ui, sans-serif;
+  --font-mono: "Syne Mono", ui-monospace, monospace;
+  
+  --color-lima: #D4F334;
+  --color-lima-hover: #C2E02E;
+  --color-lima-dark-hover: #B8D62E;
+  
+  --color-azul: #0084FF;
+  --color-azul-hover: #006FD6;
+  --color-azul-dark: #3D9DFF;
+  --color-azul-dark-hover: #0084FF;
+  
+  --color-humo: #F2F2F2;
+  --color-humo-dark: #E6E6E6;
+  --color-carbon-light: #5C5C5C;
+  --color-carbon-muted: #8A8A8A;
+  --color-carbon: #333333;
+  --color-carbon-dark: #1F1F1F;
+}
+
+/* Base custom styles for high editorial design finish */
+html, body {
+  font-family: var(--font-sans);
+  overflow-x: hidden;
+  scrollbar-gutter: stable;
+  transition: background-color 0.4s ease, color 0.4s ease;
+  scroll-behavior: smooth;
+}
+
+/* Custom scrollbars */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+/* Mode-dependent scrollbar and general highlights */
+.light {
+  background-color: #F5F5F3;
+  color: #333333;
+}
+
+.light ::-webkit-scrollbar-thumb {
+  background: #E6E6E6;
+  border-radius: 4px;
+}
+
+.light ::-webkit-scrollbar-thumb:hover {
+  background: #B8B8B8;
+}
+
+.dark {
+  background-color: #0E0E0E;
+  color: #F2F2F2;
+}
+
+.dark ::-webkit-scrollbar-thumb {
+  background: #333333;
+  border-radius: 4px;
+}
+
+.dark ::-webkit-scrollbar-thumb:hover {
+  background: #5C5C5C;
+}
+
+/* Design Tokens: Spacing & Radius helpers */
+.radius-sm { border-radius: 8px; }
+.radius-md { border-radius: 12px; }
+.radius-lg { border-radius: 16px; }
+.radius-xl { border-radius: 24px; }
+.radius-2xl { border-radius: 32px; }
+
+/* Transitions & interactions */
+.transition-smooth {
+  transition: all 250ms cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+
+.transition-fast {
+  transition: all 150ms ease;
+}
+
+.transition-slow {
+  transition: all 450ms ease;
+}
+
+.interactive-tap:active {
+  transform: scale(0.98);
+}
+
+/* Handdrawn line-art style custom classes */
+.graphic-outline {
+  border: 2px solid #333333;
+}
+
+.dark .graphic-outline {
+  border: 2px solid #F2F2F2;
+}
+
+.graphic-shadow {
+  box-shadow: 4px 4px 0px 0px #333333;
+}
+
+.dark .graphic-shadow {
+  box-shadow: 4px 4px 0px 0px #D4F334;
+}
+
+/* Dynamic dot grid pattern background */
+.grid-dot-pattern {
+  background-image: radial-gradient(#e6e6e6 1.5px, transparent 1.5px);
+  background-size: 24px 24px;
+}
+
+.dark .grid-dot-pattern {
+  background-image: radial-gradient(#333333 1.5px, transparent 1.5px);
+  background-size: 24px 24px;
+}
+
+/* Entrance animations */
+@keyframes fade-in-up {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-fade-in {
+  animation: fade-in-up 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94) both;
+}
+
+.animate-fade-in-up {
+  animation: fade-in-up 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94) both;
+}
+
+/* Empty state ambient motion */
+@keyframes empty-float {
+  0%, 100% {
+    transform: translateY(0) rotate(0deg);
+  }
+  33% {
+    transform: translateY(-8px) rotate(-0.6deg);
+  }
+  66% {
+    transform: translateY(5px) rotate(0.4deg);
+  }
+}
+
+@keyframes empty-breathe {
+  0%, 100% {
+    opacity: 0.35;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.55;
+    transform: scale(1.04);
+  }
+}
+
+.empty-float {
+  animation: empty-float 8s ease-in-out infinite;
+  will-change: transform;
+}
+
+.empty-float-delay-1 {
+  animation-delay: -2.5s;
+}
+
+.empty-float-delay-2 {
+  animation-delay: -5s;
+}
+
+.empty-breathe {
+  animation: empty-breathe 7s ease-in-out infinite;
+  will-change: transform, opacity;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .animate-fade-in,
+  .animate-fade-in-up,
+  .empty-float,
+  .empty-breathe {
+    animation: none;
+  }
+}
+
+/* Viewport shell for device-fit layouts */
+.viewport-fit {
+  min-height: 100vh;
+  min-height: 100dvh;
+  padding-bottom: env(safe-area-inset-bottom, 0px);
+}
+
+/* Design System buttons — solid fills, no gradients */
+.btn-primary {
+  background-color: #0084FF;
+  color: #FFFFFF;
+  font-family: var(--font-sans);
+  font-weight: 600;
+  font-size: 16px;
+  padding: 14px 26px;
+  border-radius: 12px;
+  border: none;
+  cursor: pointer;
+  transition: all 250ms cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  box-shadow: 0 2px 8px rgba(51, 51, 51, 0.06);
+}
+
+.btn-primary:hover {
+  background-color: #006FD6;
+}
+
+.btn-primary:active {
+  transform: scale(0.98);
+}
+
+.btn-primary:focus-visible {
+  outline: 2px solid #0084FF;
+  outline-offset: 2px;
+}
+
+.dark .btn-primary {
+  background-color: #3D9DFF;
+}
+
+.dark .btn-primary:hover {
+  background-color: #0084FF;
+}
+
+.btn-secondary {
+  background-color: transparent;
+  color: #333333;
+  font-family: var(--font-sans);
+  font-weight: 500;
+  font-size: 16px;
+  padding: 13px 24px;
+  border-radius: 12px;
+  border: 1.5px solid #333333;
+  cursor: pointer;
+  transition: all 250ms cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+
+.btn-secondary:hover {
+  background-color: #F2F2F2;
+}
+
+.btn-secondary:active {
+  transform: scale(0.98);
+}
+
+.btn-secondary:focus-visible {
+  outline: 2px solid #0084FF;
+  outline-offset: 2px;
+}
+
+.dark .btn-secondary {
+  color: #F2F2F2;
+  border-color: #F2F2F2;
+}
+
+.dark .btn-secondary:hover {
+  background-color: #242424;
+}
+
+/* Empty state — editorial asymmetric composition */
+.empty-editorial-watermark {
+  font-family: var(--font-mono);
+  font-weight: 700;
+  font-size: clamp(6rem, 18vw, 11rem);
+  line-height: 0.85;
+  letter-spacing: -0.04em;
+  color: #333333;
+  opacity: 0.04;
+  user-select: none;
+  pointer-events: none;
+}
+
+.dark .empty-editorial-watermark {
+  color: #F2F2F2;
+  opacity: 0.06;
+}
+
+.empty-lima-rule {
+  height: 3px;
+  width: clamp(3rem, 12vw, 5rem);
+  background-color: #D4F334;
+  border-radius: 2px;
+}
+
+.empty-frame-cluster {
+  position: relative;
+  min-height: clamp(11rem, 32vh, 18rem);
+}
+
+@media (min-width: 1024px) {
+  .empty-frame-cluster {
+    min-height: clamp(14rem, 38vh, 22rem);
+  }
+}

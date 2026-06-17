@@ -1,0 +1,6 @@
+{
+  "name": "Andante",
+  "description": "Galería itinerante digital de arte contemporáneo con flujo de adquisición integrado.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

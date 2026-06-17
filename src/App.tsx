@@ -15,6 +15,7 @@ import ArtworkDetailModal from './components/ArtworkDetailModal';
 import CartView from './components/CartView';
 import CheckoutView from './components/CheckoutView';
 import SuccessView from './components/SuccessView';
+import ClickSpark from './components/ClickSpark';
 
 export default function App() {
   // Navigation structure
@@ -104,6 +105,7 @@ export default function App() {
     : false;
 
   return (
+    <ClickSpark>
     <div className="flex flex-col min-h-screen bg-[#F5F5F3] dark:bg-[#0E0E0E] grid-dot-pattern text-[#333333] dark:text-[#F2F2F2] font-sans tracking-normal relative md:pb-0 pb-16 transition-colors duration-400">
       
       {/* 1. Header Area with dynamic dark status */}
@@ -382,5 +384,6 @@ export default function App() {
       </AnimatePresence>
 
     </div>
+    </ClickSpark>
   );
 }

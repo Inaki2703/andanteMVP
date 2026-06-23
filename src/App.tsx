@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import { BookOpen, X, ShieldAlert, Heart, HelpCircle, Sparkles } from 'lucide-react';
 
@@ -45,6 +45,9 @@ export default function App() {
   const [cart, setCart] = useState<CartItem[]>([]);
   const [selectedArtwork, setSelectedArtwork] = useState<Artwork | null>(null);
 
+  // Ref al contenedor scrolleable (para animar el wrap del scroll infinito)
+  const pageRef = useRef<HTMLDivElement>(null);
+
   // Checkout order states
   const [shippingInfo, setShippingInfo] = useState<ShippingInfo | null>(null);
   const [deliveryMethod, setDeliveryMethod] = useState<'domicilio' | 'sede'>('domicilio');
@@ -67,48 +70,198 @@ export default function App() {
     window.scrollTo({ top: 0, behavior: 'instant' });
   }, [currentView]);
 
-  // Section scroll-snap solo en la landing (paradas centradas por sección)
+  // ── Pager por secciones (solo en la landing) ──────────────────────────────
+  // Cada gesto de scroll avanza exactamente UNA sección, animada y bloqueada,
+  // para que se sienta como bloques que encajan al viewport (no scroll libre).
+  // En los extremos hace un "wrap" orgánico: al bajar desde el footer, el hero
+  // se desliza desde abajo (sensación de seguir bajando) y luego resetea sin
+  // costura; al subir desde el hero, el footer entra desde arriba.
   useEffect(() => {
-    const root = window.document.documentElement;
-    root.classList.toggle('snap-scroll', currentView === 'landing');
-    return () => root.classList.remove('snap-scroll');
-  }, [currentView]);
+    if (currentView !== 'landing') return;
+    // No interceptar cuando hay overlays que necesitan scroll propio.
+    if (menuOpen || showManifesto || selectedArtwork) return;
 
-  // Infinite scroll loop — only loops when the user actively pushes PAST an edge,
-  // never automatically. Reaching the footer lets you rest there; one extra wheel
-  // gesture downward instantly reveals the hero again (and vice-versa at the top).
-  useEffect(() => {
-    const noLoop = ['checkout', 'cart', 'success'];
-    if (noLoop.includes(currentView)) return;
-
+    let index = 0;
     let locked = false;
+    let accum = 0;            // delta acumulado del gesto en curso
+    let resetTimer = 0;       // limpia el acumulado si el usuario pausa
+    let peekEl: HTMLElement | null = null;
+    const THRESHOLD = 420;    // intención requerida (más permisivo que antes)
+    const MAX_PEEK = 70;      // px máximos del adelanto/“peek” de la sección
+    const DUR = 760; // ms de la animación de wrap
+    const EASE = 'cubic-bezier(0.65, 0, 0.35, 1)';
+
+    const getSections = () =>
+      Array.from(document.querySelectorAll<HTMLElement>('.snap-section'));
+
+    // Posición de layout (ignora transforms del reveal/peek) para centrar bien.
+    const absTop = (el: HTMLElement) => {
+      let y = 0;
+      let n: HTMLElement | null = el;
+      while (n) { y += n.offsetTop; n = n.offsetParent as HTMLElement | null; }
+      return y;
+    };
+    const centerScroll = (el: HTMLElement, behavior: ScrollBehavior) => {
+      const top = absTop(el) + el.offsetHeight / 2 - window.innerHeight / 2;
+      window.scrollTo({ top: Math.max(0, top), behavior });
+    };
+
+    // “Peek”: desplaza un poco la sección activa en la dirección del scroll para
+    // sugerir que se puede continuar; al pausar o cambiar de sección, regresa.
+    const applyPeek = (dir: 1 | -1, mag: number) => {
+      const el = getSections()[index];
+      if (!el) return;
+      peekEl = el;
+      const y = -dir * Math.min(mag, MAX_PEEK);
+      el.style.transition = 'transform 100ms linear';
+      el.style.transform = `translateY(${y}px)`;
+    };
+    const clearPeek = () => {
+      if (!peekEl) return;
+      peekEl.style.transition = ''; // vuelve a la transición de reveal (0.7s)
+      peekEl.style.transform = '';
+      peekEl = null;
+    };
+
+    const goTo = (i: number) => {
+      const el = getSections()[i];
+      if (!el) return;
+      clearPeek();
+      locked = true;
+      index = i;
+      centerScroll(el, 'smooth');
+      window.setTimeout(() => { locked = false; }, 720);
+    };
+
+    // Clona una sección a pantalla completa fija y la desliza desde un borde,
+    // mientras la página se desplaza en paralelo. Al terminar, reset sin costura.
+    const wrap = (dir: 1 | -1) => {
+      const page = pageRef.current;
+      const sections = getSections();
+      if (!page || sections.length === 0) return;
+      locked = true;
+
+      clearPeek();
+      const source = dir === 1 ? sections[0] : sections[sections.length - 1];
+      const clone = source.cloneNode(true) as HTMLElement;
+      Object.assign(clone.style, {
+        position: 'fixed',
+        top: '0',
+        left: '0',
+        width: '100%',
+        height: '100vh',
+        margin: '0',
+        zIndex: '60',
+        pointerEvents: 'none',
+        transform: dir === 1 ? 'translateY(100%)' : 'translateY(-100%)',
+      });
+      document.body.appendChild(clone);
+      void clone.offsetHeight; // reflow para que la transición arranque
+
+      page.style.transition = `transform ${DUR}ms ${EASE}`;
+      page.style.transform = dir === 1 ? 'translateY(-100vh)' : 'translateY(100vh)';
+      clone.style.transition = `transform ${DUR}ms ${EASE}`;
+      clone.style.transform = 'translateY(0)';
+
+      window.setTimeout(() => {
+        page.style.transition = 'none';
+        page.style.transform = 'none';
+        const now = getSections();
+        if (dir === 1) {
+          window.scrollTo({ top: 0, behavior: 'instant' as ScrollBehavior });
+          index = 0;
+        } else {
+          const last = now.length - 1;
+          if (now[last]) centerScroll(now[last], 'instant' as ScrollBehavior);
+          index = last;
+        }
+        clone.remove();
+        requestAnimationFrame(() => { locked = false; });
+      }, DUR + 30);
+    };
 
     const onWheel = (e: WheelEvent) => {
-      if (locked) return;
+      e.preventDefault();
+      if (locked) { accum = 0; return; }
 
-      const { scrollY, innerHeight } = window;
-      const pageH = document.documentElement.scrollHeight;
-      const atBottom = scrollY + innerHeight >= pageH - 2;
-      const atTop = scrollY <= 2;
+      // Acumula la intención del gesto; se reinicia si el usuario pausa.
+      accum += e.deltaY;
+      window.clearTimeout(resetTimer);
+      resetTimer = window.setTimeout(() => { accum = 0; clearPeek(); }, 160);
 
-      // Continuing to push DOWN while already resting at the footer → reveal hero again.
-      if (e.deltaY > 0 && atBottom) {
-        e.preventDefault();
-        locked = true;
-        window.scrollTo({ top: 0, behavior: 'instant' });
-        setTimeout(() => { locked = false; }, 250);
+      const dir: 1 | -1 = accum > 0 ? 1 : -1;
+
+      if (Math.abs(accum) < THRESHOLD) {
+        // Aún no hay intención suficiente: sólo “asoma” la sección como pista.
+        applyPeek(dir, Math.abs(accum) * 0.22);
+        return;
       }
-      // Pushing UP while already at the very top → jump to the footer.
-      else if (e.deltaY < 0 && atTop) {
-        e.preventDefault();
+
+      accum = 0;
+      const sections = getSections();
+
+      // La sección activa puede "consumir" el gesto (p.ej. el stack curado baraja
+      // una carta). Sólo si no lo consume, el pager cambia de sección.
+      const cur = sections[index] as HTMLElement & { __pagerStep?: (d: 1 | -1) => boolean };
+      if (typeof cur?.__pagerStep === 'function' && cur.__pagerStep(dir)) {
+        clearPeek();
         locked = true;
-        window.scrollTo({ top: pageH - innerHeight, behavior: 'instant' });
-        setTimeout(() => { locked = false; }, 250);
+        window.setTimeout(() => { locked = false; }, 620);
+        return;
+      }
+
+      const n = sections.length;
+      const target = index + dir;
+
+      if (target < 0) wrap(-1);
+      else if (target >= n) wrap(1);
+      else {
+        goTo(target);
+        (sections[target] as HTMLElement & { __pagerEnter?: (d: 1 | -1) => void })
+          ?.__pagerEnter?.(dir);
       }
     };
 
     window.addEventListener('wheel', onWheel, { passive: false });
-    return () => window.removeEventListener('wheel', onWheel);
+    return () => {
+      window.clearTimeout(resetTimer);
+      clearPeek();
+      window.removeEventListener('wheel', onWheel);
+    };
+  }, [currentView, menuOpen, showManifesto, selectedArtwork]);
+
+  // ── Reveal homologado de secciones (solo en la landing) ──
+  // Cada sección se anima al entrar al viewport; se re-activa cada vez que
+  // vuelve a entrar, así el motion es consistente en todo el recorrido.
+  useEffect(() => {
+    if (currentView !== 'landing') return;
+    const root = window.document.documentElement;
+    root.classList.add('landing-reveal');
+
+    const els = Array.from(document.querySelectorAll<HTMLElement>('.snap-section'));
+    const io = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((e) => {
+          e.target.classList.toggle('reveal-in', e.isIntersecting);
+        });
+      },
+      { threshold: 0.45 }
+    );
+
+    els.forEach((el) => {
+      // Evita el parpadeo inicial: revela de una la sección ya centrada.
+      const r = el.getBoundingClientRect();
+      if (r.top < window.innerHeight * 0.55 && r.bottom > window.innerHeight * 0.45) {
+        el.classList.add('reveal-in');
+      }
+      io.observe(el);
+    });
+
+    return () => {
+      io.disconnect();
+      root.classList.remove('landing-reveal');
+      els.forEach((el) => el.classList.remove('reveal-in'));
+    };
   }, [currentView]);
 
   // Cart operations
@@ -159,7 +312,7 @@ export default function App() {
 
   return (
     <ClickSpark>
-    <div className="flex flex-col min-h-screen bg-[#F5F5F3] dark:bg-[#0E0E0E] grid-dot-pattern text-[#333333] dark:text-[#F2F2F2] font-sans tracking-normal relative md:pb-0 pb-16 transition-colors duration-400">
+    <div ref={pageRef} className="flex flex-col min-h-screen bg-[#F5F5F3] dark:bg-[#0E0E0E] grid-dot-pattern text-[#333333] dark:text-[#F2F2F2] font-sans tracking-normal relative md:pb-0 pb-16 transition-colors duration-400">
       
       {/* 1. Header Area with dynamic dark status */}
       {currentView !== 'checkout' && currentView !== 'cart' && currentView !== 'exhibition' && currentView !== 'success' && currentView !== 'artist' && (
@@ -253,9 +406,22 @@ export default function App() {
 
       {/* 4. Elegant Editorial Footer (Design System v3.0 standard) */}
       {currentView !== 'checkout' && currentView !== 'cart' && currentView !== 'success' && (
-        <footer className="bg-[#222222] text-[#F2F2F2] py-20 px-4 sm:px-6 lg:px-8 text-xs font-sans flex-shrink-0 transition-colors duration-400 shadow-inner">
+        <footer
+          className={`flex-shrink-0 transition-colors duration-400 ${
+            currentView === 'landing'
+              ? 'snap-section p-6 min-h-dvh flex flex-col justify-center'
+              : ''
+          }`}
+        >
+          <div
+            className={`bg-[#222222] text-[#F2F2F2] text-xs font-sans transition-colors duration-400 ${
+              currentView === 'landing'
+                ? 'rounded-[32px] md:rounded-[40px] w-full py-16 px-6 sm:px-10'
+                : 'py-20 px-4 sm:px-6 lg:px-8 shadow-inner'
+            }`}
+          >
           <div className="max-w-7xl mx-auto space-y-16">
-            
+
             {/* Top Row: Brand & Subscription */}
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-start border-b border-neutral-800 pb-16">
               <div className="space-y-4">
@@ -338,6 +504,7 @@ export default function App() {
               <span className="font-mono">HECHO CON CALMA :)</span>
             </div>
 
+          </div>
           </div>
         </footer>
       )}

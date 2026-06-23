@@ -1,10 +1,10 @@
-import { Calendar, MapPin, ArrowRight, CheckCircle2, ShieldCheck, HelpCircle, AlertCircle, Sparkles, Heart, HeartOff, Megaphone, Truck, ShieldAlert } from 'lucide-react';
+import { CheckCircle2, ShieldCheck, Sparkles, Truck } from 'lucide-react';
 import { ARTWORKS_DATA, ARTISTS_DATA } from '../data';
 import { Artwork } from '../types';
-import { formatPrice } from '../utils/formatPrice';
-import { useState } from 'react';
 import ExpoActivaSection from './ExpoActivaSection';
 import CuratedStack from './CuratedStack';
+import ArtistsNames from './ArtistsNames';
+import EventsList from './EventsList';
 
 interface LandingViewProps {
   setView: (view: string) => void;
@@ -12,7 +12,7 @@ interface LandingViewProps {
 }
 
 // Orden curado para el stack "Curado a mano" (se barajan en este orden).
-const CURATED_IDS = ['marea-01', 'geo-vacuo', 'frag-urbano', 'prisma-suspendido', 'umbral-cromatico'];
+const CURATED_IDS = ['marea-01', 'geo-vacuo', 'frag-urbano'];
 
 export default function LandingView({ setView, onSelectArtwork }: LandingViewProps) {
   // Piezas del stack curado, en el orden definido arriba.
@@ -54,128 +54,11 @@ export default function LandingView({ setView, onSelectArtwork }: LandingViewPro
       {/* SECTION 3: CURADO A MANO — stack de cartas que se barajan al hacer scroll */}
       <CuratedStack artworks={curatedArtworks} onSelectArtwork={onSelectArtwork} />
 
-      {/* SECTION 4: CONOCE A QUIENES LO CREAN */}
-      <section className="snap-section bg-transparent px-4 sm:px-6 lg:px-8 min-h-dvh flex flex-col justify-center py-16">
-        <div className="max-w-7xl mx-auto space-y-10">
-          
-          <div className="text-center">
-            <h2 className="font-sans font-black text-2xl sm:text-4xl text-[#333333] dark:text-[#F2F2F2] tracking-tight uppercase">
-              Conoce a quienes lo crean
-            </h2>
-          </div>
+      {/* SECTION 4: CONOCE A QUIENES LO CREAN — hoja de nombres con foto en hover */}
+      <ArtistsNames artists={ARTISTS_DATA} setView={setView} />
 
-          {/* Creators cards grid */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-            {ARTISTS_DATA.map((artist) => (
-              <div 
-                key={artist.id}
-                className="bg-white dark:bg-[#1E1E1E] rounded-[24px] border border-[#E6E6E6] dark:border-[#2D2D2D]/60 p-6 flex flex-col items-center text-center space-y-4 hover:shadow-lg transition-all duration-300"
-              >
-                {/* Beautiful circle avatar */}
-                <div className="relative w-24 h-24 sm:w-28 sm:h-28 rounded-full overflow-hidden border-2 border-[#E6E6E6] dark:border-[#333333] shadow-sm">
-                  <img 
-                    src={artist.image} 
-                    alt={artist.name} 
-                    className="w-full h-full object-cover" 
-                  />
-                </div>
-
-                <div className="space-y-2">
-                  <h3 className="font-sans font-black text-base sm:text-lg text-[#333333] dark:text-[#F2F2F2]">
-                    {artist.name}
-                  </h3>
-                  <p className="font-sans italic text-xs text-neutral-500 dark:text-neutral-400 max-w-xs leading-relaxed px-2">
-                    {artist.bio}
-                  </p>
-                </div>
-
-                {/* Semblanza Link ↗ */}
-                <div className="pt-2">
-                  <button 
-                    onClick={() => setView('exhibition')}
-                    className="inline-flex items-center space-x-1 text-xs font-mono font-bold text-[#0084FF] dark:text-sky-300 hover:underline hover:text-[#006FD6]"
-                  >
-                    <span>Leer su semblanza</span>
-                    <span>↗</span>
-                  </button>
-                </div>
-              </div>
-            ))}
-          </div>
-
-        </div>
-      </section>
-
-      {/* SECTION 5: QUÉ MÁS ANDA PASANDO */}
-      <section className="snap-section bg-transparent px-4 sm:px-6 lg:px-8 min-h-dvh flex flex-col justify-center py-16">
-        <div className="max-w-7xl mx-auto">
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-center">
-            
-            {/* Left side text and yellow block */}
-            <div className="lg:col-span-4 flex flex-col items-start space-y-6">
-              <div className="space-y-1">
-                <h2 className="font-sans font-black text-4xl sm:text-5xl lg:text-6xl text-[#333333] dark:text-[#F2F2F2] leading-[1.05] tracking-tighter uppercase">
-                  Qué más
-                </h2>
-                <h2 className="font-sans font-black text-4xl sm:text-5xl lg:text-6xl text-[#333333] dark:text-[#F2F2F2] leading-[1.05] tracking-tighter uppercase">
-                  Anda
-                </h2>
-                <h2 className="font-sans font-black text-4xl sm:text-5xl lg:text-6xl text-[#333333] dark:text-[#F2F2F2] leading-[1.05] tracking-tighter uppercase">
-                  Pasando
-                </h2>
-              </div>
-
-              {/* Loudspeaker in yellow square block */}
-              <div className="h-16 w-16 bg-[#D4F334] rounded-[18px] flex items-center justify-center shadow-sm">
-                <Megaphone className="h-7 w-7 text-[#333333]" />
-              </div>
-            </div>
-
-            {/* Right side event cards list */}
-            <div className="lg:col-span-8 flex flex-col space-y-4">
-              {/* Event Row 1 */}
-              <div className="white-event-card bg-white dark:bg-[#1E1E1E] rounded-[20px] p-5 sm:p-6 border border-[#E6E6E6] dark:border-[#2D2D2D]/60 flex items-center justify-between cursor-pointer hover:shadow-md hover:border-[#0084FF] transition-all group">
-                <div className="flex items-center space-x-6">
-                  <span className="font-mono font-extrabold text-[#0084FF] dark:text-sky-300 text-sm sm:text-base tracking-wider whitespace-nowrap">
-                    12 JUL
-                  </span>
-                  <p className="font-sans font-bold text-sm sm:text-base text-neutral-800 dark:text-neutral-200 leading-tight">
-                    Charla: El color en la ciudad @ <span className="font-sans font-black">Galería Central</span>
-                  </p>
-                </div>
-                <ArrowRight className="h-5 w-5 text-neutral-400 group-hover:text-[#0084FF] group-hover:translate-x-1.5 transition-transform flex-shrink-0 ml-4" />
-              </div>
-
-              {/* Event Row 2 */}
-              <div className="white-event-card bg-white dark:bg-[#1E1E1E] rounded-[20px] p-5 sm:p-6 border border-[#E6E6E6] dark:border-[#2D2D2D]/60 flex items-center justify-between cursor-pointer hover:shadow-md hover:border-[#0084FF] transition-all group">
-                <div className="flex items-center space-x-6">
-                  <span className="font-mono font-extrabold text-[#0084FF] dark:text-sky-300 text-sm sm:text-base tracking-wider whitespace-nowrap">
-                    18 JUL
-                  </span>
-                  <p className="font-sans font-bold text-sm sm:text-base text-neutral-800 dark:text-neutral-200 leading-tight">
-                    Workshop: Collage Analógico en <span className="font-sans font-black">Café Norte</span>
-                  </p>
-                </div>
-                <ArrowRight className="h-5 w-5 text-neutral-400 group-hover:text-[#0084FF] group-hover:translate-x-1.5 transition-transform flex-shrink-0 ml-4" />
-              </div>
-
-              {/* Event Row 3 */}
-              <div className="white-event-card bg-white dark:bg-[#1E1E1E] rounded-[20px] p-5 sm:p-6 border border-[#E6E6E6] dark:border-[#2D2D2D]/60 flex items-center justify-between cursor-pointer hover:shadow-md hover:border-[#0084FF] transition-all group">
-                <div className="flex items-center space-x-6">
-                  <span className="font-mono font-extrabold text-[#0084FF] dark:text-sky-300 text-sm sm:text-base tracking-wider whitespace-nowrap">
-                    05 AGO
-                  </span>
-                  <p className="font-sans font-bold text-sm sm:text-base text-neutral-800 dark:text-neutral-200 leading-tight">
-                    Vernissage: Nueva Colección <span className="font-sans font-black">"Itinerancia"</span>
-                  </p>
-                </div>
-                <ArrowRight className="h-5 w-5 text-neutral-400 group-hover:text-[#0084FF] group-hover:translate-x-1.5 transition-transform flex-shrink-0 ml-4" />
-              </div>
-            </div>
-
-          </div>
-        </div>
-      </section>
+      {/* SECTION 5: QUÉ MÁS ANDA PASANDO — lista grande de eventos */}
+      <EventsList setView={setView} />
 
       {/* SECTION 6: FOUR VALUE PROPOSITIONS */}
       <section className="snap-section bg-transparent px-4 sm:px-6 lg:px-8 min-h-dvh flex flex-col justify-center py-16">

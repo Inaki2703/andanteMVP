@@ -142,13 +142,13 @@ html.landing-reveal .snap-section.reveal-in {
 
 /* Dynamic dot grid pattern background */
 .grid-dot-pattern {
-  background-image: radial-gradient(#e6e6e6 1.5px, transparent 1.5px);
-  background-size: 24px 24px;
+  background-image: radial-gradient(#d8d8d1 1.6px, transparent 1.6px);
+  background-size: 18px 18px;
 }
 
 .dark .grid-dot-pattern {
-  background-image: radial-gradient(#333333 1.5px, transparent 1.5px);
-  background-size: 24px 24px;
+  background-image: radial-gradient(#474747 1.6px, transparent 1.6px);
+  background-size: 18px 18px;
 }
 
 /* ── Marquee horizontal infinito (sección Expo Activa) ──

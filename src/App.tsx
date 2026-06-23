@@ -108,9 +108,11 @@ export default function App() {
 
     // “Peek”: desplaza un poco la sección activa en la dirección del scroll para
     // sugerir que se puede continuar; al pausar o cambiar de sección, regresa.
+    // Se omite en secciones que manejan su propio scroll interno (p.ej. el stack
+    // curado), para que el gesto sólo afecte a sus elementos, no a toda la sección.
     const applyPeek = (dir: 1 | -1, mag: number) => {
-      const el = getSections()[index];
-      if (!el) return;
+      const el = getSections()[index] as HTMLElement & { __pagerStep?: unknown };
+      if (!el || typeof el.__pagerStep === 'function') return;
       peekEl = el;
       const y = -dir * Math.min(mag, MAX_PEEK);
       el.style.transition = 'transform 100ms linear';

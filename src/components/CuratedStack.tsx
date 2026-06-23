@@ -49,28 +49,44 @@ export default function CuratedStack({ artworks, onSelectArtwork }: CuratedStack
   return (
     <section
       ref={sectionRef}
-      className="snap-section relative min-h-dvh flex flex-col justify-center py-16 px-6"
+      className="snap-section relative min-h-dvh flex flex-col justify-center py-16 px-6 sm:px-10"
     >
-      {/* Encabezado + contador */}
-      <div className="max-w-[460px] sm:max-w-[520px] mx-auto w-full mb-8 flex items-end justify-between gap-4">
-        <div>
-          <div className="flex items-center gap-3 text-neutral-600 dark:text-neutral-400 mb-2">
+      <div className="max-w-7xl mx-auto w-full grid grid-cols-1 lg:grid-cols-2 gap-10 lg:gap-16 items-center">
+
+        {/* Columna izquierda: bloque de texto */}
+        <div className="flex flex-col">
+          <div className="flex items-center gap-3 text-neutral-600 dark:text-neutral-400 mb-4">
             <span className="h-0.5 w-12 bg-[#D4F334]" />
             <span className="text-[10px] sm:text-xs font-mono font-bold tracking-widest uppercase">
               Selección de la semana
             </span>
           </div>
-          <h2 className="font-sans font-black text-3xl sm:text-5xl tracking-tight uppercase text-[#1A1A1A] dark:text-[#F2F2F2] leading-none">
+          <h2 className="font-sans font-black text-4xl sm:text-6xl lg:text-7xl tracking-tight uppercase text-[#1A1A1A] dark:text-[#F2F2F2] leading-[0.95]">
             Curado<br />a mano
           </h2>
-        </div>
-        <span className="font-mono text-sm text-neutral-500 dark:text-neutral-400 tabular-nums shrink-0">
-          {String(index + 1).padStart(2, '0')} / {String(N).padStart(2, '0')}
-        </span>
-      </div>
+          <p className="mt-6 max-w-sm text-sm sm:text-base text-neutral-500 dark:text-neutral-400 leading-relaxed">
+            No es un catálogo infinito. Cada pieza pasó por una mirada. Desliza para barajar la selección de esta semana.
+          </p>
 
-      {/* Stack de cartas */}
-      <div className="relative mx-auto w-full max-w-[460px] sm:max-w-[520px] h-[clamp(360px,52vh,520px)]">
+          <div className="mt-8 flex items-center gap-4">
+            <span className="font-mono text-base text-[#1A1A1A] dark:text-[#F2F2F2] tabular-nums">
+              {String(index + 1).padStart(2, '0')}
+              <span className="text-neutral-400 dark:text-neutral-600"> / {String(N).padStart(2, '0')}</span>
+            </span>
+            <span className="h-px flex-1 max-w-[140px] bg-[#E6E6E6] dark:bg-neutral-800 relative overflow-hidden">
+              <span
+                className="absolute inset-y-0 left-0 bg-[#D4F334] transition-[width] duration-500"
+                style={{ width: `${((index + 1) / N) * 100}%` }}
+              />
+            </span>
+            <span className="text-[10px] font-mono uppercase tracking-[0.2em] text-neutral-400 dark:text-neutral-500">
+              Desliza ↓
+            </span>
+          </div>
+        </div>
+
+        {/* Columna derecha: stack de cartas */}
+        <div className="relative w-full max-w-[460px] mx-auto lg:mx-0 lg:ml-auto h-[clamp(360px,52vh,520px)]">
         {artworks.map((art, i) => {
           const d = i - index;
           const behind = Math.min(Math.max(d, 0), 3);
@@ -137,11 +153,8 @@ export default function CuratedStack({ artworks, onSelectArtwork }: CuratedStack
             </article>
           );
         })}
-      </div>
+        </div>
 
-      {/* Pista de interacción */}
-      <div className="mt-7 text-center text-[10px] font-mono uppercase tracking-[0.2em] text-neutral-400 dark:text-neutral-500">
-        Desliza para barajar las piezas
       </div>
     </section>
   );

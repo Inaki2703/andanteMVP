@@ -1,4 +1,13 @@
-import { useRef, useEffect, useState, useCallback, MouseEvent } from 'react';
+import {
+  useRef,
+  useEffect,
+  useState,
+  useCallback,
+  useMemo,
+  useId,
+  MouseEvent,
+  MutableRefObject,
+} from 'react';
 import { createPortal } from 'react-dom';
 import { EXHIBITION_DATA } from '../data';
 
@@ -6,7 +15,7 @@ interface ExpoActivaSectionProps {
   setView: (view: string) => void;
 }
 
-// Selección curada de obras para los marquees
+// Selección curada de obras para la fila de fotos
 const IMAGES = [
   'https://images.unsplash.com/photo-1541701494587-cb58502866ab?auto=format&fit=crop&q=80&w=800',
   'https://images.unsplash.com/photo-1550684848-fac1c5b4e853?auto=format&fit=crop&q=80&w=800',
@@ -18,104 +27,116 @@ const IMAGES = [
   'https://images.unsplash.com/photo-1536924940846-227afb31e2a5?auto=format&fit=crop&q=80&w=800',
 ];
 
-// Tamaños y desfases verticales irregulares para la fila inferior: distintas
-// alturas y offsets (estilo brandnewschool), no un carrusel uniforme.
+// Alturas irregulares (no un carrusel uniforme). Más bajas que la banda del
+// marquee para que el texto ondulado asome arriba, abajo y entre las fotos.
 const TILES = [
-  { w: 280, h: 340, mt: 24 },
-  { w: 420, h: 240, mt: 120 },
-  { w: 320, h: 380, mt: 0 },
-  { w: 240, h: 200, mt: 150 },
-  { w: 400, h: 300, mt: 64 },
-  { w: 300, h: 360, mt: 16 },
-  { w: 380, h: 250, mt: 130 },
-  { w: 300, h: 320, mt: 56 },
+  { w: 300, h: 240 },
+  { w: 240, h: 190 },
+  { w: 360, h: 260 },
+  { w: 220, h: 200 },
+  { w: 320, h: 175 },
+  { w: 270, h: 250 },
+  { w: 340, h: 205 },
+  { w: 250, h: 220 },
 ];
 
-// ── Una línea de marquee: la palabra repetida, intercalada con imágenes
-//    (estilo riseatseven "CHASING…"). Driven por rAF para poder desacelerar
-//    suavemente al pasar el cursor por encima. ──
-function MarqueeLine({
-  word,
-  images,
-  duration,
+const BASE_SPEED = 1.4;
+const SLOW_SPEED = 0.35;
+
+// ── Marquee curvado (técnica reactbits/CurvedLoop): mide el ancho real del
+//    texto para repetirlo sin costura y lo desliza sobre una curva cuya
+//    profundidad la define `curveAmount`. Driven por rAF con desaceleración
+//    suave al pasar el cursor. ──
+function CurvedMarquee({
+  marqueeText,
+  curveAmount,
+  speedRef,
 }: {
-  word: string;
-  images: string[];
-  duration: number;
+  marqueeText: string;
+  curveAmount: number;
+  speedRef: MutableRefObject<{ cur: number; target: number }>;
 }) {
-  const repeats = Math.max(images.length, 3);
-  const group = Array.from({ length: repeats }, (_, i) => i);
-  const items = [...group, ...group]; // duplicado para bucle sin costura
+  const text = useMemo(() => {
+    const hasTrailing = /\s| $/.test(marqueeText);
+    return (hasTrailing ? marqueeText : marqueeText + ' ').repeat(2);
+  }, [marqueeText]);
 
-  const trackRef = useRef<HTMLDivElement>(null);
-  const st = useRef({ offset: 0, group: 0, speed: 0, target: 0, base: 0 });
+  const measureRef = useRef<SVGTextElement>(null);
+  const tpRef = useRef<SVGTextPathElement>(null);
+  const [spacing, setSpacing] = useState(0);
+  const [offset, setOffset] = useState(0);
+  const uid = useId();
+  const pathId = `curve-${uid.replace(/:/g, '')}`;
+  const pathD = `M-100,40 Q720,${40 + curveAmount} 1540,40`;
 
+  const ready = spacing > 0;
+  const totalText = ready
+    ? Array(Math.ceil(1800 / spacing) + 2)
+        .fill(text)
+        .join('')
+    : text;
+
+  const textStyle = {
+    fontFamily: '"Syne", sans-serif',
+    fontWeight: 700,
+    fontSize: '6rem',
+    textTransform: 'uppercase' as const,
+    letterSpacing: '0.04em',
+  };
+
+  // Medir el ancho real del texto para el bucle sin costura.
   useEffect(() => {
-    const track = trackRef.current;
-    if (!track) return;
-    const s = st.current;
+    if (measureRef.current) setSpacing(measureRef.current.getComputedTextLength());
+  }, [text]);
 
-    const measure = () => {
-      const groupW = track.scrollWidth / 2; // hay 2 grupos idénticos
-      if (groupW <= 0) return;
-      s.group = groupW;
-      s.base = groupW / duration; // px/s para completar un grupo en `duration`
-      if (s.speed === 0) s.speed = s.base;
-      if (s.target === 0) s.target = s.base;
-    };
-    measure();
-    const ro = new ResizeObserver(measure);
-    ro.observe(track);
+  // Posición inicial.
+  useEffect(() => {
+    if (spacing && tpRef.current) {
+      tpRef.current.setAttribute('startOffset', -spacing + 'px');
+      setOffset(-spacing);
+    }
+  }, [spacing]);
 
+  // Animación + desaceleración suave.
+  useEffect(() => {
+    if (!spacing) return;
     let raf = 0;
-    let last = performance.now();
-    const frame = (now: number) => {
-      const dt = Math.min(0.05, (now - last) / 1000);
-      last = now;
-      // interpola la velocidad hacia el objetivo → desaceleración/aceleración suave
-      s.speed += (s.target - s.speed) * Math.min(1, dt * 5);
-      s.offset -= s.speed * dt;
-      if (s.group > 0) {
-        while (s.offset <= -s.group) s.offset += s.group;
+    const step = () => {
+      const s = speedRef.current;
+      s.cur += (s.target - s.cur) * 0.08;
+      const el = tpRef.current;
+      if (el) {
+        const cur = parseFloat(el.getAttribute('startOffset') || '0');
+        let n = cur - s.cur;
+        if (n <= -spacing) n += spacing;
+        if (n > 0) n -= spacing;
+        el.setAttribute('startOffset', n + 'px');
       }
-      track.style.transform = `translate3d(${s.offset.toFixed(2)}px,0,0)`;
-      raf = requestAnimationFrame(frame);
+      raf = requestAnimationFrame(step);
     };
-    raf = requestAnimationFrame(frame);
-
-    return () => {
-      cancelAnimationFrame(raf);
-      ro.disconnect();
-    };
-  }, [duration]);
-
-  const slowDown = () => {
-    st.current.target = st.current.base * 0.18;
-  };
-  const resume = () => {
-    st.current.target = st.current.base;
-  };
+    raf = requestAnimationFrame(step);
+    return () => cancelAnimationFrame(raf);
+  }, [spacing, speedRef]);
 
   return (
-    <div className="overflow-hidden" onMouseEnter={slowDown} onMouseLeave={resume}>
-      <div ref={trackRef} className="marquee-track" style={{ willChange: 'transform' }}>
-        {items.map((i, idx) => (
-          <span key={idx} className="flex items-center mr-6 sm:mr-8">
-            <span className="font-sans font-semibold lowercase leading-none tracking-tight text-[#1A1A1A] dark:text-[#F2F2F2] text-[72px] whitespace-nowrap">
-              {word}
-            </span>
-            <span className="ml-6 sm:ml-8 shrink-0 block h-[62px] aspect-[16/10] rounded-xl overflow-hidden shadow-sm">
-              <img
-                src={images[i % images.length]}
-                alt=""
-                referrerPolicy="no-referrer"
-                className="w-full h-full object-cover"
-              />
-            </span>
-          </span>
-        ))}
-      </div>
-    </div>
+    <svg
+      className="w-full overflow-visible block aspect-[100/12] leading-none"
+      viewBox="0 0 1440 120"
+    >
+      <text ref={measureRef} xmlSpace="preserve" style={{ ...textStyle, visibility: 'hidden', opacity: 0, pointerEvents: 'none' }}>
+        {text}
+      </text>
+      <defs>
+        <path id={pathId} d={pathD} fill="none" stroke="transparent" />
+      </defs>
+      {ready && (
+        <text xmlSpace="preserve" style={textStyle} className="fill-[#1A1A1A] dark:fill-[#F2F2F2]">
+          <textPath ref={tpRef} href={`#${pathId}`} startOffset={offset + 'px'} xmlSpace="preserve">
+            {totalText}
+          </textPath>
+        </text>
+      )}
+    </svg>
   );
 }
 
@@ -124,10 +145,9 @@ export default function ExpoActivaSection({ setView }: ExpoActivaSectionProps) {
   const driftRef = useRef<HTMLDivElement>(null);
   const cursorRef = useRef<HTMLDivElement>(null);
   const [hovering, setHovering] = useState(false);
+  const speed = useRef({ cur: BASE_SPEED, target: BASE_SPEED });
 
-  // Drift horizontal sutil ligado al scroll, además del marquee continuo
-  // (estilo brandnewschool.com/culture). Se aplica a una capa externa para
-  // componerse con la animación del track sin pisarla.
+  // Drift horizontal sutil ligado al scroll en la fila de fotos.
   useEffect(() => {
     let raf = 0;
     const update = () => {
@@ -136,10 +156,9 @@ export default function ExpoActivaSection({ setView }: ExpoActivaSectionProps) {
       const layer = driftRef.current;
       if (!sec || !layer) return;
       const r = sec.getBoundingClientRect();
-      // progress ≈ -1 (sección abajo) … 0 (centrada) … 1 (arriba)
       const progress =
         (window.innerHeight / 2 - (r.top + r.height / 2)) / window.innerHeight;
-      const tx = -120 - progress * 100; // siempre negativo → sin huecos a la izquierda
+      const tx = -120 - progress * 100;
       layer.style.transform = `translate3d(${tx.toFixed(1)}px,0,0)`;
     };
     const onScroll = () => {
@@ -163,7 +182,6 @@ export default function ExpoActivaSection({ setView }: ExpoActivaSectionProps) {
     }
   }, []);
 
-  // Fila inferior: duplicada para bucle sin costura del marquee
   const driftImages = [...IMAGES, ...IMAGES];
 
   return (
@@ -176,10 +194,10 @@ export default function ExpoActivaSection({ setView }: ExpoActivaSectionProps) {
       onMouseLeave={() => setHovering(false)}
       onMouseMove={moveCursor}
       onClick={() => setView('exhibition')}
-      className="snap-section relative min-h-dvh flex flex-col justify-center gap-10 sm:gap-14 py-16 cursor-none select-none"
+      className="snap-section relative min-h-dvh flex flex-col justify-center gap-8 sm:gap-10 py-16 cursor-none select-none"
     >
       {/* Fila superior: label (izquierda) + badge Expo activa (derecha) */}
-      <div className="px-6 sm:px-10 flex items-center justify-between gap-4">
+      <div className="px-6 sm:px-10 flex items-center justify-between gap-4 relative z-20">
         <div className="flex items-center gap-3 text-neutral-600 dark:text-neutral-400">
           <span className="h-0.5 w-12 bg-[#D4F334]" />
           <span className="text-[10px] sm:text-xs font-mono font-bold tracking-widest uppercase">
@@ -196,41 +214,51 @@ export default function ExpoActivaSection({ setView }: ExpoActivaSectionProps) {
         </div>
       </div>
 
-      {/* Marquee de una sola línea: "arte mundialista" (Syne semibold) con imágenes */}
-      <MarqueeLine word="arte mundialista" images={IMAGES} duration={72} />
+      {/* Composición: marquee curvado arriba; debajo el carrusel de fotos, que
+          sólo oculta la parte baja de la curva (el centro de la curva se mete
+          por detrás de las imágenes). Al pasar el cursor, el texto se ralentiza. */}
+      <div
+        onMouseEnter={() => { speed.current.target = SLOW_SPEED; }}
+        onMouseLeave={() => { speed.current.target = BASE_SPEED; }}
+        className="relative left-1/2 -translate-x-1/2 w-screen"
+      >
+        {/* Marquee curvado, full-width, arriba */}
+        <div className="pointer-events-none relative z-0">
+          <CurvedMarquee marqueeText="ARTE ✦ MUNDIALISTA ✦ " curveAmount={250} speedRef={speed} />
+        </div>
 
-      {/* Fila inferior: tarjetas con alturas y desfases verticales distintos
-          (no uniforme) + marquee lento a la izquierda, con drift de scroll. */}
-      <div className="overflow-hidden h-[420px]">
-        <div ref={driftRef} className="will-change-transform h-full">
-          <div
-            className="marquee-track h-full"
-            style={{ animation: 'marquee-left 95s linear infinite', alignItems: 'flex-start' }}
-          >
-            {driftImages.map((src, i) => {
-              const t = TILES[i % TILES.length];
-              return (
-                <div
-                  key={i}
-                  className="shrink-0 mr-4 sm:mr-5 rounded-2xl overflow-hidden shadow-sm"
-                  style={{ width: t.w, height: t.h, marginTop: t.mt }}
-                >
-                  <img
-                    src={src}
-                    alt=""
-                    referrerPolicy="no-referrer"
-                    className="w-full h-full object-cover"
-                  />
-                </div>
-              );
-            })}
+        {/* Carrusel de fotos, claramente debajo de la curva: sólo la punta más
+            baja del texto curvado las roza. z-10 → pasa por delante del texto. */}
+        <div className="relative z-10 mt-4 sm:mt-8 overflow-hidden">
+          <div ref={driftRef} className="will-change-transform">
+            <div
+              className="marquee-track"
+              style={{ animation: 'marquee-left 95s linear infinite', alignItems: 'center' }}
+            >
+              {driftImages.map((src, i) => {
+                const t = TILES[i % TILES.length];
+                return (
+                  <div
+                    key={i}
+                    className="shrink-0 mr-5 sm:mr-7 rounded-2xl overflow-hidden"
+                    style={{ width: t.w, height: t.h }}
+                  >
+                    <img
+                      src={src}
+                      alt=""
+                      referrerPolicy="no-referrer"
+                      className="w-full h-full object-cover"
+                    />
+                  </div>
+                );
+              })}
+            </div>
           </div>
         </div>
       </div>
 
       {/* Cursor-badge tipo riseatseven ("Send Us Your Brief ↗").
-          Se renderiza en un portal a <body> para que `position: fixed` sea
-          relativo al viewport y no a ningún ancestro con transform. */}
+          Portal a <body> para que `position: fixed` sea relativo al viewport. */}
       {createPortal(
         <div
           ref={cursorRef}

@@ -21,8 +21,8 @@ function stickerAlt(emoji: string): string {
 }
 
 const roleBadge: Record<WallMessage['role'], { label: string; cls: string } | null> = {
-  artista: { label: 'Artista', cls: 'bg-[#D4F334] text-[#333333]' },
-  espacio: { label: 'Espacio anfitrión', cls: 'bg-[#0084FF] text-white' },
+  artista: { label: 'Artista', cls: 'bg-brand text-on-brand' },
+  espacio: { label: 'Espacio anfitrión', cls: 'bg-accent text-white' },
   visitante: null,
 };
 
@@ -42,14 +42,14 @@ export default function WallMessageCard({
   const close = () => setMenuOpen(false);
 
   const menuItem =
-    'w-full flex items-center gap-2 px-3 py-2 text-left text-xs font-sans text-[#333333] dark:text-[#F2F2F2] hover:bg-[#F2F2F2] dark:hover:bg-[#242424] transition-colors cursor-pointer';
+    'w-full flex items-center gap-2 px-3 py-2 text-left text-xs font-sans text-fg hover:bg-[#F2F2F2] dark:hover:bg-elevated transition-colors cursor-pointer';
 
   return (
-    <article className="bg-white dark:bg-[#1E1E1E] border border-[#E6E6E6] dark:border-[#333333] rounded-[20px] p-5 shadow-sm">
+    <article className="bg-surface border border-border rounded-[20px] p-5 shadow-sm">
       {/* Encabezado: autor + rol + timestamp + menú */}
       <header className="flex items-center justify-between gap-3 mb-3">
         <div className="flex items-center gap-2 min-w-0">
-          <span className="font-sans font-semibold text-sm text-[#333333] dark:text-[#F2F2F2] truncate">
+          <span className="font-sans font-semibold text-sm text-fg truncate">
             {message.author}
           </span>
           {badge && (
@@ -73,7 +73,7 @@ export default function WallMessageCard({
               aria-haspopup="menu"
               aria-expanded={menuOpen}
               aria-label="Más acciones"
-              className="h-8 w-8 flex items-center justify-center rounded-full text-neutral-400 hover:text-[#333333] dark:hover:text-[#F2F2F2] hover:bg-[#F2F2F2] dark:hover:bg-[#242424] transition-colors cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-[#0084FF]"
+              className="h-8 w-8 flex items-center justify-center rounded-full text-neutral-400 hover:text-fg hover:bg-[#F2F2F2] dark:hover:bg-elevated transition-colors cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-accent"
             >
               <MoreHorizontal className="h-4 w-4" aria-hidden="true" />
             </button>
@@ -83,7 +83,7 @@ export default function WallMessageCard({
                 <div className="fixed inset-0 z-10" onClick={close} aria-hidden="true" />
                 <div
                   role="menu"
-                  className="absolute right-0 top-9 z-20 w-44 bg-white dark:bg-[#1E1E1E] border border-[#E6E6E6] dark:border-[#333333] rounded-xl shadow-md overflow-hidden py-1"
+                  className="absolute right-0 top-9 z-20 w-44 bg-surface border border-border rounded-xl shadow-md overflow-hidden py-1"
                 >
                   {artistMode ? (
                     <>
@@ -131,7 +131,7 @@ export default function WallMessageCard({
           onClick={() => onToggleHeart(message.id)}
           aria-pressed={liked}
           aria-label={liked ? 'Quitar me gusta' : 'Me gusta'}
-          className="inline-flex items-center gap-1.5 text-xs font-mono font-bold text-neutral-500 dark:text-neutral-400 hover:text-red-500 transition-colors cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-[#0084FF] rounded-md px-1.5 py-1 -ml-1.5"
+          className="inline-flex items-center gap-1.5 text-xs font-mono font-bold text-neutral-500 dark:text-neutral-400 hover:text-red-500 transition-colors cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-accent rounded-md px-1.5 py-1 -ml-1.5"
         >
           <Heart
             className={`h-4 w-4 stroke-[1.75] transition-colors ${liked ? 'fill-red-500 text-red-500 stroke-red-500' : ''}`}

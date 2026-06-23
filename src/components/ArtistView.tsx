@@ -35,7 +35,7 @@ export default function ArtistView({ artist, artworks, setView, onSelectArtwork 
 
   const nf = (n: number) => n.toLocaleString('es-AR');
   return (
-    <div className="animate-fade-in pb-20 bg-transparent text-[#333333] dark:text-[#F2F2F2]">
+    <div className="animate-fade-in pb-20 bg-transparent text-fg">
 
       {/* BREADCRUMB */}
       <section className="px-6 pt-10 sm:pt-16">
@@ -43,14 +43,14 @@ export default function ArtistView({ artist, artworks, setView, onSelectArtwork 
           <div className="flex flex-wrap items-center gap-2 sm:gap-3 text-neutral-500 dark:text-neutral-400 text-[10px] sm:text-xs font-mono font-black uppercase tracking-wider select-none">
             <button
               onClick={() => setView('landing')}
-              className="hover:text-[#0084FF] dark:hover:text-[#3D9DFF] transition-colors cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-[#0084FF] rounded-sm"
+              className="hover:text-[#0084FF] dark:hover:text-[#3D9DFF] transition-colors cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-accent rounded-sm"
             >
               🏠 Sala Principal
             </button>
             <span className="text-neutral-300 dark:text-neutral-700">/</span>
             <button
               onClick={() => setView('exhibition')}
-              className="hover:text-[#0084FF] dark:hover:text-[#3D9DFF] transition-colors cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-[#0084FF] rounded-sm"
+              className="hover:text-[#0084FF] dark:hover:text-[#3D9DFF] transition-colors cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-accent rounded-sm"
             >
               Exposición
             </button>
@@ -77,14 +77,14 @@ export default function ArtistView({ artist, artworks, setView, onSelectArtwork 
             <div className="relative m-5 sm:m-8 md:m-10 max-w-xl bg-white/95 dark:bg-[#1A1A1A]/95 backdrop-blur-sm rounded-[32px] shadow-md p-8 sm:p-12 md:p-14">
               {/* Badge verificada */}
               {artist.verified && (
-                <span className="inline-flex items-center gap-1.5 bg-[#D4F334] text-[#333333] px-3 py-1 rounded-full text-[10px] font-mono font-bold uppercase tracking-wider mb-4">
+                <span className="inline-flex items-center gap-1.5 bg-brand text-on-brand px-3 py-1 rounded-full text-[10px] font-mono font-bold uppercase tracking-wider mb-4">
                   <BadgeCheck className="h-3.5 w-3.5" aria-hidden="true" />
                   Artista verificada
                 </span>
               )}
 
               {/* Nombre (Display / H1) */}
-              <h1 className="font-sans font-black text-4xl sm:text-5xl md:text-6xl tracking-tighter leading-[1.05] text-[#333333] dark:text-[#F2F2F2]">
+              <h1 className="font-sans font-black text-4xl sm:text-5xl md:text-6xl tracking-tighter leading-[1.05] text-fg">
                 {artist.name}
               </h1>
 
@@ -92,7 +92,7 @@ export default function ArtistView({ artist, artworks, setView, onSelectArtwork 
               {artist.tagline && (
                 <p className="mt-4 text-base sm:text-lg text-neutral-600 dark:text-neutral-300 leading-relaxed relative inline-block">
                   {artist.tagline}
-                  <span className="block h-1 w-16 bg-[#D4F334] mt-2 rounded-full" aria-hidden="true" />
+                  <span className="block h-1 w-16 bg-brand mt-2 rounded-full" aria-hidden="true" />
                 </p>
               )}
             </div>
@@ -106,10 +106,10 @@ export default function ArtistView({ artist, artworks, setView, onSelectArtwork 
         {/* SEMBLANZA — bloque editorial narrativo */}
         {artist.semblanza && (
           <section aria-labelledby="semblanza-title">
-            <span className="text-[10px] font-mono font-bold tracking-widest text-[#0084FF] dark:text-[#3D9DFF] uppercase">
+            <span className="text-[10px] font-mono font-bold tracking-widest text-accent uppercase">
               — En primera persona
             </span>
-            <h2 id="semblanza-title" className="font-sans font-bold text-3xl sm:text-4xl tracking-tight text-[#333333] dark:text-[#F2F2F2] mt-2">
+            <h2 id="semblanza-title" className="font-sans font-bold text-3xl sm:text-4xl tracking-tight text-fg mt-2">
               Su semblanza
             </h2>
 
@@ -122,7 +122,7 @@ export default function ArtistView({ artist, artworks, setView, onSelectArtwork 
             {/* Cita destacada (Syne Italic) */}
             {artist.quote && (
               <blockquote className="mt-10 max-w-2xl border-l-2 border-[#D4F334] pl-6">
-                <p className="font-sans italic font-medium text-xl sm:text-2xl leading-snug text-[#333333] dark:text-[#F2F2F2]">
+                <p className="font-sans italic font-medium text-xl sm:text-2xl leading-snug text-fg">
                   «{artist.quote}»
                 </p>
               </blockquote>
@@ -144,21 +144,21 @@ export default function ArtistView({ artist, artworks, setView, onSelectArtwork 
         {/* TRAYECTORIA / CV EXPOSITIVO — cronológico, reciente primero */}
         {artist.exhibitions && artist.exhibitions.length > 0 && (
           <section aria-labelledby="trayectoria-title">
-            <span className="text-[10px] font-mono font-bold tracking-widest text-[#0084FF] dark:text-[#3D9DFF] uppercase">
+            <span className="text-[10px] font-mono font-bold tracking-widest text-accent uppercase">
               — Dónde ha colgado
             </span>
-            <h2 id="trayectoria-title" className="font-sans font-bold text-3xl sm:text-4xl tracking-tight text-[#333333] dark:text-[#F2F2F2] mt-2">
+            <h2 id="trayectoria-title" className="font-sans font-bold text-3xl sm:text-4xl tracking-tight text-fg mt-2">
               Trayectoria
             </h2>
 
-            <ul className="mt-8 border-t border-[#E6E6E6] dark:border-[#333333]">
+            <ul className="mt-8 border-t border-border">
               {artist.exhibitions.map((expo) => (
                 <li
                   key={expo.id}
-                  className="flex flex-col sm:flex-row sm:items-baseline sm:justify-between gap-1 sm:gap-6 py-5 border-b border-[#E6E6E6] dark:border-[#333333]"
+                  className="flex flex-col sm:flex-row sm:items-baseline sm:justify-between gap-1 sm:gap-6 py-5 border-b border-border"
                 >
                   <div className="flex-grow">
-                    <h3 className="font-sans font-semibold text-lg text-[#333333] dark:text-[#F2F2F2] leading-snug">
+                    <h3 className="font-sans font-semibold text-lg text-fg leading-snug">
                       {expo.title}
                     </h3>
                     <p className="font-mono text-xs text-neutral-500 dark:text-neutral-400 mt-1 uppercase tracking-wide">
@@ -169,7 +169,7 @@ export default function ArtistView({ artist, artworks, setView, onSelectArtwork 
                     <span className="font-mono text-xs font-bold text-neutral-500 dark:text-neutral-400 tabular-nums">
                       {expo.year}
                     </span>
-                    <span className="font-mono text-[10px] font-bold uppercase tracking-wider px-2.5 py-1 rounded-full border border-[#E6E6E6] dark:border-[#333333] text-neutral-600 dark:text-neutral-300">
+                    <span className="font-mono text-[10px] font-bold uppercase tracking-wider px-2.5 py-1 rounded-full border border-border text-neutral-600 dark:text-neutral-300">
                       {expo.type}
                     </span>
                   </div>
@@ -180,16 +180,16 @@ export default function ArtistView({ artist, artworks, setView, onSelectArtwork 
         )}
 
         {/* Redes + Seguir + prueba social */}
-        <section aria-labelledby="seguir-title" className="bg-white dark:bg-[#1A1A1A] border border-[#E6E6E6] dark:border-[#333333] rounded-[32px] shadow-sm p-8 sm:p-12">
+        <section aria-labelledby="seguir-title" className="bg-canvas border border-border rounded-[32px] shadow-sm p-8 sm:p-12">
           <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-8">
 
             {/* Texto + CTA + redes */}
             <div className="space-y-6">
               <div>
-                <span className="text-[10px] font-mono font-bold tracking-widest text-[#0084FF] dark:text-[#3D9DFF] uppercase">
+                <span className="text-[10px] font-mono font-bold tracking-widest text-accent uppercase">
                   — Acompañá su andar
                 </span>
-                <h2 id="seguir-title" className="font-sans font-bold text-2xl sm:text-3xl tracking-tight text-[#333333] dark:text-[#F2F2F2] mt-2">
+                <h2 id="seguir-title" className="font-sans font-bold text-2xl sm:text-3xl tracking-tight text-fg mt-2">
                   Seguí a {artist.name.split(' ')[0]}
                 </h2>
               </div>
@@ -200,10 +200,10 @@ export default function ArtistView({ artist, artworks, setView, onSelectArtwork 
                   type="button"
                   onClick={handleToggleFollow}
                   aria-pressed={following}
-                  className={`inline-flex items-center gap-2 px-6 py-3 rounded-md font-sans font-semibold text-sm transition-all cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 dark:focus-visible:ring-offset-[#1A1A1A] focus-visible:ring-[#0084FF] ${
+                  className={`inline-flex items-center gap-2 px-6 py-3 rounded-md font-sans font-semibold text-sm transition-all cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 dark:focus-visible:ring-offset-[#1A1A1A] focus-visible:ring-accent ${
                     following
-                      ? 'bg-[#E8F5FF] dark:bg-sky-950/40 text-[#0084FF] dark:text-sky-300 border border-[#0084FF]/30'
-                      : 'bg-[#0084FF] hover:bg-[#006FD6] dark:bg-[#3D9DFF] text-white'
+                      ? 'bg-[#E8F5FF] dark:bg-sky-950/40 text-accent border border-[#0084FF]/30'
+                      : 'bg-accent hover:bg-[#006FD6] dark:bg-[#3D9DFF] text-white'
                   }`}
                 >
                   {following ? (
@@ -223,7 +223,7 @@ export default function ArtistView({ artist, artworks, setView, onSelectArtwork 
                     target="_blank"
                     rel="noopener noreferrer"
                     aria-label={`Instagram de ${artist.name} (se abre en una pestaña nueva)`}
-                    className="h-11 w-11 flex items-center justify-center rounded-md border border-[#E6E6E6] dark:border-[#333333] text-[#333333] dark:text-[#F2F2F2] hover:border-[#0084FF] hover:text-[#0084FF] dark:hover:text-[#3D9DFF] transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-[#0084FF]"
+                    className="h-11 w-11 flex items-center justify-center rounded-md border border-border text-fg hover:border-accent hover:text-[#0084FF] dark:hover:text-[#3D9DFF] transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-accent"
                   >
                     <Instagram className="h-5 w-5" aria-hidden="true" />
                   </a>
@@ -234,7 +234,7 @@ export default function ArtistView({ artist, artworks, setView, onSelectArtwork 
                     target="_blank"
                     rel="noopener noreferrer"
                     aria-label={`Sitio web de ${artist.name} (se abre en una pestaña nueva)`}
-                    className="h-11 w-11 flex items-center justify-center rounded-md border border-[#E6E6E6] dark:border-[#333333] text-[#333333] dark:text-[#F2F2F2] hover:border-[#0084FF] hover:text-[#0084FF] dark:hover:text-[#3D9DFF] transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-[#0084FF]"
+                    className="h-11 w-11 flex items-center justify-center rounded-md border border-border text-fg hover:border-accent hover:text-[#0084FF] dark:hover:text-[#3D9DFF] transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-accent"
                   >
                     <Globe className="h-5 w-5" aria-hidden="true" />
                   </a>
@@ -248,7 +248,7 @@ export default function ArtistView({ artist, artworks, setView, onSelectArtwork 
                 <dt className="flex items-center gap-1.5 text-[10px] font-mono font-bold uppercase tracking-wider text-neutral-500 dark:text-neutral-400">
                   <Users className="h-3.5 w-3.5" aria-hidden="true" /> Seguidores
                 </dt>
-                <dd className="font-mono font-bold text-2xl text-[#333333] dark:text-[#F2F2F2] tabular-nums mt-1">
+                <dd className="font-mono font-bold text-2xl text-fg tabular-nums mt-1">
                   {nf(followers)}
                 </dd>
               </div>
@@ -256,7 +256,7 @@ export default function ArtistView({ artist, artworks, setView, onSelectArtwork 
                 <dt className="flex items-center gap-1.5 text-[10px] font-mono font-bold uppercase tracking-wider text-neutral-500 dark:text-neutral-400">
                   <MessageCircle className="h-3.5 w-3.5" aria-hidden="true" /> Mensajes
                 </dt>
-                <dd className="font-mono font-bold text-2xl text-[#333333] dark:text-[#F2F2F2] tabular-nums mt-1">
+                <dd className="font-mono font-bold text-2xl text-fg tabular-nums mt-1">
                   {nf(visibleMessageCount)}
                 </dd>
               </div>
@@ -264,7 +264,7 @@ export default function ArtistView({ artist, artworks, setView, onSelectArtwork 
                 <dt className="flex items-center gap-1.5 text-[10px] font-mono font-bold uppercase tracking-wider text-neutral-500 dark:text-neutral-400">
                   <Eye className="h-3.5 w-3.5" aria-hidden="true" /> Vistas
                 </dt>
-                <dd className="font-mono font-bold text-2xl text-[#333333] dark:text-[#F2F2F2] tabular-nums mt-1">
+                <dd className="font-mono font-bold text-2xl text-fg tabular-nums mt-1">
                   {nf(artist.views ?? 0)}
                 </dd>
               </div>

@@ -82,10 +82,10 @@ export default function CommunityWall({ artistId, artistName, messages, setMessa
     <section aria-labelledby="muro-title">
       <div className="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-4">
         <div>
-          <span className="text-[10px] font-mono font-bold tracking-widest text-[#0084FF] dark:text-[#3D9DFF] uppercase">
+          <span className="text-[10px] font-mono font-bold tracking-widest text-accent uppercase">
             — La comunidad opina
           </span>
-          <h2 id="muro-title" className="font-sans font-bold text-3xl sm:text-4xl tracking-tight text-[#333333] dark:text-[#F2F2F2] mt-2">
+          <h2 id="muro-title" className="font-sans font-bold text-3xl sm:text-4xl tracking-tight text-fg mt-2">
             El muro de {firstName}
           </h2>
         </div>
@@ -101,8 +101,8 @@ export default function CommunityWall({ artistId, artistName, messages, setMessa
             aria-checked={artistMode}
             aria-label="Activar vista artista (controles de moderación)"
             onClick={() => setArtistMode((v) => !v)}
-            className={`relative h-6 w-11 rounded-full transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 dark:focus-visible:ring-offset-[#0E0E0E] focus-visible:ring-[#0084FF] ${
-              artistMode ? 'bg-[#0084FF] dark:bg-[#3D9DFF]' : 'bg-[#D1D5DB] dark:bg-[#444]'
+            className={`relative h-6 w-11 rounded-full transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 dark:focus-visible:ring-offset-[#0E0E0E] focus-visible:ring-accent ${
+              artistMode ? 'bg-accent dark:bg-[#3D9DFF]' : 'bg-[#D1D5DB] dark:bg-[#444]'
             }`}
           >
             <span className={`absolute top-0.5 left-0.5 h-5 w-5 rounded-full bg-white shadow-sm transition-transform ${artistMode ? 'translate-x-5' : ''}`} />
@@ -118,9 +118,9 @@ export default function CommunityWall({ artistId, artistName, messages, setMessa
       {notice && (
         <div
           role="status"
-          className="mt-4 flex items-center gap-2 text-sm text-[#333333] dark:text-[#F2F2F2] bg-[#E8F5FF] dark:bg-sky-950/40 border border-[#0084FF]/30 rounded-xl px-4 py-3"
+          className="mt-4 flex items-center gap-2 text-sm text-fg bg-[#E8F5FF] dark:bg-sky-950/40 border border-[#0084FF]/30 rounded-xl px-4 py-3"
         >
-          <CheckCircle2 className="h-4 w-4 flex-shrink-0 text-[#0084FF] dark:text-[#3D9DFF]" aria-hidden="true" />
+          <CheckCircle2 className="h-4 w-4 flex-shrink-0 text-accent" aria-hidden="true" />
           <span>{notice}</span>
         </div>
       )}
@@ -135,7 +135,7 @@ export default function CommunityWall({ artistId, artistName, messages, setMessa
         <div className="mt-8 space-y-4">
           {pinned.map((m) => (
             <div key={m.id} className="relative">
-              <span className="absolute -top-2.5 left-5 z-10 inline-flex items-center gap-1 bg-[#0084FF] dark:bg-[#3D9DFF] text-white text-[9px] font-mono font-bold uppercase tracking-wider px-2 py-0.5 rounded-full">
+              <span className="absolute -top-2.5 left-5 z-10 inline-flex items-center gap-1 bg-accent dark:bg-[#3D9DFF] text-white text-[9px] font-mono font-bold uppercase tracking-wider px-2 py-0.5 rounded-full">
                 <Pin className="h-3 w-3" aria-hidden="true" /> Fijado
               </span>
               <WallMessageCard

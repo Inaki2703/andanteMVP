@@ -68,7 +68,7 @@ export default function WallComposer({ onSubmit }: WallComposerProps) {
   };
 
   return (
-    <div className="bg-[#F8F9FA] dark:bg-[#161616] border border-[#E6E6E6] dark:border-[#333333] rounded-[24px] p-5 sm:p-6 space-y-4">
+    <div className="bg-input dark:bg-input border border-border rounded-[24px] p-5 sm:p-6 space-y-4">
       {/* Nombre */}
       <div>
         <label htmlFor="wall-author" className="block text-[10px] font-mono font-bold uppercase tracking-wider text-neutral-500 dark:text-neutral-400 mb-1.5">
@@ -85,7 +85,7 @@ export default function WallComposer({ onSubmit }: WallComposerProps) {
           }}
           placeholder="¿Cómo te llamás?"
           maxLength={40}
-          className="w-full bg-white dark:bg-[#1E1E1E] border border-[#E6E6E6] dark:border-[#333333] rounded-xl px-4 py-3 text-sm text-[#333333] dark:text-[#F2F2F2] placeholder-neutral-400 focus:outline-none focus-visible:ring-2 focus-visible:ring-[#0084FF]"
+          className="w-full bg-surface border border-border rounded-xl px-4 py-3 text-sm text-fg placeholder-neutral-400 focus:outline-none focus-visible:ring-2 focus-visible:ring-accent"
         />
       </div>
 
@@ -113,7 +113,7 @@ export default function WallComposer({ onSubmit }: WallComposerProps) {
           placeholder="Dejá unas palabras para la artista…"
           rows={3}
           maxLength={MAX_CHARS}
-          className="w-full resize-none bg-white dark:bg-[#1E1E1E] border border-[#E6E6E6] dark:border-[#333333] rounded-xl px-4 py-3 text-sm text-[#333333] dark:text-[#F2F2F2] placeholder-neutral-400 leading-relaxed focus:outline-none focus-visible:ring-2 focus-visible:ring-[#0084FF]"
+          className="w-full resize-none bg-surface border border-border rounded-xl px-4 py-3 text-sm text-fg placeholder-neutral-400 leading-relaxed focus:outline-none focus-visible:ring-2 focus-visible:ring-accent"
         />
       </div>
 
@@ -136,10 +136,10 @@ export default function WallComposer({ onSubmit }: WallComposerProps) {
                 }}
                 aria-pressed={active}
                 aria-label={s.alt}
-                className={`h-11 w-11 flex items-center justify-center rounded-xl text-xl transition-all cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-[#0084FF] ${
+                className={`h-11 w-11 flex items-center justify-center rounded-xl text-xl transition-all cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-accent ${
                   active
-                    ? 'bg-[#D4F334] ring-2 ring-[#333333] dark:ring-[#F2F2F2]'
-                    : 'bg-white dark:bg-[#1E1E1E] border border-[#E6E6E6] dark:border-[#333333] hover:border-[#0084FF]'
+                    ? 'bg-brand ring-2 ring-fg dark:ring-on-inverse'
+                    : 'bg-surface border border-border hover:border-accent'
                 }`}
               >
                 <span aria-hidden="true">{s.emoji}</span>
@@ -153,9 +153,9 @@ export default function WallComposer({ onSubmit }: WallComposerProps) {
       {error && (
         <div
           role="alert"
-          className="flex items-start gap-2 text-sm text-[#333333] dark:text-[#F2F2F2] bg-[#FFF8E1] dark:bg-[#2A2410] border border-[#D4F334] rounded-xl px-4 py-3"
+          className="flex items-start gap-2 text-sm text-fg bg-warning-bg border border-brand rounded-xl px-4 py-3"
         >
-          <AlertCircle className="h-4 w-4 mt-0.5 flex-shrink-0 text-[#8A7A00] dark:text-[#D4F334]" aria-hidden="true" />
+          <AlertCircle className="h-4 w-4 mt-0.5 flex-shrink-0 text-[#8A7A00] dark:text-brand" aria-hidden="true" />
           <span className="leading-relaxed">{error}</span>
         </div>
       )}
@@ -165,7 +165,7 @@ export default function WallComposer({ onSubmit }: WallComposerProps) {
         type="button"
         onClick={handleSubmit}
         disabled={!canSubmit}
-        className="w-full sm:w-auto inline-flex items-center justify-center px-6 py-3.5 rounded-md font-sans font-bold text-sm bg-[#D4F334] text-[#333333] hover:bg-[#C2E02E] transition-all cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 dark:focus-visible:ring-offset-[#161616] focus-visible:ring-[#333333] disabled:opacity-40 disabled:cursor-not-allowed"
+        className="w-full sm:w-auto inline-flex items-center justify-center px-6 py-3.5 rounded-md font-sans font-bold text-sm bg-brand text-on-brand hover:bg-brand-hover transition-all cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 dark:focus-visible:ring-offset-input focus-visible:ring-fg disabled:opacity-40 disabled:cursor-not-allowed"
       >
         Dejar mi mensaje
       </button>

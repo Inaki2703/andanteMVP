@@ -45,7 +45,7 @@ export default function CurvedLoop({ marqueeText = "ARTE ✦ MUNDIALISTA" }: Cur
             strokeWidth="12"
             strokeLinecap="round"
             d="M -50 140 Q 250 20, 500 130 T 1050 120"
-            className="blur-md dark:stroke-[#3D9DFF]/10"
+            className="blur-md dark:stroke-accent/10"
           />
 
           <text
@@ -66,8 +66,8 @@ export default function CurvedLoop({ marqueeText = "ARTE ✦ MUNDIALISTA" }: Cur
 
         {/* Decorative central accent badge mirroring a premium contemporary ticket seal */}
         <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 pointer-events-none flex flex-col items-center">
-          <div className="px-5 py-2 bg-neutral-900 dark:bg-[#1C1C1E] border border-neutral-700/60 dark:border-neutral-800 rounded-full shadow-2xl backdrop-blur-md flex items-center gap-2 transform hover:scale-105 transition-transform duration-350">
-            <span className="w-2 h-2 rounded-full bg-[#D4F334] animate-ping" />
+          <div className="px-5 py-2 bg-neutral-900 dark:bg-tab border border-neutral-700/60 dark:border-neutral-800 rounded-full shadow-2xl backdrop-blur-md flex items-center gap-2 transform hover:scale-105 transition-transform duration-350">
+            <span className="w-2 h-2 rounded-full bg-brand animate-ping" />
             <span className="text-[10px] sm:text-xs font-mono font-extrabold text-white tracking-[0.2em] uppercase">
               MUESTRA SANTIAGO
             </span>

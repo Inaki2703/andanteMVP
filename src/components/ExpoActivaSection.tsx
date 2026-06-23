@@ -130,7 +130,7 @@ function CurvedMarquee({
         <path id={pathId} d={pathD} fill="none" stroke="transparent" />
       </defs>
       {ready && (
-        <text xmlSpace="preserve" style={textStyle} className="fill-[#1A1A1A] dark:fill-[#F2F2F2]">
+        <text xmlSpace="preserve" style={textStyle} className="fill-fg">
           <textPath ref={tpRef} href={`#${pathId}`} startOffset={offset + 'px'} xmlSpace="preserve">
             {totalText}
           </textPath>
@@ -199,16 +199,16 @@ export default function ExpoActivaSection({ setView }: ExpoActivaSectionProps) {
       {/* Fila superior: label (izquierda) + badge Expo activa (derecha) */}
       <div className="px-6 sm:px-10 flex items-center justify-between gap-4 relative z-20">
         <div className="flex items-center gap-3 text-neutral-600 dark:text-neutral-400">
-          <span className="h-0.5 w-12 bg-[#D4F334]" />
+          <span className="h-0.5 w-12 bg-brand" />
           <span className="text-[10px] sm:text-xs font-mono font-bold tracking-widest uppercase">
             Ahora en {EXHIBITION_DATA.locationName}
           </span>
         </div>
 
-        <div className="inline-flex items-center gap-2 bg-[#D4F334] text-[#1A1A1A] px-3.5 py-1.5 rounded-full text-[10px] font-mono font-bold tracking-wider uppercase shrink-0">
+        <div className="inline-flex items-center gap-2 bg-brand text-on-brand px-3.5 py-1.5 rounded-full text-[10px] font-mono font-bold tracking-wider uppercase shrink-0">
           <span className="relative flex h-2 w-2">
-            <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#0084FF] opacity-75" />
-            <span className="relative inline-flex rounded-full h-2 w-2 bg-[#0084FF]" />
+            <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-accent opacity-75" />
+            <span className="relative inline-flex rounded-full h-2 w-2 bg-accent" />
           </span>
           <span>Expo activa</span>
         </div>
@@ -266,7 +266,7 @@ export default function ExpoActivaSection({ setView }: ExpoActivaSectionProps) {
             hovering ? 'opacity-100' : 'opacity-0'
           }`}
         >
-          <span className="inline-flex items-center gap-1.5 rounded-full bg-[#D4F334] text-[#1A1A1A] px-4 py-2.5 text-xs font-sans font-extrabold shadow-lg whitespace-nowrap">
+          <span className="inline-flex items-center gap-1.5 rounded-full bg-brand text-on-brand px-4 py-2.5 text-xs font-sans font-extrabold shadow-lg whitespace-nowrap">
             Ver exposición <span className="text-sm leading-none">↗</span>
           </span>
         </div>,

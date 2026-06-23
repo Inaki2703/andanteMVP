@@ -1,5 +1,5 @@
 import { motion } from 'motion/react';
-import { X, ShieldCheck, HeartPulse, Send, Check, MapPin, ShoppingBag, Trash2 } from 'lucide-react';
+import { X, ShieldCheck, Heartbeat, PaperPlaneTilt, Check, MapPin, ShoppingBag, Trash } from '@phosphor-icons/react';
 import { Artwork } from '../types';
 import { EXHIBITION_DATA } from '../data';
 import { formatPrice } from '../utils/formatPrice';
@@ -33,7 +33,7 @@ export default function ArtworkDetailModal({
 
       {/* Centered responsive dialog container with 1pt white border and more compact sizing */}
       <div 
-        className="relative w-full max-w-[840px] bg-white dark:bg-[#1E1E1E] rounded-[32px] overflow-hidden shadow-2xl z-10 flex flex-col md:grid md:grid-cols-12 max-h-[90vh] md:h-[574px] border border-white transition-colors duration-300"
+        className="relative w-full max-w-[840px] bg-surface rounded-[32px] overflow-hidden shadow-2xl z-10 flex flex-col md:grid md:grid-cols-12 max-h-[90vh] md:h-[574px] border border-white transition-colors duration-300"
         onClick={(e) => e.stopPropagation()}
       >
         
@@ -62,14 +62,14 @@ export default function ArtworkDetailModal({
           
           {/* Year pill on bottom left panel */}
           <div className="absolute bottom-6 left-6 z-10">
-            <span className="text-[9px] sm:text-[10px] font-mono font-black tracking-widest text-[#D4F334] bg-neutral-900/80 backdrop-blur-md border border-neutral-700/50 px-3.5 py-1.5 rounded-full uppercase">
+            <span className="text-[9px] sm:text-[10px] font-mono font-black tracking-widest text-brand bg-neutral-900/80 backdrop-blur-md border border-neutral-700/50 px-3.5 py-1.5 rounded-full uppercase">
               AÑO {artwork.year}
             </span>
           </div>
         </div>
 
         {/* Column 2: Metadata specs and details info board */}
-        <div className="md:col-span-6 p-6 sm:p-7 md:p-8 flex flex-col justify-between h-full bg-white dark:bg-[#1E1E1E] text-neutral-800 dark:text-neutral-200 overflow-y-auto select-none">
+        <div className="md:col-span-6 p-6 sm:p-7 md:p-8 flex flex-col justify-between h-full bg-surface text-neutral-800 dark:text-neutral-200 overflow-y-auto select-none">
           
           <div className="space-y-4">
             {/* Title & Technique - Inverted structural stack with reduced casing/size */}
@@ -80,7 +80,7 @@ export default function ArtworkDetailModal({
               </h2>
               
               {/* Technique/medium is now loaded below the main title heading */}
-              <span className="text-[10px] font-mono tracking-[0.16em] text-[#0084FF] dark:text-[#3D9DFF] font-black uppercase block mt-1.5">
+              <span className="text-[10px] font-mono tracking-[0.16em] text-accent font-black uppercase block mt-1.5">
                 {artwork.medium.toUpperCase()}
               </span>
               
@@ -99,7 +99,7 @@ export default function ArtworkDetailModal({
               
               <div className="flex justify-between items-center py-0.5">
                 <span className="text-neutral-400 dark:text-neutral-500 font-medium">Ubicación Actual</span>
-                <span className="font-mono font-bold text-[#0084FF] dark:text-sky-300 flex items-center gap-1">
+                <span className="font-mono font-bold text-accent flex items-center gap-1">
                   <MapPin className="h-3.5 w-3.5" />
                   <span>{EXHIBITION_DATA.locationName}</span>
                 </span>
@@ -113,7 +113,7 @@ export default function ArtworkDetailModal({
 
             {/* Curatorial feedback description */}
             <div className="space-y-1.5 text-left">
-              <span className="text-[9px] font-mono font-black tracking-widest text-[#8A8A8A] dark:text-[#7A7A7A] uppercase block">
+              <span className="text-[9px] font-mono font-black tracking-widest text-fg-muted uppercase block">
                 RESEÑA CURATORIAL
               </span>
               <p className="font-sans text-xs leading-relaxed text-neutral-500 dark:text-neutral-400 antialiased">

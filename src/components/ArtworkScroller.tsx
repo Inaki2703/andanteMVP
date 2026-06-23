@@ -63,17 +63,17 @@ export default function ArtworkScroller({ artworks, artistName, onSelectArtwork 
   };
 
   const arrowBase =
-    'h-11 w-11 flex items-center justify-center rounded-full border border-[#E6E6E6] dark:border-[#333333] bg-white dark:bg-[#1E1E1E] text-[#333333] dark:text-[#F2F2F2] transition-all hover:border-[#0084FF] hover:text-[#0084FF] dark:hover:text-[#3D9DFF] focus:outline-none focus-visible:ring-2 focus-visible:ring-[#0084FF] dark:focus-visible:ring-[#3D9DFF] disabled:opacity-30 disabled:cursor-not-allowed disabled:hover:border-[#E6E6E6] disabled:hover:text-[#333333] cursor-pointer';
+    'h-11 w-11 flex items-center justify-center rounded-full border border-border bg-surface text-fg transition-all hover:border-accent hover:text-[#0084FF] dark:hover:text-[#3D9DFF] focus:outline-none focus-visible:ring-2 focus-visible:ring-accent dark:focus-visible:ring-[#3D9DFF] disabled:opacity-30 disabled:cursor-not-allowed disabled:hover:border-[#E6E6E6] disabled:hover:text-[#333333] cursor-pointer';
 
   return (
     <div>
       {/* Cabecera: título + flechas SIEMPRE visibles */}
       <div className="flex items-end justify-between gap-4 mb-6">
         <div>
-          <span className="text-[10px] font-mono font-bold tracking-widest text-[#0084FF] dark:text-[#3D9DFF] uppercase">
+          <span className="text-[10px] font-mono font-bold tracking-widest text-accent uppercase">
             — Su obra
           </span>
-          <h2 className="font-sans font-bold text-3xl sm:text-4xl tracking-tight text-[#333333] dark:text-[#F2F2F2] mt-2">
+          <h2 className="font-sans font-bold text-3xl sm:text-4xl tracking-tight text-fg mt-2">
             Obra relevante
           </h2>
         </div>
@@ -106,7 +106,7 @@ export default function ArtworkScroller({ artworks, artistName, onSelectArtwork 
         aria-label={`Obra relevante de ${artistName}`}
         tabIndex={0}
         onKeyDown={handleKeyDown}
-        className="flex gap-5 overflow-x-auto pb-4 snap-x snap-mandatory motion-safe:scroll-smooth rounded-2xl focus:outline-none focus-visible:ring-2 focus-visible:ring-[#0084FF] dark:focus-visible:ring-[#3D9DFF] focus-visible:ring-offset-4 dark:focus-visible:ring-offset-[#0E0E0E]"
+        className="flex gap-5 overflow-x-auto pb-4 snap-x snap-mandatory motion-safe:scroll-smooth rounded-2xl focus:outline-none focus-visible:ring-2 focus-visible:ring-accent dark:focus-visible:ring-[#3D9DFF] focus-visible:ring-offset-4 dark:focus-visible:ring-offset-[#0E0E0E]"
       >
         {artworks.map((art) => (
           // Ancho < contenedor → el último item "asoma" (peeking)
@@ -122,7 +122,7 @@ export default function ArtworkScroller({ artworks, artistName, onSelectArtwork 
         aria-hidden="true"
       >
         <div
-          className="h-full bg-[#0084FF] dark:bg-[#3D9DFF] rounded-full motion-reduce:transition-none transition-[margin] duration-150"
+          className="h-full bg-accent dark:bg-[#3D9DFF] rounded-full motion-reduce:transition-none transition-[margin] duration-150"
           style={{
             width: `${thumbPct}%`,
             marginLeft: `${progress * (100 - thumbPct)}%`,

@@ -33,7 +33,7 @@ interface Spark {
 // The canvas is fixed to the viewport so sparks render correctly anywhere in the app,
 // even while the page scrolls. Pointer events pass through to the underlying UI.
 export default function ClickSpark({
-  sparkColor = '#333333',
+  sparkColor,
   sparkSize = 11,
   sparkRadius = 18,
   sparkCount = 8,
@@ -122,7 +122,11 @@ export default function ClickSpark({
         const x2 = spark.x + (distance + lineLength) * Math.cos(spark.angle);
         const y2 = spark.y + (distance + lineLength) * Math.sin(spark.angle);
 
-        ctx.strokeStyle = sparkColor;
+        const resolvedColor =
+          sparkColor ??
+          getComputedStyle(document.documentElement).getPropertyValue('--carbon').trim();
+
+        ctx.strokeStyle = resolvedColor || '#333333';
         ctx.lineWidth = sparkWidth;
         ctx.lineCap = 'round';
         ctx.globalAlpha = 1 - eased;

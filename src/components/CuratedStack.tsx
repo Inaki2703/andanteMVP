@@ -56,12 +56,12 @@ export default function CuratedStack({ artworks, onSelectArtwork }: CuratedStack
         {/* Columna izquierda: bloque de texto */}
         <div className="flex flex-col">
           <div className="flex items-center gap-3 text-neutral-600 dark:text-neutral-400 mb-4">
-            <span className="h-0.5 w-12 bg-[#D4F334]" />
+            <span className="h-0.5 w-12 bg-brand" />
             <span className="text-[10px] sm:text-xs font-mono font-bold tracking-widest uppercase">
               Selección de la semana
             </span>
           </div>
-          <h2 className="font-sans font-black text-4xl sm:text-6xl lg:text-7xl tracking-tight uppercase text-[#1A1A1A] dark:text-[#F2F2F2] leading-[0.95]">
+          <h2 className="font-sans font-black text-4xl sm:text-6xl lg:text-7xl tracking-tight uppercase text-fg leading-[0.95]">
             Curado<br />a mano
           </h2>
           <p className="mt-6 max-w-sm text-sm sm:text-base text-neutral-500 dark:text-neutral-400 leading-relaxed">
@@ -69,13 +69,13 @@ export default function CuratedStack({ artworks, onSelectArtwork }: CuratedStack
           </p>
 
           <div className="mt-8 flex items-center gap-4">
-            <span className="font-mono text-base text-[#1A1A1A] dark:text-[#F2F2F2] tabular-nums">
+            <span className="font-mono text-base text-fg tabular-nums">
               {String(index + 1).padStart(2, '0')}
               <span className="text-neutral-400 dark:text-neutral-600"> / {String(N).padStart(2, '0')}</span>
             </span>
             <span className="h-px flex-1 max-w-[140px] bg-[#E6E6E6] dark:bg-neutral-800 relative overflow-hidden">
               <span
-                className="absolute inset-y-0 left-0 bg-[#D4F334] transition-[width] duration-500"
+                className="absolute inset-y-0 left-0 bg-brand transition-[width] duration-500"
                 style={{ width: `${((index + 1) / N) * 100}%` }}
               />
             </span>
@@ -115,7 +115,7 @@ export default function CuratedStack({ artworks, onSelectArtwork }: CuratedStack
                 transition:
                   'transform 0.6s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.55s ease',
               }}
-              className="absolute inset-0 rounded-[28px] overflow-hidden bg-white dark:bg-[#1A1A1A] border border-[#E6E6E6] dark:border-[#2A2A2A] shadow-2xl cursor-pointer flex flex-col will-change-transform"
+              className="absolute inset-0 rounded-[28px] overflow-hidden bg-canvas border border-[#E6E6E6] dark:border-[#2A2A2A] shadow-2xl cursor-pointer flex flex-col will-change-transform"
             >
               <div className="relative flex-1 overflow-hidden">
                 <img
@@ -127,9 +127,9 @@ export default function CuratedStack({ artworks, onSelectArtwork }: CuratedStack
                 <span
                   className={`absolute top-4 left-4 text-[9px] font-mono tracking-wider px-2 py-0.5 rounded font-black uppercase shadow-sm ${
                     art.status === 'Disponible'
-                      ? 'bg-[#D4F334] text-[#1A1A1A]'
+                      ? 'bg-brand text-on-brand'
                       : art.status === 'Reservado'
-                      ? 'bg-[#0084FF] text-white'
+                      ? 'bg-accent text-white'
                       : 'bg-neutral-800 text-white'
                   }`}
                 >
@@ -139,14 +139,14 @@ export default function CuratedStack({ artworks, onSelectArtwork }: CuratedStack
 
               <div className="p-5 flex items-center justify-between gap-3">
                 <div className="min-w-0">
-                  <h3 className="font-sans font-extrabold text-lg leading-tight truncate text-[#1A1A1A] dark:text-[#F2F2F2]">
+                  <h3 className="font-sans font-extrabold text-lg leading-tight truncate text-fg">
                     {art.title}
                   </h3>
                   <p className="font-mono text-[10px] uppercase tracking-wider text-neutral-500 truncate mt-0.5">
                     por {art.artistName}
                   </p>
                 </div>
-                <span className="shrink-0 px-3 py-1 rounded-full bg-[#E8F5FF] dark:bg-sky-950/40 text-[#0084FF] dark:text-sky-300 text-xs font-mono font-bold">
+                <span className="shrink-0 px-3 py-1 rounded-full bg-[#E8F5FF] dark:bg-sky-950/40 text-accent text-xs font-mono font-bold">
                   {formatPrice(art.price)}
                 </span>
               </div>

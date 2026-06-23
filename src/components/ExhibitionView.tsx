@@ -1,4 +1,4 @@
-import { MapPin, Calendar, Heart, Shield, Award, Sparkles, CheckCircle2 } from 'lucide-react';
+import { MapPin, CalendarBlank, Heart, Shield, Medal, Sparkle, CheckCircle } from '@phosphor-icons/react';
 import { EXHIBITION_DATA, ARTISTS_DATA, ARTWORKS_DATA } from '../data';
 import { Artwork } from '../types';
 import { formatPrice } from '../utils/formatPrice';
@@ -29,7 +29,7 @@ export default function ExhibitionView({ onSelectArtwork, setView, onSelectArtis
   };
 
   return (
-    <div className="animate-fade-in space-y-16 sm:space-y-24 pb-20 bg-transparent text-[#333333] dark:text-[#F2F2F2]">
+    <div className="animate-fade-in space-y-16 sm:space-y-24 pb-20 bg-transparent text-fg">
       
       {/* 1. HERO TITLE & BADGE CONTAINER */}
       <section className="px-6 pt-10 sm:pt-16 bg-transparent">
@@ -40,7 +40,7 @@ export default function ExhibitionView({ onSelectArtwork, setView, onSelectArtis
             <div className="flex flex-wrap items-center gap-2 sm:gap-3 text-neutral-500 dark:text-neutral-400 text-[10px] sm:text-xs font-mono font-black uppercase tracking-wider select-none">
               <button
                 onClick={() => setView('landing')}
-                className="hover:text-[#0084FF] dark:hover:text-[#3D9DFF] transition-colors flex items-center gap-1 cursor-pointer focus:outline-none"
+                className="hover:text-accent transition-colors flex items-center gap-1 cursor-pointer focus:outline-none"
               >
                 <span>🏠 Sala Principal</span>
               </button>
@@ -49,20 +49,20 @@ export default function ExhibitionView({ onSelectArtwork, setView, onSelectArtis
             </div>
 
             {/* Custom notched ticket badge as reference */}
-            <div className="relative self-start bg-[#111111] dark:bg-neutral-800 text-white px-6 py-2.5 text-[10px] sm:text-xs font-mono font-bold tracking-[0.152em] uppercase rounded-lg shadow-md flex items-center gap-2 select-none">
+            <div className="relative self-start bg-deep dark:bg-neutral-800 text-white px-6 py-2.5 text-[10px] sm:text-xs font-mono font-bold tracking-[0.152em] uppercase rounded-lg shadow-md flex items-center gap-2 select-none">
               {/* Left Notch */}
-              <div className="absolute -left-1.5 top-1/2 -translate-y-1/2 w-3 h-3 bg-[#F5F5F3] dark:bg-[#0E0E0E] rounded-full border-r border-[#111111] dark:border-neutral-800"></div>
+              <div className="absolute -left-1.5 top-1/2 -translate-y-1/2 w-3 h-3 bg-page rounded-full border-r border-deep dark:border-neutral-800"></div>
               {/* Right Notch */}
-              <div className="absolute -right-1.5 top-1/2 -translate-y-1/2 w-3 h-3 bg-[#F5F5F3] dark:bg-[#0E0E0E] rounded-full border-l border-[#111111] dark:border-neutral-800"></div>
+              <div className="absolute -right-1.5 top-1/2 -translate-y-1/2 w-3 h-3 bg-page rounded-full border-l border-deep dark:border-neutral-800"></div>
               <span>EXH_ID: 2024_05</span>
-              <span className="text-[#D4F334]">🎫</span>
+              <span className="text-brand">🎫</span>
             </div>
           </div>
 
           {/* Exhibition metadata box header display */}
           <div className="pt-4 space-y-2">
             {/* Active exhibition blue box */}
-            <div className="inline-block border border-[#0084FF] text-[#0084FF] dark:text-[#3D9DFF] px-4 py-1 text-[10px] font-mono font-extrabold tracking-[0.2em] rounded-sm uppercase mb-4">
+            <div className="inline-block border border-accent text-accent px-4 py-1 text-[10px] font-mono font-extrabold tracking-[0.2em] rounded-sm uppercase mb-4">
               ACTIVE EXHIBITION
             </div>
 
@@ -90,14 +90,14 @@ export default function ExhibitionView({ onSelectArtwork, setView, onSelectArtis
             />
             {/* Interactive metadata details overlay */}
             <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-black/10 flex flex-col justify-end p-8 sm:p-12 md:p-16 text-white text-left">
-              <span className="text-[10px] sm:text-xs font-mono tracking-[0.25em] text-[#D4F334] uppercase font-bold mb-3 sm:mb-4 bg-lime-950/60 backdrop-blur-xs px-3.5 py-1.5 rounded-full w-auto max-w-max">
+              <span className="text-[10px] sm:text-xs font-mono tracking-[0.25em] text-brand uppercase font-bold mb-3 sm:mb-4 bg-lime-950/60 backdrop-blur-xs px-3.5 py-1.5 rounded-full w-auto max-w-max">
                 SEDE DIRECTAL EN {EXHIBITION_DATA.locationName.toUpperCase()}
               </span>
               <h2 className="font-sans font-black text-2xl sm:text-4xl md:text-5xl tracking-tighter max-w-4xl uppercase">
                 {EXHIBITION_DATA.address}
               </h2>
               <p className="font-mono text-xs text-neutral-300 max-w-xl mt-3 flex items-center gap-2">
-                <Calendar className="h-4 w-4 text-[#D4F334]" />
+                <CalendarBlank className="h-4 w-4 text-brand" />
                 <span>{EXHIBITION_DATA.dateRange}</span>
               </p>
             </div>
@@ -136,7 +136,7 @@ export default function ExhibitionView({ onSelectArtwork, setView, onSelectArtis
         <div className="max-w-7xl mx-auto border-b border-neutral-300/40 dark:border-neutral-800/40 pb-16 pt-8">
           <div className="space-y-10">
             <div className="text-center sm:text-left space-y-2">
-              <span className="text-[10px] font-mono font-bold tracking-widest text-[#0084FF] dark:text-[#3D9DFF] uppercase">
+              <span className="text-[10px] font-mono font-bold tracking-widest text-accent uppercase">
                 — CREADORES DE LA MUESTRA
               </span>
               <h2 className="font-sans font-black text-2xl sm:text-4xl text-neutral-800 dark:text-neutral-100 tracking-tight uppercase">
@@ -166,17 +166,17 @@ export default function ExhibitionView({ onSelectArtwork, setView, onSelectArtis
                       openProfile();
                     }
                   } : undefined}
-                  className={`group flex flex-col items-center sm:items-start text-center sm:text-left bg-white dark:bg-[#111111] border border-[#E6E6E6] dark:border-[#2D2D2D]/60 rounded-[24px] p-6 hover:shadow-lg transition-all duration-300 relative overflow-hidden ${
-                    hasProfile ? 'cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-[#0084FF] dark:focus-visible:ring-[#3D9DFF] focus-visible:ring-offset-2 dark:focus-visible:ring-offset-[#0E0E0E]' : ''
+                  className={`group flex flex-col items-center sm:items-start text-center sm:text-left bg-white dark:bg-deep border border-border-soft rounded-[24px] p-6 hover:shadow-lg transition-all duration-300 relative overflow-hidden ${
+                    hasProfile ? 'cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 dark:focus-visible:ring-offset-page' : ''
                   }`}
                 >
-                  <div className="absolute top-4 right-4 text-xs font-mono font-black text-neutral-200 dark:text-neutral-800 group-hover:text-[#0084FF]/25 dark:group-hover:text-[#3D9DFF]/25 transition-colors uppercase select-none pointer-events-none">
+                  <div className="absolute top-4 right-4 text-xs font-mono font-black text-neutral-200 dark:text-neutral-800 group-hover:text-accent/25 dark:group-hover:text-accent/25 transition-colors uppercase select-none pointer-events-none">
                     {artist.specialty.split(' ')[0]}
                   </div>
 
                   <div className="flex flex-col sm:flex-row items-center gap-5 w-full">
                     {/* Perfect Avatar Frame */}
-                    <div className="relative w-20 h-20 rounded-full overflow-hidden border-2 border-neutral-200 dark:border-neutral-800 flex-shrink-0 bg-neutral-100 dark:bg-neutral-900 shadow-inner group-hover:border-[#0084FF]/55 transition-all">
+                    <div className="relative w-20 h-20 rounded-full overflow-hidden border-2 border-neutral-200 dark:border-neutral-800 flex-shrink-0 bg-neutral-100 dark:bg-neutral-900 shadow-inner group-hover:border-accent/55 transition-all">
                       <img
                         src={artist.image}
                         alt={artist.name}
@@ -189,7 +189,7 @@ export default function ExhibitionView({ onSelectArtwork, setView, onSelectArtis
                       <h4 className="font-sans font-black text-lg text-neutral-800 dark:text-neutral-100 tracking-tight leading-snug">
                         {artist.name}
                       </h4>
-                      <p className="text-[10px] font-mono text-[#0084FF] dark:text-[#3D9DFF] uppercase font-bold tracking-wider">
+                      <p className="text-[10px] font-mono text-accent uppercase font-bold tracking-wider">
                         {artist.specialty}
                       </p>
                     </div>
@@ -204,7 +204,7 @@ export default function ExhibitionView({ onSelectArtwork, setView, onSelectArtis
 
                   {/* Semblanza affordance (solo si tiene perfil) */}
                   {hasProfile && (
-                    <span className="mt-4 inline-flex items-center gap-1 text-[10px] font-mono font-bold text-[#0084FF] dark:text-[#3D9DFF] uppercase tracking-wider group-hover:underline">
+                    <span className="mt-4 inline-flex items-center gap-1 text-[10px] font-mono font-bold text-accent uppercase tracking-wider group-hover:underline">
                       Leer su semblanza
                       <span aria-hidden="true">↗</span>
                     </span>
@@ -222,7 +222,7 @@ export default function ExhibitionView({ onSelectArtwork, setView, onSelectArtis
         <div className="max-w-7xl mx-auto space-y-10">
           
           <div className="text-center sm:text-left space-y-2">
-            <span className="text-[10px] font-mono font-bold tracking-widest text-[#0084FF] dark:text-[#3D9DFF] uppercase">
+            <span className="text-[10px] font-mono font-bold tracking-widest text-accent uppercase">
               — DISPONIBLES EN SEDE
             </span>
             <h2 className="font-sans font-black text-2xl sm:text-4xl text-neutral-800 dark:text-neutral-100 tracking-tight uppercase">
@@ -239,7 +239,7 @@ export default function ExhibitionView({ onSelectArtwork, setView, onSelectArtis
               <div
                 key={artwork.id}
                 onClick={() => onSelectArtwork(artwork)}
-                className="group flex flex-col bg-white dark:bg-[#1E1E1E] rounded-[24px] border border-[#E6E6E6] dark:border-[#2D2D2D]/60 transition-all duration-300 hover:shadow-xl hover:-translate-y-1 overflow-hidden p-4 cursor-pointer"
+                className="group flex flex-col bg-surface rounded-[24px] border border-border-soft transition-all duration-300 hover:shadow-xl hover:-translate-y-1 overflow-hidden p-4 cursor-pointer"
               >
                 {/* Image panel bounds */}
                 <div className="relative overflow-hidden aspect-square rounded-[18px] bg-neutral-100 dark:bg-neutral-900 flex items-center justify-center">
@@ -254,9 +254,9 @@ export default function ExhibitionView({ onSelectArtwork, setView, onSelectArtis
                   <div className="absolute top-4 left-4 z-10">
                     <span className={`text-[8px] font-mono tracking-wider px-2 py-0.5 rounded font-black uppercase shadow-sm ${
                       artwork.status === 'Disponible'
-                        ? 'bg-[#D4F334] text-[#333333]'
+                        ? 'bg-brand text-on-brand'
                         : artwork.status === 'Reservado'
-                        ? 'bg-[#0084FF] text-white'
+                        ? 'bg-accent text-on-accent'
                         : 'bg-neutral-800 text-white'
                     }`}>
                       {artwork.status}
@@ -279,10 +279,10 @@ export default function ExhibitionView({ onSelectArtwork, setView, onSelectArtis
                   <div>
                     {/* Title & Price Single-Line flex */}
                     <div className="flex items-center justify-between gap-2">
-                      <h3 className="font-sans font-extrabold text-base sm:text-lg text-neutral-800 dark:text-[#F2F2F2] group-hover:text-[#0084FF] transition-colors leading-tight">
+                      <h3 className="font-sans font-extrabold text-base sm:text-lg text-neutral-800 dark:text-on-inverse group-hover:text-accent transition-colors leading-tight">
                         {artwork.title}
                       </h3>
-                      <span className="flex-shrink-0 px-3 py-1 bg-[#E8F5FF] dark:bg-sky-950/40 text-[#0084FF] dark:text-sky-300 text-[11px] font-mono font-extrabold rounded-full">
+                      <span className="flex-shrink-0 px-3 py-1 bg-accent-soft text-accent text-[11px] font-mono font-extrabold rounded-full">
                         {formatPrice(artwork.price)}
                       </span>
                     </div>
@@ -310,8 +310,8 @@ export default function ExhibitionView({ onSelectArtwork, setView, onSelectArtis
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-12">
             
             <div className="flex gap-4 items-start">
-              <div className="h-10 w-10 bg-[#E8F5FF] dark:bg-sky-950/40 rounded-full flex items-center justify-center text-[#0084FF] dark:text-sky-300 flex-shrink-0">
-                <Shield className="h-5 w-5" />
+              <div className="h-10 w-10 bg-accent-soft rounded-full flex items-center justify-center text-accent flex-shrink-0">
+                <Shield className="h-5 w-5" weight="regular" />
               </div>
               <div className="space-y-1">
                 <h4 className="font-mono text-xs font-black text-neutral-800 dark:text-neutral-200 uppercase tracking-widest">
@@ -324,8 +324,8 @@ export default function ExhibitionView({ onSelectArtwork, setView, onSelectArtis
             </div>
 
             <div className="flex gap-4 items-start">
-              <div className="h-10 w-10 bg-[#E8F5FF] dark:bg-sky-950/40 rounded-full flex items-center justify-center text-[#0084FF] dark:text-sky-300 flex-shrink-0">
-                <Award className="h-5 w-5" />
+              <div className="h-10 w-10 bg-accent-soft rounded-full flex items-center justify-center text-accent flex-shrink-0">
+                <Medal className="h-5 w-5" />
               </div>
               <div className="space-y-1">
                 <h4 className="font-mono text-xs font-black text-neutral-800 dark:text-neutral-200 uppercase tracking-widest">

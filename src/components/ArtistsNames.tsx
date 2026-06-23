@@ -63,17 +63,17 @@ export default function ArtistsNames({ artists, setView }: ArtistsNamesProps) {
       <div className="max-w-6xl mx-auto w-full">
         {/* Encabezado */}
         <div className="flex items-center gap-3 text-neutral-600 dark:text-neutral-400 mb-3">
-          <span className="h-0.5 w-12 bg-[#D4F334]" />
+          <span className="h-0.5 w-12 bg-brand" />
           <span className="text-[10px] sm:text-xs font-mono font-bold tracking-widest uppercase">
             Conoce a quienes lo crean
           </span>
         </div>
-        <h2 className="font-sans font-black text-2xl sm:text-3xl uppercase tracking-tight text-[#1A1A1A] dark:text-[#F2F2F2] mb-8 sm:mb-10">
+        <h2 className="font-sans font-black text-2xl sm:text-3xl uppercase tracking-tight text-fg mb-8 sm:mb-10">
           Comunidad Andante
         </h2>
 
         {/* Hoja de nombres */}
-        <p className="font-sans font-semibold text-xl sm:text-2xl lg:text-3xl leading-snug sm:leading-snug text-[#1A1A1A] dark:text-[#F2F2F2] [text-wrap:pretty]">
+        <p className="font-sans font-semibold text-xl sm:text-2xl lg:text-3xl leading-snug sm:leading-snug text-fg [text-wrap:pretty]">
           {entries.map((entry, idx) => {
             const sep = idx < entries.length - 1 ? <span className="text-neutral-400 dark:text-neutral-600"> • </span> : null;
 

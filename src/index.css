@@ -5,25 +5,189 @@
    no a prefers-color-scheme del sistema. */
 @custom-variant dark (&:where(.dark, .dark *));
 
-@theme {
+/* =============================================================================
+   CAPA 1 — PRIMITIVOS (editar solo aquí para cambiar tonos de marca)
+   ============================================================================= */
+:root {
+  /* Lima */
+  --lima: #D4F334;
+  --lima-hover: #C2E02E;
+  --lima-hover-dark: #B8D62E;
+
+  /* Azul */
+  --azul: #0084FF;
+  --azul-hover: #006FD6;
+  --azul-soft: #E8F5FF;
+  --azul-dark: #3D9DFF;
+  --azul-dark-hover: #0084FF;
+  --azul-soft-dark: color-mix(in srgb, var(--azul-dark) 12%, transparent);
+
+  /* Humo */
+  --humo: #F2F2F2;
+  --humo-warm: #FAF7F0;
+  --humo-border: #E6E6E6;
+  --pattern-dot: #DAD5C4;
+  --pattern-dot-dark: #474747;
+
+  /* Carbón */
+  --carbon: #333333;
+  --carbon-light: #5C5C5C;
+  --carbon-muted: #8A8A8A;
+  --carbon-footer: #222222;
+  --carbon-muted-dark: #7A7A7A;
+  --carbon-text-dark: #B8B8B8;
+
+  /* Neutros estructurales */
+  --white: #FFFFFF;
+  --black: #0E0E0E;
+  --surface-dark-1: #1A1A1A;
+  --surface-dark-2: #1E1E1E;
+  --surface-dark-3: #1F1F1F;
+  --surface-dark-4: #242424;
+  --surface-dark-border: #2D2D2D;
+  --surface-dark-deep: #111111;
+  --surface-dark-inset: #181818;
+  --surface-dark-panel: #141414;
+  --surface-dark-tab: #1C1C1C;
+  --surface-dark-input: #161616;
+
+  /* Derivados de marca */
+  --lima-soft: #EDF6CC;
+  --lima-soft-hover: #E2EDA6;
+  --lima-soft-text: #607D0A;
+  --lima-soft-text-dark: #CBE25B;
+  --lima-soft-bg-dark: #1E250A;
+  --lima-soft-bg-dark-muted: #252C0C;
+
+  /* Inputs y controles */
+  --input-bg: #F8F9FA;
+  --toggle-off: #D1D5DB;
+  --toggle-off-dark: #444444;
+
+  /* Semánticos de estado */
+  --error: #D64533;
+  --error-dark: #FF7A66;
+  --warning-bg: #FFF8E1;
+  --warning-bg-dark: #2A2410;
+  --warning-text: #8A7A00;
+}
+
+/* =============================================================================
+   CAPA 2 — SEMÁNTICOS (roles de UI; no editar salvo nuevas funcionalidades)
+   ============================================================================= */
+.light {
+  --ds-brand: var(--lima);
+  --ds-brand-hover: var(--lima-hover);
+  --ds-accent: var(--azul);
+  --ds-accent-hover: var(--azul-hover);
+  --ds-accent-soft: var(--azul-soft);
+  --ds-fg: var(--carbon);
+  --ds-fg-secondary: var(--carbon-light);
+  --ds-fg-muted: var(--carbon-muted);
+  --ds-on-brand: var(--carbon);
+  --ds-on-accent: var(--white);
+  --ds-on-inverse: var(--humo);
+  --ds-bg-page: var(--humo-warm);
+  --ds-bg-canvas: var(--white);
+  --ds-bg-surface: var(--white);
+  --ds-bg-surface-raised: var(--white);
+  --ds-bg-elevated: var(--humo);
+  --ds-bg-footer: var(--carbon-footer);
+  --ds-border: var(--humo-border);
+  --ds-border-soft: color-mix(in srgb, var(--surface-dark-border) 60%, transparent);
+  --ds-border-strong: var(--carbon);
+  --ds-ring-offset: var(--humo-warm);
+  --ds-input: var(--input-bg);
+  --ds-brand-soft: var(--lima-soft);
+  --ds-brand-soft-hover: var(--lima-soft-hover);
+  --ds-brand-soft-text: var(--lima-soft-text);
+  --ds-error: var(--error);
+  --ds-warning-bg: var(--warning-bg);
+  --ds-warning-text: var(--warning-text);
+  --ds-inset: var(--surface-dark-inset);
+  --ds-panel: var(--surface-dark-panel);
+  --ds-toggle-off: var(--toggle-off);
+}
+
+.dark {
+  --ds-brand: var(--lima);
+  --ds-brand-hover: var(--lima-hover-dark);
+  --ds-accent: var(--azul-dark);
+  --ds-accent-hover: var(--azul-dark-hover);
+  --ds-accent-soft: var(--azul-soft-dark);
+  --ds-fg: var(--humo);
+  --ds-fg-secondary: var(--carbon-text-dark);
+  --ds-fg-muted: var(--carbon-muted-dark);
+  --ds-on-brand: var(--carbon);
+  --ds-on-accent: var(--white);
+  --ds-on-inverse: var(--humo);
+  --ds-bg-page: var(--black);
+  --ds-bg-canvas: var(--surface-dark-1);
+  --ds-bg-surface: var(--surface-dark-2);
+  --ds-bg-surface-raised: var(--surface-dark-3);
+  --ds-bg-elevated: var(--surface-dark-4);
+  --ds-bg-footer: var(--carbon-footer);
+  --ds-border: var(--carbon);
+  --ds-border-soft: color-mix(in srgb, var(--surface-dark-border) 60%, transparent);
+  --ds-border-strong: var(--humo);
+  --ds-ring-offset: var(--black);
+  --ds-input: var(--surface-dark-input);
+  --ds-brand-soft: var(--lima-soft-bg-dark);
+  --ds-brand-soft-hover: var(--lima-soft-bg-dark-muted);
+  --ds-brand-soft-text: var(--lima-soft-text-dark);
+  --ds-error: var(--error-dark);
+  --ds-warning-bg: var(--warning-bg-dark);
+  --ds-warning-text: var(--lima);
+  --ds-inset: var(--surface-dark-inset);
+  --ds-panel: var(--surface-dark-panel);
+  --ds-toggle-off: var(--toggle-off-dark);
+}
+
+/* Tailwind utilities — resuelven en runtime vía variables semánticas */
+@theme inline {
   --font-sans: "Syne", "Inter", system-ui, sans-serif;
   --font-mono: "Syne Mono", ui-monospace, monospace;
-  
-  --color-lima: #D4F334;
-  --color-lima-hover: #C2E02E;
-  --color-lima-dark-hover: #B8D62E;
-  
-  --color-azul: #0084FF;
-  --color-azul-hover: #006FD6;
-  --color-azul-dark: #3D9DFF;
-  --color-azul-dark-hover: #0084FF;
-  
-  --color-humo: #F2F2F2;
-  --color-humo-dark: #E6E6E6;
-  --color-carbon-light: #5C5C5C;
-  --color-carbon-muted: #8A8A8A;
-  --color-carbon: #333333;
-  --color-carbon-dark: #1F1F1F;
+
+  /* Primitivos (uso puntual) */
+  --color-lima: var(--lima);
+  --color-azul: var(--azul);
+  --color-humo: var(--humo);
+  --color-carbon: var(--carbon);
+
+  /* Semánticos (uso habitual en componentes) */
+  --color-brand: var(--ds-brand);
+  --color-brand-hover: var(--ds-brand-hover);
+  --color-accent: var(--ds-accent);
+  --color-accent-hover: var(--ds-accent-hover);
+  --color-accent-soft: var(--ds-accent-soft);
+  --color-fg: var(--ds-fg);
+  --color-fg-secondary: var(--ds-fg-secondary);
+  --color-fg-muted: var(--ds-fg-muted);
+  --color-on-brand: var(--ds-on-brand);
+  --color-on-accent: var(--ds-on-accent);
+  --color-on-inverse: var(--ds-on-inverse);
+  --color-page: var(--ds-bg-page);
+  --color-canvas: var(--ds-bg-canvas);
+  --color-surface: var(--ds-bg-surface);
+  --color-surface-raised: var(--ds-bg-surface-raised);
+  --color-elevated: var(--ds-bg-elevated);
+  --color-footer: var(--ds-bg-footer);
+  --color-border: var(--ds-border);
+  --color-border-soft: var(--ds-border-soft);
+  --color-border-strong: var(--ds-border-strong);
+  --color-ring-offset: var(--ds-ring-offset);
+  --color-input: var(--ds-input);
+  --color-brand-soft: var(--ds-brand-soft);
+  --color-brand-soft-hover: var(--ds-brand-soft-hover);
+  --color-brand-soft-text: var(--ds-brand-soft-text);
+  --color-error: var(--ds-error);
+  --color-warning-bg: var(--ds-warning-bg);
+  --color-warning-text: var(--ds-warning-text);
+  --color-inset: var(--ds-inset);
+  --color-panel: var(--ds-panel);
+  --color-deep: var(--surface-dark-deep);
+  --color-tab: var(--surface-dark-tab);
+  --color-toggle-off: var(--ds-toggle-off);
 }
 
 /* Base custom styles for high editorial design finish */
@@ -60,7 +224,6 @@ html.landing-reveal .snap-section.reveal-in {
   }
 }
 
-/* Custom scrollbars */
 ::-webkit-scrollbar {
   width: 8px;
   height: 8px;
@@ -70,43 +233,40 @@ html.landing-reveal .snap-section.reveal-in {
   background: transparent;
 }
 
-/* Mode-dependent scrollbar and general highlights */
 .light {
-  background-color: #F5F5F3;
-  color: #333333;
+  background-color: var(--ds-bg-page);
+  color: var(--ds-fg);
 }
 
 .light ::-webkit-scrollbar-thumb {
-  background: #E6E6E6;
+  background: var(--ds-border);
   border-radius: 4px;
 }
 
 .light ::-webkit-scrollbar-thumb:hover {
-  background: #B8B8B8;
+  background: var(--carbon-text-dark);
 }
 
 .dark {
-  background-color: #0E0E0E;
-  color: #F2F2F2;
+  background-color: var(--ds-bg-page);
+  color: var(--ds-fg);
 }
 
 .dark ::-webkit-scrollbar-thumb {
-  background: #333333;
+  background: var(--ds-border);
   border-radius: 4px;
 }
 
 .dark ::-webkit-scrollbar-thumb:hover {
-  background: #5C5C5C;
+  background: var(--carbon-light);
 }
 
-/* Design Tokens: Spacing & Radius helpers */
 .radius-sm { border-radius: 8px; }
 .radius-md { border-radius: 12px; }
 .radius-lg { border-radius: 16px; }
 .radius-xl { border-radius: 24px; }
 .radius-2xl { border-radius: 32px; }
 
-/* Transitions & interactions */
 .transition-smooth {
   transition: all 250ms cubic-bezier(0.25, 0.46, 0.45, 0.94);
 }
@@ -123,31 +283,25 @@ html.landing-reveal .snap-section.reveal-in {
   transform: scale(0.98);
 }
 
-/* Handdrawn line-art style custom classes */
 .graphic-outline {
-  border: 2px solid #333333;
-}
-
-.dark .graphic-outline {
-  border: 2px solid #F2F2F2;
+  border: 2px solid var(--ds-border-strong);
 }
 
 .graphic-shadow {
-  box-shadow: 4px 4px 0px 0px #333333;
+  box-shadow: 4px 4px 0px 0px var(--carbon);
 }
 
 .dark .graphic-shadow {
-  box-shadow: 4px 4px 0px 0px #D4F334;
+  box-shadow: 4px 4px 0px 0px var(--lima);
 }
 
-/* Dynamic dot grid pattern background */
 .grid-dot-pattern {
-  background-image: radial-gradient(#d8d8d1 1.6px, transparent 1.6px);
+  background-image: radial-gradient(var(--pattern-dot) 1.6px, transparent 1.6px);
   background-size: 18px 18px;
 }
 
 .dark .grid-dot-pattern {
-  background-image: radial-gradient(#474747 1.6px, transparent 1.6px);
+  background-image: radial-gradient(var(--pattern-dot-dark) 1.6px, transparent 1.6px);
   background-size: 18px 18px;
 }
 
@@ -173,13 +327,12 @@ html.landing-reveal .snap-section.reveal-in {
 /* Texto en contorno (outline) para alternar con el relleno, estilo editorial */
 .text-outline {
   color: transparent;
-  -webkit-text-stroke: 2px #1A1A1A;
+  -webkit-text-stroke: 2px var(--carbon);
 }
 .dark .text-outline {
-  -webkit-text-stroke-color: #F2F2F2;
+  -webkit-text-stroke-color: var(--humo);
 }
 
-/* Entrance animations */
 @keyframes fade-in-up {
   from {
     opacity: 0;
@@ -199,7 +352,6 @@ html.landing-reveal .snap-section.reveal-in {
   animation: fade-in-up 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94) both;
 }
 
-/* Empty state ambient motion */
 @keyframes empty-float {
   0%, 100% {
     transform: translateY(0) rotate(0deg);
@@ -251,17 +403,15 @@ html.landing-reveal .snap-section.reveal-in {
   }
 }
 
-/* Viewport shell for device-fit layouts */
 .viewport-fit {
   min-height: 100vh;
   min-height: 100dvh;
   padding-bottom: env(safe-area-inset-bottom, 0px);
 }
 
-/* Design System buttons — solid fills, no gradients */
 .btn-primary {
-  background-color: #0084FF;
-  color: #FFFFFF;
+  background-color: var(--ds-accent);
+  color: var(--ds-on-accent);
   font-family: var(--font-sans);
   font-weight: 600;
   font-size: 16px;
@@ -274,7 +424,7 @@ html.landing-reveal .snap-section.reveal-in {
 }
 
 .btn-primary:hover {
-  background-color: #006FD6;
+  background-color: var(--ds-accent-hover);
 }
 
 .btn-primary:active {
@@ -282,33 +432,25 @@ html.landing-reveal .snap-section.reveal-in {
 }
 
 .btn-primary:focus-visible {
-  outline: 2px solid #0084FF;
+  outline: 2px solid var(--ds-accent);
   outline-offset: 2px;
-}
-
-.dark .btn-primary {
-  background-color: #3D9DFF;
-}
-
-.dark .btn-primary:hover {
-  background-color: #0084FF;
 }
 
 .btn-secondary {
   background-color: transparent;
-  color: #333333;
+  color: var(--ds-fg);
   font-family: var(--font-sans);
   font-weight: 500;
   font-size: 16px;
   padding: 13px 24px;
   border-radius: 12px;
-  border: 1.5px solid #333333;
+  border: 1.5px solid var(--ds-border-strong);
   cursor: pointer;
   transition: all 250ms cubic-bezier(0.25, 0.46, 0.45, 0.94);
 }
 
 .btn-secondary:hover {
-  background-color: #F2F2F2;
+  background-color: var(--ds-bg-elevated);
 }
 
 .btn-secondary:active {
@@ -316,41 +458,30 @@ html.landing-reveal .snap-section.reveal-in {
 }
 
 .btn-secondary:focus-visible {
-  outline: 2px solid #0084FF;
+  outline: 2px solid var(--ds-accent);
   outline-offset: 2px;
 }
 
-.dark .btn-secondary {
-  color: #F2F2F2;
-  border-color: #F2F2F2;
-}
-
-.dark .btn-secondary:hover {
-  background-color: #242424;
-}
-
-/* Empty state — editorial asymmetric composition */
 .empty-editorial-watermark {
   font-family: var(--font-mono);
   font-weight: 700;
   font-size: clamp(6rem, 18vw, 11rem);
   line-height: 0.85;
   letter-spacing: -0.04em;
-  color: #333333;
+  color: var(--ds-fg);
   opacity: 0.04;
   user-select: none;
   pointer-events: none;
 }
 
 .dark .empty-editorial-watermark {
-  color: #F2F2F2;
   opacity: 0.06;
 }
 
 .empty-lima-rule {
   height: 3px;
   width: clamp(3rem, 12vw, 5rem);
-  background-color: #D4F334;
+  background-color: var(--ds-brand);
   border-radius: 2px;
 }
 

@@ -1,4 +1,4 @@
-import { Trash2, ArrowLeft, ArrowRight, ShieldCheck, Truck, RefreshCw, Smile } from 'lucide-react';
+import { Trash, ArrowLeft, ArrowRight, ShieldCheck, Truck, ArrowClockwise, Smiley } from '@phosphor-icons/react';
 import { CartItem } from '../types';
 import { formatPrice } from '../utils/formatPrice';
 
@@ -25,18 +25,18 @@ export default function CartView({
   if (cart.length === 0) {
     return (
       <div className="animate-fade-in max-w-xl mx-auto py-20 px-4 text-center">
-        <div className="inline-flex p-5 rounded-full bg-[#F2F2F2] dark:bg-[#242424] border border-[#E6E6E6] dark:border-[#333333] text-[#8A8A8A] mb-6 shadow-sm">
-          <Trash2 className="h-10 w-10 stroke-[1.2]" />
+        <div className="inline-flex p-5 rounded-full bg-elevated dark:bg-elevated border border-border text-fg-muted mb-6 shadow-sm">
+          <Trash className="h-10 w-10" weight="light" />
         </div>
-        <h2 className="font-sans font-bold text-3xl text-[#333333] dark:text-[#F2F2F2] tracking-tight">
+        <h2 className="font-sans font-bold text-3xl text-fg tracking-tight">
           Tu Selección está vacía.
         </h2>
-        <p className="font-sans text-sm text-[#5C5C5C] dark:text-[#B8B8B8] mt-4 leading-relaxed max-w-sm mx-auto">
+        <p className="font-sans text-sm text-fg-secondary mt-4 leading-relaxed max-w-sm mx-auto">
           ¿Aún no has encontrado una obra original que dialogue con tu mirada? Recorre la muestra activa y añade una de nuestras piezas únicas.
         </p>
         <button
           onClick={() => setView('exhibition')}
-          className="mt-8 bg-[#0084FF] hover:bg-[#006FD6] dark:bg-[#3D9DFF] dark:hover:bg-[#0084FF] text-white font-sans font-semibold text-xs uppercase tracking-wider px-8 py-4 rounded-md shadow-md transition-all cursor-pointer"
+          className="mt-8 bg-accent hover:bg-accent-hover dark:hover:bg-accent text-on-accent font-sans font-semibold text-xs uppercase tracking-wider px-8 py-4 rounded-md shadow-md transition-all cursor-pointer"
         >
           Explorar sala activa
         </button>
@@ -45,17 +45,17 @@ export default function CartView({
   }
 
   return (
-    <div className="animate-fade-in py-12 sm:py-16 px-4 sm:px-6 lg:px-8 max-w-5xl mx-auto bg-white dark:bg-[#1A1A1A] transition-colors duration-400">
+    <div className="animate-fade-in py-12 sm:py-16 px-4 sm:px-6 lg:px-8 max-w-5xl mx-auto bg-canvas transition-colors duration-400">
       
       {/* HEADER INDEX STEPS */}
       <div className="mb-10 text-center sm:text-left">
-        <span className="text-[10px] font-mono tracking-widest text-[#0084FF] dark:text-[#3D9DFF] font-bold block mb-1 uppercase">
+        <span className="text-[10px] font-mono tracking-widest text-accent font-bold block mb-1 uppercase">
           PASO 01 / 02
         </span>
-        <h1 className="font-sans font-bold text-3xl sm:text-4xl text-[#333333] dark:text-[#F2F2F2] tracking-tight">
+        <h1 className="font-sans font-bold text-3xl sm:text-4xl text-fg tracking-tight">
           Tu Selección (Bolsa de Obra)
         </h1>
-        <p className="text-xs text-[#5C5C5C] dark:text-[#B8B8B8] font-mono mt-1">
+        <p className="text-xs text-fg-secondary font-mono mt-1">
           Valida los detalles de adquisición de tu pieza de arte original y continúa al checkout.
         </p>
       </div>
@@ -64,56 +64,56 @@ export default function CartView({
         
         {/* Left Column: Curated selected items */}
         <div className="lg:col-span-7 space-y-4">
-          <span className="text-[10px] font-mono tracking-wider text-[#8A8A8A] dark:text-[#7A7A7A] block mb-2 uppercase font-bold">
+          <span className="text-[10px] font-mono tracking-wider text-fg-muted block mb-2 uppercase font-bold">
             — PIEZAS SELECCIONADAS
           </span>
 
           {cart.map((item) => (
             <div
               key={item.artwork.id}
-              className="bg-[#F2F2F2] dark:bg-[#242424] border border-[#E6E6E6] dark:border-[#333333] rounded-2xl p-5 flex gap-4 sm:gap-6 items-center transition-colors shadow-sm"
+              className="bg-elevated dark:bg-elevated border border-border rounded-2xl p-5 flex gap-4 sm:gap-6 items-center transition-colors shadow-sm"
             >
               {/* Thumbnail of art block */}
               <img
                 src={item.artwork.image}
                 alt={item.artwork.title}
                 referrerPolicy="no-referrer"
-                className="w-20 h-20 sm:w-24 sm:h-24 object-cover rounded-xl border border-[#E6E6E6] dark:border-[#333333] flex-shrink-0 bg-white dark:bg-[#1F1F1F]"
+                className="w-20 h-20 sm:w-24 sm:h-24 object-cover rounded-xl border border-border flex-shrink-0 bg-surface-raised"
               />
 
               {/* Text specifics */}
               <div className="flex-grow flex flex-col justify-between min-w-0">
                 <div>
                   <div className="flex items-start justify-between gap-2">
-                    <span className="text-[10px] font-mono text-[#0084FF] dark:text-[#3D9DFF] uppercase tracking-wider block font-bold">
+                    <span className="text-[10px] font-mono text-accent uppercase tracking-wider block font-bold">
                       {item.artwork.artistName}
                     </span>
                     <button
                       onClick={() => onRemoveItem(item.artwork.id)}
-                      className="p-1.5 text-[#5C5C5C] dark:text-[#B8B8B8] hover:text-[#D64533] dark:hover:text-[#FF7A66] rounded-full hover:bg-neutral-200 dark:hover:bg-[#333333] transition-colors focus:outline-none flex-shrink-0 cursor-pointer"
+                      className="p-1.5 text-fg-secondary hover:text-error rounded-full hover:bg-neutral-200 dark:hover:bg-border transition-colors focus:outline-none flex-shrink-0 cursor-pointer"
                       title="Quitar de mi selección"
                     >
-                      <Trash2 className="h-4.5 w-4.5" />
+                      <Trash className="h-4.5 w-4.5" />
                     </button>
                   </div>
                   
-                  <h3 className="font-sans font-bold text-lg sm:text-xl text-[#333333] dark:text-[#F2F2F2] truncate pr-4 mt-0.5">
+                  <h3 className="font-sans font-bold text-lg sm:text-xl text-fg truncate pr-4 mt-0.5">
                     {item.artwork.title}
                   </h3>
                   
-                  <p className="text-[10px] text-[#5C5C5C] dark:text-[#B8B8B8] font-mono mt-1">
+                  <p className="text-[10px] text-fg-secondary font-mono mt-1">
                     {item.artwork.medium}
                   </p>
-                  <p className="text-[10px] text-[#8A8A8A] dark:text-[#7A7A7A] font-mono mt-0.5">
+                  <p className="text-[10px] text-fg-muted font-mono mt-0.5">
                     {item.artwork.dimensions} • Original de Autor
                   </p>
                 </div>
 
-                <div className="flex items-center justify-between border-t border-[#E6E6E6] dark:border-[#333333] mt-4 pt-3">
-                  <span className="bg-white dark:bg-[#1A1A1A] border border-[#E6E6E6] dark:border-[#333333] text-[9px] text-[#5C5C5C] dark:text-[#B8B8B8] rounded px-2.5 py-0.5 font-mono font-bold uppercase tracking-wider">
+                <div className="flex items-center justify-between border-t border-border mt-4 pt-3">
+                  <span className="bg-canvas border border-border text-[9px] text-fg-secondary rounded px-2.5 py-0.5 font-mono font-bold uppercase tracking-wider">
                     Cantidad: {item.quantity} (Pieza Única)
                   </span>
-                  <span className="font-mono text-sm sm:text-base font-bold text-[#333333] dark:text-[#F2F2F2]">
+                  <span className="font-mono text-sm sm:text-base font-bold text-fg">
                     {formatPrice(item.artwork.price)}
                   </span>
                 </div>
@@ -124,7 +124,7 @@ export default function CartView({
           {/* Return anchor link */}
           <button
             onClick={() => setView('exhibition')}
-            className="inline-flex items-center text-xs font-mono text-[#0084FF] dark:text-[#3D9DFF] hover:underline font-bold mt-4 cursor-pointer"
+            className="inline-flex items-center text-xs font-mono text-accent hover:underline font-bold mt-4 cursor-pointer"
           >
             <ArrowLeft className="h-4 w-4 mr-1.5" />
             <span>Seguir recorriendo la sala</span>
@@ -132,28 +132,28 @@ export default function CartView({
         </div>
 
         {/* Right Column: Pricing details summary */}
-        <div className="lg:col-span-5 bg-[#F2F2F2] dark:bg-[#242424] border border-[#E6E6E6] dark:border-[#333333] rounded-3xl p-6 sm:p-8 shadow-sm">
-          <span className="text-[10px] font-mono tracking-wider text-[#8A8A8A] dark:text-[#7A7A7A] block mb-6 uppercase font-bold">
+        <div className="lg:col-span-5 bg-elevated dark:bg-elevated border border-border rounded-3xl p-6 sm:p-8 shadow-sm">
+          <span className="text-[10px] font-mono tracking-wider text-fg-muted block mb-6 uppercase font-bold">
             — RESUMEN DE ADQUISICIÓN
           </span>
 
           <div className="space-y-4">
-            <div className="flex justify-between text-xs font-mono text-[#5C5C5C] dark:text-[#B8B8B8]">
+            <div className="flex justify-between text-xs font-mono text-fg-secondary">
               <span>Valor total de la obra</span>
-              <span className="font-bold text-[#333333] dark:text-[#F2F2F2]">{formatPrice(subtotal)}</span>
+              <span className="font-bold text-fg">{formatPrice(subtotal)}</span>
             </div>
             
-            <div className="flex justify-between text-xs font-mono text-[#5C5C5C] dark:text-[#B8B8B8]">
+            <div className="flex justify-between text-xs font-mono text-fg-secondary">
               <span className="flex items-center">
-                <Truck className="h-4 w-4 mr-1 text-[#0084FF] dark:text-[#3D9DFF]" />
+                <Truck className="h-4 w-4 mr-1 text-accent" />
                 <span>Embalaje Especial Asegurado</span>
               </span>
-              <span className="font-bold text-[#333333] dark:text-[#F2F2F2]">{formatPrice(shippingFee)}</span>
+              <span className="font-bold text-fg">{formatPrice(shippingFee)}</span>
             </div>
 
-            <hr className="border-[#E6E6E6] dark:border-[#333333]" />
+            <hr className="border-border" />
 
-            <div className="flex justify-between text-sm font-mono text-[#333333] dark:text-[#F2F2F2] pt-2 pb-6 items-baseline">
+            <div className="flex justify-between text-sm font-mono text-fg pt-2 pb-6 items-baseline">
               <span className="font-bold">Monto Total</span>
               <span className="text-xl sm:text-2xl font-bold">{formatPrice(totalVal)}</span>
             </div>
@@ -162,33 +162,33 @@ export default function CartView({
           <button
             onClick={() => setView('checkout')}
             id="proceed-to-checkout"
-            className="w-full bg-[#0084FF] hover:bg-[#006FD6] dark:bg-[#3D9DFF] dark:hover:bg-[#0084FF] text-white font-sans font-semibold text-xs uppercase tracking-wider py-4 rounded-md transition-all shadow-md active:scale-98 flex items-center justify-center space-x-2 cursor-pointer"
+            className="w-full bg-accent hover:bg-accent-hover dark:hover:bg-accent text-on-accent font-sans font-semibold text-xs uppercase tracking-wider py-4 rounded-md transition-all shadow-md active:scale-98 flex items-center justify-center space-x-2 cursor-pointer"
           >
             <span>Paso 2: Continuar al Checkout</span>
             <ArrowRight className="h-4 w-4" />
           </button>
 
           {/* Guarantee Badges panel with responsive design details */}
-          <div className="mt-8 pt-6 border-t border-[#E6E6E6] dark:border-[#333333] space-y-4">
+          <div className="mt-8 pt-6 border-t border-border space-y-4">
             <div className="flex items-start gap-3">
-              <ShieldCheck className="h-5 w-5 text-[#0084FF] dark:text-[#3D9DFF] flex-shrink-0 mt-0.5" />
+              <ShieldCheck className="h-5 w-5 text-accent flex-shrink-0 mt-0.5" />
               <div>
-                <p className="text-[10px] font-mono text-[#333333] dark:text-[#F2F2F2] font-bold uppercase leading-none">
+                <p className="text-[10px] font-mono text-fg font-bold uppercase leading-none">
                   Firma de Autor Homologada
                 </p>
-                <p className="text-[10px] text-[#5C5C5C] dark:text-[#B8B8B8] mt-1.5 leading-relaxed font-sans">
+                <p className="text-[10px] text-fg-secondary mt-1.5 leading-relaxed font-sans">
                   Todas las adquisiciones en Andante cuidan a los autores locales, asegurándoles la correspondencia directa del canon de curaduría.
                 </p>
               </div>
             </div>
 
-            <div className="flex items-start gap-3 border-t border-[#E6E6E6]/60 dark:border-[#333333]/50 pt-4">
-              <RefreshCw className="h-5 w-5 text-[#0084FF] dark:text-[#3D9DFF] flex-shrink-0 mt-0.5" />
+            <div className="flex items-start gap-3 border-t border-border/60 dark:border-border/50 pt-4">
+              <ArrowClockwise className="h-5 w-5 text-accent flex-shrink-0 mt-0.5" />
               <div>
-                <p className="text-[10px] font-mono text-[#333333] dark:text-[#F2F2F2] font-bold uppercase leading-none">
+                <p className="text-[10px] font-mono text-fg font-bold uppercase leading-none">
                   Logística y Despacho Físico
                 </p>
-                <p className="text-[10px] text-[#5C5C5C] dark:text-[#B8B8B8] mt-1.5 leading-relaxed font-sans">
+                <p className="text-[10px] text-fg-secondary mt-1.5 leading-relaxed font-sans">
                   Ofrecemos resguardo de transporte total ante eventualidades puerta a puerta o programando recogida directa en las sedes.
                 </p>
               </div>

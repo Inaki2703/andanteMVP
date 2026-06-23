@@ -34,7 +34,7 @@ export default function LandingView({ setView, onSelectArtwork }: LandingViewPro
               className="w-full h-full object-cover transform duration-[8000ms] scale-102 hover:scale-105"
             />
             <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-black/10 flex flex-col justify-end p-8 sm:p-12 md:p-16 text-white text-left">
-              <span className="text-[10px] sm:text-xs font-mono tracking-[0.25em] text-[#D4F334] uppercase font-bold mb-3 sm:mb-4 bg-lime-950/60 backdrop-blur-xs px-3.5 py-1.5 rounded-full w-auto max-w-max">
+              <span className="text-[10px] sm:text-xs font-mono tracking-[0.25em] text-brand uppercase font-bold mb-3 sm:mb-4 bg-lime-950/60 backdrop-blur-xs px-3.5 py-1.5 rounded-full w-auto max-w-max">
                 ANDANTE :) GALERÍA ITINERANTE
               </span>
               <h1 className="font-sans font-black text-3xl sm:text-5xl md:text-6xl lg:text-7xl tracking-tighter leading-[1.05] max-w-4xl">
@@ -62,15 +62,15 @@ export default function LandingView({ setView, onSelectArtwork }: LandingViewPro
 
       {/* SECTION 6: FOUR VALUE PROPOSITIONS */}
       <section className="snap-section bg-transparent px-4 sm:px-6 lg:px-8 min-h-dvh flex flex-col justify-center py-16">
-        <div className="max-w-7xl mx-auto border-t border-[#E6E6E6] dark:border-neutral-800 pt-16">
+        <div className="max-w-7xl mx-auto border-t border-border pt-16">
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
             
             {/* Proposition 1 */}
             <div className="flex flex-col items-center lg:items-start text-center lg:text-left space-y-3">
-              <div className="h-10 w-10 bg-sky-50 dark:bg-sky-950/40 rounded-full flex items-center justify-center font-bold text-[#0084FF] dark:text-sky-300">
+              <div className="h-10 w-10 bg-sky-50 dark:bg-sky-950/40 rounded-full flex items-center justify-center font-bold text-accent">
                 <CheckCircle2 className="h-5 w-5" />
               </div>
-              <h3 className="font-sans font-black text-sm text-[#333333] dark:text-[#F2F2F2]">
+              <h3 className="font-sans font-black text-sm text-fg">
                 Curaduría con criterio
               </h3>
               <p className="font-sans text-xs text-neutral-500 leading-relaxed max-w-xs">
@@ -80,10 +80,10 @@ export default function LandingView({ setView, onSelectArtwork }: LandingViewPro
 
             {/* Proposition 2 */}
             <div className="flex flex-col items-center lg:items-start text-center lg:text-left space-y-3">
-              <div className="h-10 w-10 bg-sky-50 dark:bg-sky-950/40 rounded-full flex items-center justify-center font-bold text-[#0084FF] dark:text-sky-300">
+              <div className="h-10 w-10 bg-sky-50 dark:bg-sky-950/40 rounded-full flex items-center justify-center font-bold text-accent">
                 <ShieldCheck className="h-5 w-5" />
               </div>
-              <h3 className="font-sans font-black text-sm text-[#333333] dark:text-[#F2F2F2]">
+              <h3 className="font-sans font-black text-sm text-fg">
                 Pago seguro
               </h3>
               <p className="font-sans text-xs text-neutral-500 leading-relaxed max-w-xs">
@@ -93,10 +93,10 @@ export default function LandingView({ setView, onSelectArtwork }: LandingViewPro
 
             {/* Proposition 3 */}
             <div className="flex flex-col items-center lg:items-start text-center lg:text-left space-y-3">
-              <div className="h-10 w-10 bg-sky-50 dark:bg-sky-950/40 rounded-full flex items-center justify-center font-bold text-[#0084FF] dark:text-sky-300">
+              <div className="h-10 w-10 bg-sky-50 dark:bg-sky-950/40 rounded-full flex items-center justify-center font-bold text-accent">
                 <Truck className="h-5 w-5" />
               </div>
-              <h3 className="font-sans font-black text-sm text-[#333333] dark:text-[#F2F2F2]">
+              <h3 className="font-sans font-black text-sm text-fg">
                 Envío y enmarcado claros
               </h3>
               <p className="font-sans text-xs text-neutral-500 leading-relaxed max-w-xs">
@@ -106,10 +106,10 @@ export default function LandingView({ setView, onSelectArtwork }: LandingViewPro
 
             {/* Proposition 4 */}
             <div className="flex flex-col items-center lg:items-start text-center lg:text-left space-y-3">
-              <div className="h-10 w-10 bg-sky-50 dark:bg-sky-950/40 rounded-full flex items-center justify-center font-bold text-[#0084FF] dark:text-sky-300">
+              <div className="h-10 w-10 bg-sky-50 dark:bg-sky-950/40 rounded-full flex items-center justify-center font-bold text-accent">
                 <Sparkles className="h-5 w-5" />
               </div>
-              <h3 className="font-sans font-black text-sm text-[#333333] dark:text-[#F2F2F2]">
+              <h3 className="font-sans font-black text-sm text-fg">
                 Comisión justa
               </h3>
               <p className="font-sans text-xs text-neutral-500 leading-relaxed max-w-xs">

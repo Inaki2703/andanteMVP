@@ -145,7 +145,7 @@ export default function Header({
               className="flex items-center gap-1.5 w-fit select-none outline-none"
             >
               <span
-                className="text-[#1A1A1A] dark:text-[#F2F2F2] text-[22px] leading-none"
+                className="text-fg text-[22px] leading-none"
                 style={{ fontFamily: "'Syne', sans-serif", fontWeight: 700 }}
               >
                 andante
@@ -153,7 +153,7 @@ export default function Header({
               <motion.span
                 animate={{ rotate: dropdownOpen ? 180 : 0 }}
                 transition={{ duration: 0.25, ease: [0.4, 0, 0.2, 1] }}
-                className="text-[#1A1A1A] dark:text-[#F2F2F2]"
+                className="text-fg"
               >
                 <ChevronDown size={17} strokeWidth={2} />
               </motion.span>
@@ -161,7 +161,7 @@ export default function Header({
 
             <button
               onClick={() => setView('exhibition')}
-              className="flex items-center gap-1.5 w-fit px-2 py-[3px] rounded bg-[#D5F149] hover:bg-[#c9e83f] transition-colors"
+              className="flex items-center gap-1.5 w-fit px-2 py-[3px] rounded bg-brand hover:bg-brand-hover transition-colors"
             >
               <span className="text-[10px]">🎨</span>
               <span
@@ -186,12 +186,12 @@ export default function Header({
           <div className="flex items-center gap-4 px-5">
             <button
               onClick={() => { setMenuOpen(false); setView('checkout'); }}
-              className="relative text-[#1A1A1A] dark:text-[#F2F2F2] hover:opacity-70 transition-opacity"
+              className="relative text-fg hover:opacity-70 transition-opacity"
               aria-label="Ver carrito"
             >
               <ShoppingBag size={22} strokeWidth={1.6} />
               {cartCount > 0 && (
-                <span className="absolute -top-1.5 -right-1.5 h-4 w-4 bg-[#D5F149] text-black text-[8px] font-bold rounded-full flex items-center justify-center">
+                <span className="absolute -top-1.5 -right-1.5 h-4 w-4 bg-brand text-black text-[8px] font-bold rounded-full flex items-center justify-center">
                   {cartCount}
                 </span>
               )}
@@ -238,14 +238,14 @@ export default function Header({
                 animate={{ opacity: 1, x: 0 }}
                 transition={{ delay: i * 0.04, duration: 0.18 }}
                 onClick={() => { setView('exhibition'); setDropdownOpen(false); }}
-                className="w-full flex items-center gap-3 px-5 py-3 hover:bg-[#F0EFE9] dark:hover:bg-[#242424] transition-colors border-b border-[#E8E7E2] dark:border-[#2A2A2A] last:border-0"
+                className="w-full flex items-center gap-3 px-5 py-3 hover:bg-elevated dark:hover:bg-elevated transition-colors border-b border-[#E8E7E2] dark:border-[#2A2A2A] last:border-0"
               >
                 <div className="shrink-0 w-9 h-9 rounded overflow-hidden bg-[#E0DED8]">
                   <img src={expo.image} alt={expo.title} className="w-full h-full object-cover" />
                 </div>
                 <div className="flex-1 text-left min-w-0">
                   <p
-                    className="text-[13px] text-[#1A1A1A] dark:text-[#F2F2F2] leading-tight truncate"
+                    className="text-[13px] text-fg leading-tight truncate"
                     style={{ fontFamily: "'Syne', sans-serif", fontWeight: 600 }}
                   >
                     {expo.title}
@@ -258,7 +258,7 @@ export default function Header({
                   </p>
                 </div>
                 {expo.active && (
-                  <span className="shrink-0 w-2 h-2 rounded-full bg-[#D5F149]" />
+                  <span className="shrink-0 w-2 h-2 rounded-full bg-brand" />
                 )}
               </motion.button>
             ))}

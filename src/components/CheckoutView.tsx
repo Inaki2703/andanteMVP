@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { ArrowLeft, ShieldCheck, Truck, MapPin, CheckCircle, Trash2, RefreshCw } from 'lucide-react';
+import { ArrowLeft, ShieldCheck, Truck, MapPin, CheckCircle, Trash, ArrowClockwise } from '@phosphor-icons/react';
 import { Artwork, CartItem, ShippingInfo, PaymentInfo } from '../types';
 import EmptySelectionView from './EmptySelectionView';
 import { formatPrice } from '../utils/formatPrice';
@@ -143,7 +143,7 @@ export default function CheckoutView({
     type: string = 'text'
   ) => {
     return (
-      <div className="bg-[#F8F9FA] dark:bg-[#1A1A1A] rounded-xl px-4 py-1.5 transition-all focus-within:ring-2 focus-within:ring-[#0084FF]/20 border border-neutral-200/60 dark:border-neutral-800 text-left">
+      <div className="bg-input dark:bg-canvas rounded-xl px-4 py-1.5 transition-all focus-within:ring-2 focus-within:ring-accent/20 border border-neutral-200/60 dark:border-neutral-800 text-left">
         <label htmlFor={id} className="text-[9px] sm:text-[10px] font-mono text-neutral-400 dark:text-neutral-500 uppercase font-black tracking-wider block">
           {label}
         </label>
@@ -183,7 +183,7 @@ export default function CheckoutView({
       <div className="flex-shrink-0">
         <button
           onClick={() => setView('exhibition')}
-          className="flex items-center gap-2 text-[10px] sm:text-xs font-mono font-black text-neutral-500 dark:text-neutral-400 hover:text-[#0084FF] uppercase tracking-widest pb-3 sm:pb-4 transition-colors cursor-pointer select-none"
+          className="flex items-center gap-2 text-[10px] sm:text-xs font-mono font-black text-neutral-500 dark:text-neutral-400 hover:text-accent uppercase tracking-widest pb-3 sm:pb-4 transition-colors cursor-pointer select-none"
         >
           <span>←</span>
           <span>VOLVER A CATÁLOGO</span>
@@ -218,7 +218,7 @@ export default function CheckoutView({
               <button
                 type="button"
                 onClick={fillSampleData}
-                className="bg-[#EDF6CC] hover:bg-[#E2EDA6] text-[#607D0A] dark:bg-[#1E250A] dark:text-[#CBE25B] font-mono text-[9px] font-black tracking-widest px-3.5 py-1.5 rounded-lg transition-all shadow-xs uppercase select-none border border-transparent whitespace-nowrap cursor-pointer hover:scale-[1.02]"
+                className="bg-brand-soft hover:bg-brand-soft-hover text-brand-soft-text dark:bg-brand-soft dark:text-brand-soft-text font-mono text-[9px] font-black tracking-widest px-3.5 py-1.5 rounded-lg transition-all shadow-xs uppercase select-none border border-transparent whitespace-nowrap cursor-pointer hover:scale-[1.02]"
               >
                 AUTORELLENAR
               </button>
@@ -233,7 +233,7 @@ export default function CheckoutView({
             )}
 
             {/* FORM CONTAINER - Solid white card maximizing contrast and accessibility */}
-            <div className="bg-white dark:bg-[#111111] border border-neutral-200 dark:border-neutral-800/80 rounded-[24px] p-4 sm:p-5.5 shadow-sm space-y-4">
+            <div className="bg-white dark:bg-deep border border-neutral-200 dark:border-neutral-800/80 rounded-[24px] p-4 sm:p-5.5 shadow-sm space-y-4">
               
               {/* 1. CONTACTO & FACTURACIÓN */}
               <div className="space-y-2">
@@ -299,7 +299,7 @@ export default function CheckoutView({
                       onClick={() => setDeliveryMethod('domicilio')}
                       className={`px-2.5 py-1 text-[8.5px] font-mono uppercase font-black tracking-wider rounded-md transition-all cursor-pointer ${
                         deliveryMethod === 'domicilio'
-                          ? 'bg-white dark:bg-[#1C1C1C] text-[#0084FF] shadow-xs border border-neutral-200/20'
+                          ? 'bg-white dark:bg-tab text-accent shadow-xs border border-neutral-200/20'
                           : 'text-neutral-400 hover:text-neutral-600 dark:hover:text-neutral-200'
                       }`}
                     >
@@ -310,7 +310,7 @@ export default function CheckoutView({
                       onClick={() => setDeliveryMethod('sede')}
                       className={`px-2.5 py-1 text-[8.5px] font-mono uppercase font-black tracking-wider rounded-md transition-all cursor-pointer ${
                         deliveryMethod === 'sede'
-                          ? 'bg-white dark:bg-[#1C1C1C] text-[#0084FF] shadow-xs border border-neutral-200/20'
+                          ? 'bg-white dark:bg-tab text-accent shadow-xs border border-neutral-200/20'
                           : 'text-neutral-400 hover:text-neutral-600 dark:hover:text-neutral-200'
                       }`}
                     >
@@ -348,10 +348,10 @@ export default function CheckoutView({
                     </div>
                   </div>
                 ) : (
-                  <div className="bg-[#EDF6CC]/20 dark:bg-[#252C0C]/10 border border-[#D4F334]/20 rounded-[16px] p-3 flex gap-2.5 items-start text-left select-none">
-                    <MapPin className="h-4.5 w-4.5 text-[#8EA01A] dark:text-[#CBE25B] flex-shrink-0 mt-0.5" />
+                  <div className="bg-brand-soft/20 dark:bg-brand-soft/10 border border-brand/20 rounded-[16px] p-3 flex gap-2.5 items-start text-left select-none">
+                    <MapPin className="h-4.5 w-4.5 text-brand-soft-text flex-shrink-0 mt-0.5" />
                     <div className="space-y-0.5">
-                      <h5 className="font-sans font-extrabold text-[11px] text-neutral-800 dark:text-[#EDF6CC]">RECOGIDA CON CORTESÍA EN EXPO</h5>
+                      <h5 className="font-sans font-extrabold text-[11px] text-neutral-800 dark:text-brand-soft">RECOGIDA CON CORTESÍA EN EXPO</h5>
                       <p className="text-[10px] font-sans text-neutral-500 dark:text-neutral-400 leading-snug">
                         La pieza permanecerá colgada de manera segura hasta la clausura de la exposición actual en <strong>Café Norte (Sala Central)</strong>. Podrás retirar tu obra embalada sin ningún coste de logística.
                       </p>
@@ -379,7 +379,7 @@ export default function CheckoutView({
 
                 <div className="grid grid-cols-1 sm:grid-cols-12 gap-2.5">
                   <div className="sm:col-span-6">
-                    <div className="bg-[#F8F9FA] dark:bg-[#1A1A1A] rounded-xl px-4 py-1.5 transition-all focus-within:ring-2 focus-within:ring-[#0084FF]/20 border border-neutral-200/60 dark:border-neutral-800 text-left">
+                    <div className="bg-input dark:bg-canvas rounded-xl px-4 py-1.5 transition-all focus-within:ring-2 focus-within:ring-accent/20 border border-neutral-200/60 dark:border-neutral-800 text-left">
                       <label htmlFor="cardNumberInput" className="text-[9px] sm:text-[10px] font-mono text-neutral-400 dark:text-neutral-500 uppercase font-black tracking-wider block">
                         Número de Tarjeta *
                       </label>
@@ -404,7 +404,7 @@ export default function CheckoutView({
                   </div>
 
                   <div className="sm:col-span-3">
-                    <div className="bg-[#F8F9FA] dark:bg-[#1A1A1A] rounded-xl px-4 py-1.5 transition-all focus-within:ring-2 focus-within:ring-[#0084FF]/20 border border-neutral-200/60 dark:border-neutral-800 text-left">
+                    <div className="bg-input dark:bg-canvas rounded-xl px-4 py-1.5 transition-all focus-within:ring-2 focus-within:ring-accent/20 border border-neutral-200/60 dark:border-neutral-800 text-left">
                       <label htmlFor="expiryInput" className="text-[9px] sm:text-[10px] font-mono text-neutral-400 dark:text-neutral-500 uppercase font-black tracking-wider block">
                         Expiración *
                       </label>
@@ -429,7 +429,7 @@ export default function CheckoutView({
                   </div>
 
                   <div className="sm:col-span-3">
-                    <div className="bg-[#F8F9FA] dark:bg-[#1A1A1A] rounded-xl px-4 py-1.5 transition-all focus-within:ring-2 focus-within:ring-[#0084FF]/20 border border-neutral-200/60 dark:border-neutral-800 text-left">
+                    <div className="bg-input dark:bg-canvas rounded-xl px-4 py-1.5 transition-all focus-within:ring-2 focus-within:ring-accent/20 border border-neutral-200/60 dark:border-neutral-800 text-left">
                       <label htmlFor="cvvInput" className="text-[9px] sm:text-[10px] font-mono text-neutral-400 dark:text-neutral-500 uppercase font-black tracking-wider block">
                         CVC/CVV *
                       </label>
@@ -462,7 +462,7 @@ export default function CheckoutView({
               <button
                 type="submit"
                 disabled={isSubmitting || cart.length === 0}
-                className="w-full bg-[#0084FF] hover:bg-[#0076E5] active:scale-[0.99] text-white font-sans text-xs font-black uppercase tracking-widest py-3.5 rounded-xl transition-all duration-150 shadow-md flex items-center justify-center space-x-2 border border-white/5 cursor-pointer select-none"
+                className="w-full bg-accent hover:bg-accent-hover active:scale-[0.99] text-white font-sans text-xs font-black uppercase tracking-widest py-3.5 rounded-xl transition-all duration-150 shadow-md flex items-center justify-center space-x-2 border border-white/5 cursor-pointer select-none"
               >
                 {isSubmitting ? (
                   <>
@@ -494,7 +494,7 @@ export default function CheckoutView({
             {/* Conserva los disclaimers de Firma y Logística - Rendered Beautifully inside form stack at bottom */}
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-4 border-t border-neutral-200/50 dark:border-neutral-800/50 pt-3.5 text-left select-none">
               <div className="flex gap-2.5 items-start">
-                <ShieldCheck className="h-4 w-4 text-[#0084FF] dark:text-[#3D9DFF] flex-shrink-0 mt-0.5" />
+                <ShieldCheck className="h-4 w-4 text-accent flex-shrink-0 mt-0.5" />
                 <div>
                   <h4 className="text-[9px] font-mono font-black text-neutral-700 dark:text-neutral-300 uppercase tracking-wider block leading-none">
                     Firma de Autor Homologada
@@ -505,7 +505,7 @@ export default function CheckoutView({
                 </div>
               </div>
               <div className="flex gap-2.5 items-start border-t sm:border-t-0 sm:border-l border-neutral-200/50 dark:border-neutral-800/50 pt-3 sm:pt-0 sm:pl-4">
-                <RefreshCw className="h-4 w-4 text-[#0084FF] dark:text-[#3D9DFF] flex-shrink-0 mt-0.5" />
+                <ArrowClockwise className="h-4 w-4 text-accent flex-shrink-0 mt-0.5" />
                 <div>
                   <h4 className="text-[9px] font-mono font-black text-neutral-700 dark:text-neutral-300 uppercase tracking-wider block leading-none">
                     Logística y Despacho Físico
@@ -522,7 +522,7 @@ export default function CheckoutView({
         </div>
 
         {/* Right Column: "BOLSA DE ADQUISICIONES" dark mode panel fully replicated & scrollable if overflowing */}
-        <div id="checkout-sidebar-container" className="lg:col-span-5 h-full bg-[#0E0E0E] text-white border border-neutral-800 rounded-[28px] p-5 sm:p-6 flex flex-col justify-between overflow-y-auto space-y-5 select-none">
+        <div id="checkout-sidebar-container" className="lg:col-span-5 h-full bg-page text-white border border-neutral-800 rounded-[28px] p-5 sm:p-6 flex flex-col justify-between overflow-y-auto space-y-5 select-none">
           
           <div className="space-y-5">
             
@@ -536,7 +536,7 @@ export default function CheckoutView({
             {/* Selected Active Artwork Listing with TRASH DELETION */}
             <div className="space-y-3">
               {cart.map((item) => (
-                <div key={item.artwork.id} className="flex gap-3 items-center bg-[#181818] p-2.5 rounded-xl border border-neutral-800/40 relative group">
+                <div key={item.artwork.id} className="flex gap-3 items-center bg-inset p-2.5 rounded-xl border border-neutral-800/40 relative group">
                   <img
                     src={item.artwork.image}
                     alt={item.artwork.title}
@@ -566,10 +566,10 @@ export default function CheckoutView({
                     <button
                       type="button"
                       onClick={() => onRemoveItem(item.artwork.id)}
-                      className="p-1 text-neutral-500 hover:text-red-400 hover:bg-[#252525] rounded transition-colors cursor-pointer"
+                      className="p-1 text-neutral-500 hover:text-red-400 hover:bg-elevated rounded transition-colors cursor-pointer"
                       title="Eliminar de la bolsa"
                     >
-                      <Trash2 className="h-3.5 w-3.5" />
+                      <Trash className="h-3.5 w-3.5" />
                     </button>
                   </div>
                 </div>
@@ -580,7 +580,7 @@ export default function CheckoutView({
                   <p className="text-neutral-500 font-mono text-[10px] uppercase font-extrabold tracking-widest">Tu bolsa está vacía</p>
                   <button
                     onClick={() => setView('exhibition')}
-                    className="text-[#D4F334] font-mono text-[9px] uppercase font-bold underline"
+                    className="text-brand font-mono text-[9px] uppercase font-bold underline"
                   >
                     Examinar obras
                   </button>
@@ -597,18 +597,18 @@ export default function CheckoutView({
               
               <div className="flex justify-between items-center">
                 <span className="uppercase tracking-wider text-[10px]">Embalaje Especializado</span>
-                <span className="font-extrabold text-[#D4F334] tracking-wider uppercase text-[9px]">CORTESÍA</span>
+                <span className="font-extrabold text-brand tracking-wider uppercase text-[9px]">CORTESÍA</span>
               </div>
 
               <div className="flex justify-between items-center">
                 <span className="uppercase tracking-wider text-[10px]">Seguro de Despacho</span>
-                <span className="font-extrabold text-[#D4F334] tracking-wider uppercase text-[9px]">INCLUIDO</span>
+                <span className="font-extrabold text-brand tracking-wider uppercase text-[9px]">INCLUIDO</span>
               </div>
 
               {/* Total final display with large lemon font */}
               <div className="border-t border-neutral-800 pt-3.5 flex justify-between items-baseline text-white">
                 <span className="font-sans font-black text-[10px] tracking-widest uppercase">TOTAL ADQUISICIÓN</span>
-                <span className="font-mono text-xl font-black text-[#D4F334] tracking-tight">{formatPrice(totalVal)}</span>
+                <span className="font-mono text-xl font-black text-brand tracking-tight">{formatPrice(totalVal)}</span>
               </div>
 
             </div>
@@ -616,7 +616,7 @@ export default function CheckoutView({
           </div>
 
           {/* Guarantee container box with micro frame borders */}
-          <div className="bg-[#141414] border border-neutral-800/80 p-3.5 rounded-xl text-left">
+          <div className="bg-panel border border-neutral-800/80 p-3.5 rounded-xl text-left">
             <h4 className="font-mono text-[8px] font-black tracking-widest text-neutral-400 uppercase mb-1.5">
               GARANTÍA COLECCIONISTA
             </h4>

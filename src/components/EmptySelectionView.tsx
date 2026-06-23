@@ -1,5 +1,5 @@
 import { motion, useReducedMotion } from 'motion/react';
-import { ArrowRight, Sparkles } from 'lucide-react';
+import { ArrowRight, Sparkle } from '@phosphor-icons/react';
 import { Artwork } from '../types';
 import { formatPrice } from '../utils/formatPrice';
 
@@ -87,23 +87,23 @@ export default function EmptySelectionView({
           <motion.div variants={variants} className="relative z-10 space-y-4 sm:space-y-5 text-left">
             <div className="flex items-center gap-3">
               <span className="empty-lima-rule flex-shrink-0" aria-hidden="true" />
-              <span className="text-[10px] font-mono tracking-[0.2em] text-[#0084FF] dark:text-[#3D9DFF] font-bold uppercase">
+              <span className="text-[10px] font-mono tracking-[0.2em] text-accent font-bold uppercase">
                 Tu colección
               </span>
             </div>
 
-            <h2 className="font-sans font-bold text-[clamp(1.75rem,5.5vw,3.25rem)] text-[#333333] dark:text-[#F2F2F2] tracking-tighter leading-[1.02] max-w-[14ch] sm:max-w-[16ch]">
+            <h2 className="font-sans font-bold text-[clamp(1.75rem,5.5vw,3.25rem)] text-fg tracking-tighter leading-[1.02] max-w-[14ch] sm:max-w-[16ch]">
               Tu colección está esperando su{' '}
               <span className="relative inline-block">
                 <span className="relative z-10">primera pieza.</span>
                 <span
-                  className="absolute left-0 right-0 bottom-1 sm:bottom-1.5 h-[0.45em] bg-[#D4F334] -z-0 opacity-90"
+                  className="absolute left-0 right-0 bottom-1 sm:bottom-1.5 h-[0.45em] bg-brand -z-0 opacity-90"
                   aria-hidden="true"
                 />
               </span>
             </h2>
 
-            <p className="font-sans text-sm sm:text-base text-[#5C5C5C] dark:text-[#B8B8B8] leading-relaxed max-w-md pl-0 sm:pl-1">
+            <p className="font-sans text-sm sm:text-base text-fg-secondary leading-relaxed max-w-md pl-0 sm:pl-1">
               Todavía no has guardado ni comprado nada. Anda la galería y encuentra algo que te haga sentir.
             </p>
 
@@ -133,11 +133,11 @@ export default function EmptySelectionView({
           className="lg:col-span-5 order-1 lg:order-2 relative empty-frame-cluster flex-shrink-0"
         >
           <div
-            className={`absolute right-4 sm:right-8 top-1/2 -translate-y-1/2 w-40 h-40 sm:w-52 sm:h-52 rounded-full bg-[#D4F334]/15 dark:bg-[#D4F334]/8 border border-[#D4F334]/25 ${prefersReducedMotion ? '' : 'empty-breathe'}`}
+            className={`absolute right-4 sm:right-8 top-1/2 -translate-y-1/2 w-40 h-40 sm:w-52 sm:h-52 rounded-full bg-brand/15 dark:bg-brand/8 border border-brand/25 ${prefersReducedMotion ? '' : 'empty-breathe'}`}
             aria-hidden="true"
           />
           <div
-            className="absolute inset-0 border border-dashed border-[#E6E6E6] dark:border-[#333333]/80 rounded-[28px] rotate-2 pointer-events-none opacity-60"
+            className="absolute inset-0 border border-dashed border-border/80 rounded-[28px] rotate-2 pointer-events-none opacity-60"
             aria-hidden="true"
           />
 
@@ -149,7 +149,7 @@ export default function EmptySelectionView({
                   key={art.id}
                   type="button"
                   onClick={() => onSelectArtwork(art)}
-                  className={`absolute ${layout.className} rounded-2xl overflow-hidden border-2 border-[#333333] dark:border-[#F2F2F2] bg-white dark:bg-[#1F1F1F] cursor-pointer transition-smooth hover:scale-[1.04] hover:z-40 focus:outline-none focus:ring-2 focus:ring-[#0084FF] dark:focus:ring-[#3D9DFF] ${prefersReducedMotion ? '' : `empty-float ${layout.delay}`.trim()}`}
+                  className={`absolute ${layout.className} rounded-2xl overflow-hidden border-2 border-border-strong bg-surface-raised cursor-pointer transition-smooth hover:scale-[1.04] hover:z-40 focus:outline-none focus:ring-2 focus:ring-accent ${prefersReducedMotion ? '' : `empty-float ${layout.delay}`.trim()}`}
                   aria-label={`Ver ${art.title} de ${art.artistName}`}
                 >
                   <img
@@ -162,8 +162,8 @@ export default function EmptySelectionView({
               );
             })
           ) : (
-            <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-24 h-24 rounded-full border-2 border-dashed border-[#333333] dark:border-[#F2F2F2] flex items-center justify-center bg-white/80 dark:bg-[#1A1A1A]/80">
-              <Sparkles className="h-8 w-8 text-[#D4F334]" />
+            <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-24 h-24 rounded-full border-2 border-dashed border-border-strong flex items-center justify-center bg-canvas/80">
+              <Sparkle className="h-8 w-8 text-brand" />
             </div>
           )}
         </motion.div>
@@ -173,11 +173,11 @@ export default function EmptySelectionView({
       {available.length > 0 && (
         <motion.div variants={variants} className="w-full max-w-6xl mx-auto mt-8 sm:mt-10 lg:mt-12 flex-shrink-0 px-1 sm:px-2">
           <div className="flex items-center gap-4 mb-4">
-            <span className="text-[10px] font-mono tracking-widest text-[#8A8A8A] dark:text-[#7A7A7A] uppercase font-bold whitespace-nowrap">
+            <span className="text-[10px] font-mono tracking-widest text-fg-muted uppercase font-bold whitespace-nowrap">
               Obras para empezar
             </span>
-            <span className="h-px flex-grow bg-[#E6E6E6] dark:bg-[#333333]" aria-hidden="true" />
-            <span className="text-[10px] font-mono text-[#D4F334] font-bold hidden sm:inline">↗</span>
+            <span className="h-px flex-grow bg-border" aria-hidden="true" />
+            <span className="text-[10px] font-mono text-brand font-bold hidden sm:inline">↗</span>
           </div>
 
           <div className="flex gap-3 overflow-x-auto snap-x snap-mandatory pb-2 -mx-1 px-1 sm:grid sm:grid-cols-3 sm:overflow-visible sm:gap-4">
@@ -186,25 +186,25 @@ export default function EmptySelectionView({
                 key={art.id}
                 type="button"
                 onClick={() => onSelectArtwork(art)}
-                className={`group flex items-center gap-3 bg-white dark:bg-[#1A1A1A] border border-[#E6E6E6] dark:border-[#333333] rounded-xl p-3 sm:p-4 transition-smooth hover:border-[#0084FF] dark:hover:border-[#3D9DFF] hover:shadow-md cursor-pointer text-left flex-shrink-0 snap-start w-[min(88vw,300px)] sm:w-auto sm:hover:-translate-y-0.5 ${i === 1 ? 'sm:mt-3' : ''}`}
+                className={`group flex items-center gap-3 bg-canvas border border-border rounded-xl p-3 sm:p-4 transition-smooth hover:border-accent hover:shadow-md cursor-pointer text-left flex-shrink-0 snap-start w-[min(88vw,300px)] sm:w-auto sm:hover:-translate-y-0.5 ${i === 1 ? 'sm:mt-3' : ''}`}
               >
-                <span className="text-[10px] font-mono font-bold text-[#0084FF] dark:text-[#3D9DFF] w-5 flex-shrink-0">
+                <span className="text-[10px] font-mono font-bold text-accent w-5 flex-shrink-0">
                   {String(i + 1).padStart(2, '0')}
                 </span>
                 <img
                   src={art.image}
                   alt=""
                   referrerPolicy="no-referrer"
-                  className="w-14 h-14 sm:w-16 sm:h-16 rounded-lg object-cover flex-shrink-0 border border-[#E6E6E6] dark:border-[#333333] group-hover:scale-[1.02] transition-smooth"
+                  className="w-14 h-14 sm:w-16 sm:h-16 rounded-lg object-cover flex-shrink-0 border border-border group-hover:scale-[1.02] transition-smooth"
                 />
                 <div className="min-w-0 flex-grow">
-                  <p className="font-sans font-semibold text-sm text-[#333333] dark:text-[#F2F2F2] truncate">
+                  <p className="font-sans font-semibold text-sm text-fg truncate">
                     {art.title}
                   </p>
-                  <p className="text-[10px] font-mono text-[#0084FF] dark:text-[#3D9DFF] uppercase truncate">
+                  <p className="text-[10px] font-mono text-accent uppercase truncate">
                     {art.artistName}
                   </p>
-                  <p className="text-[10px] font-mono text-[#8A8A8A] dark:text-[#7A7A7A] mt-0.5">
+                  <p className="text-[10px] font-mono text-fg-muted mt-0.5">
                     {formatPrice(art.price)}
                   </p>
                 </div>

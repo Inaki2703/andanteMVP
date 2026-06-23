@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
-import { BookOpen, X, ShieldAlert, Heart, HelpCircle, Sparkles } from 'lucide-react';
+import { BookOpen, X, ShieldWarning, Heart, Question, Sparkle } from '@phosphor-icons/react';
 
 // Shared imports
 import { Artwork, CartItem, ShippingInfo, PaymentInfo } from './types';
@@ -314,7 +314,7 @@ export default function App() {
 
   return (
     <ClickSpark>
-    <div ref={pageRef} className="flex flex-col min-h-screen bg-[#F5F5F3] dark:bg-[#0E0E0E] grid-dot-pattern text-[#333333] dark:text-[#F2F2F2] font-sans tracking-normal relative md:pb-0 pb-16 transition-colors duration-400">
+    <div ref={pageRef} className="flex flex-col min-h-screen bg-page grid-dot-pattern text-fg font-sans tracking-normal relative md:pb-0 pb-16 transition-colors duration-400">
       
       {/* 1. Header Area with dynamic dark status */}
       {currentView !== 'checkout' && currentView !== 'cart' && currentView !== 'exhibition' && currentView !== 'success' && currentView !== 'artist' && (
@@ -416,7 +416,7 @@ export default function App() {
           }`}
         >
           <div
-            className={`bg-[#222222] text-[#F2F2F2] text-xs font-sans transition-colors duration-400 ${
+            className={`bg-footer text-on-inverse text-xs font-sans transition-colors duration-400 ${
               currentView === 'landing'
                 ? 'rounded-[32px] md:rounded-[40px] w-full py-16 px-6 sm:px-10'
                 : 'py-20 px-4 sm:px-6 lg:px-8 shadow-inner'
@@ -427,7 +427,7 @@ export default function App() {
             {/* Top Row: Brand & Subscription */}
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-start border-b border-neutral-800 pb-16">
               <div className="space-y-4">
-                <h2 className="font-sans font-black text-4xl sm:text-5xl tracking-tighter text-[#D4F334] select-none">
+                <h2 className="font-sans font-black text-4xl sm:text-5xl tracking-tighter text-brand select-none">
                   ANDANTE :)
                 </h2>
                 <p className="text-neutral-400 max-w-sm text-sm leading-relaxed">
@@ -437,7 +437,7 @@ export default function App() {
 
               {/* Subscribe form aligned beautifully */}
               <div className="space-y-4">
-                <span className="text-[10px] font-mono tracking-widest text-[#D4F334] font-bold block uppercase">
+                <span className="text-[10px] font-mono tracking-widest text-brand font-bold block uppercase">
                   SUSCRIPCIÓN
                 </span>
                 <div className="relative border-b border-neutral-600 pb-3 flex items-center justify-between">
@@ -449,7 +449,7 @@ export default function App() {
                   <button 
                     type="button" 
                     onClick={() => alert("¡Gracias por suscribirte a Andante!")}
-                    className="p-1 text-[#D4F334] hover:text-[#C2E02E] font-bold text-lg cursor-pointer"
+                    className="p-1 text-brand hover:text-brand-hover font-bold text-lg cursor-pointer"
                   >
                     ↗
                   </button>
@@ -513,26 +513,26 @@ export default function App() {
 
       {/* 5. Floating Action Strip helper for mobile screens */}
       {currentView !== 'checkout' && currentView !== 'cart' && currentView !== 'success' && (
-        <div className="md:hidden fixed bottom-0 left-0 right-0 z-30 bg-white/90 dark:bg-[#1A1A1A]/90 backdrop-blur-md border-t border-[#E6E6E6] dark:border-[#333333] px-4 py-3.5 flex justify-around select-none">
+        <div className="md:hidden fixed bottom-0 left-0 right-0 z-30 bg-white/90 dark:bg-canvas/90 backdrop-blur-md border-t border-border px-4 py-3.5 flex justify-around select-none">
           <button
             onClick={() => setView('landing')}
-            className={`flex flex-col items-center gap-0.5 text-[9px] font-mono font-black uppercase tracking-wider ${currentView === 'landing' ? 'text-[#0084FF] dark:text-[#3D9DFF]' : 'text-[#8A8A8A]'}`}
+            className={`flex flex-col items-center gap-0.5 text-[9px] font-mono font-black uppercase tracking-wider ${currentView === 'landing' ? 'text-accent' : 'text-fg-muted'}`}
           >
             <span>Inicio</span>
           </button>
           <button
             onClick={() => setView('exhibition')}
-            className={`flex flex-col items-center gap-0.5 text-[9px] font-mono font-black uppercase tracking-wider ${currentView === 'exhibition' ? 'text-[#0084FF] dark:text-[#3D9DFF]' : 'text-[#8A8A8A]'}`}
+            className={`flex flex-col items-center gap-0.5 text-[9px] font-mono font-black uppercase tracking-wider ${currentView === 'exhibition' ? 'text-accent' : 'text-fg-muted'}`}
           >
             <span>Exhibición</span>
           </button>
           <button
             onClick={() => setView('cart')}
-            className={`relative flex flex-col items-center gap-0.5 text-[9px] font-mono font-black uppercase tracking-wider ${currentView === 'cart' ? 'text-[#0084FF] dark:text-[#3D9DFF]' : 'text-[#8A8A8A]'}`}
+            className={`relative flex flex-col items-center gap-0.5 text-[9px] font-mono font-black uppercase tracking-wider ${currentView === 'cart' ? 'text-accent' : 'text-fg-muted'}`}
           >
             <span>Selección</span>
             {cart.length > 0 && (
-              <span className="absolute -top-1.5 -right-2.5 h-3.5 w-3.5 bg-[#0084FF] text-white text-[8px] font-bold flex items-center justify-center rounded-full">
+              <span className="absolute -top-1.5 -right-2.5 h-3.5 w-3.5 bg-accent text-on-accent text-[8px] font-bold flex items-center justify-center rounded-full">
                 {cart.length}
               </span>
             )}
@@ -578,41 +578,41 @@ export default function App() {
               initial={{ scale: 0.95, opacity: 0 }}
               animate={{ scale: 1, opacity: 1 }}
               exit={{ scale: 0.95, opacity: 0 }}
-              className="relative max-w-2xl bg-white dark:bg-[#1F1F1F] border border-[#E6E6E6] dark:border-[#333333] p-6 sm:p-10 rounded-2xl shadow-xl z-10 max-h-[85vh] overflow-y-auto transition-colors"
+              className="relative max-w-2xl bg-surface-raised border border-border p-6 sm:p-10 rounded-2xl shadow-xl z-10 max-h-[85vh] overflow-y-auto transition-colors"
             >
-              <div className="flex items-start justify-between border-b border-[#E6E6E6] dark:border-[#333333] pb-4 mb-6">
+              <div className="flex items-start justify-between border-b border-border pb-4 mb-6">
                 <div>
-                  <span className="text-[10px] font-mono text-[#0084FF] dark:text-[#3D9DFF] uppercase font-bold tracking-wider block">
+                  <span className="text-[10px] font-mono text-accent uppercase font-bold tracking-wider block">
                     MANIFIESTO CULTURAL
                   </span>
-                  <h3 className="font-sans font-black text-2xl sm:text-3xl text-[#333333] dark:text-[#F2F2F2] mt-1 tracking-tight">
+                  <h3 className="font-sans font-black text-2xl sm:text-3xl text-fg mt-1 tracking-tight">
                     — Declaración de Principios
                   </h3>
                 </div>
                 <button
                   onClick={() => setShowManifesto(false)}
-                  className="p-1.5 hover:bg-[#F2F2F2] dark:hover:bg-[#242424] text-[#333333] dark:text-[#F2F2F2] rounded-full transition-colors cursor-pointer"
+                  className="p-1.5 hover:bg-elevated text-fg rounded-full transition-colors cursor-pointer"
                 >
                   <X className="h-5 w-5" />
                 </button>
               </div>
 
               {/* Substantive editorial core readings */}
-              <div className="font-sans text-sm sm:text-base text-[#5C5C5C] dark:text-[#B8B8B8] leading-relaxed space-y-5 antialiased">
+              <div className="font-sans text-sm sm:text-base text-fg-secondary leading-relaxed space-y-5 antialiased">
                 {MANIFIESTO.trim().split('\n\n').map((paragraph, i) => (
                   <p key={i}>{paragraph}</p>
                 ))}
               </div>
 
-              <div className="mt-8 border-t border-[#E6E6E6] dark:border-[#333333] pt-6 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 font-mono text-[9px] text-[#8A8A8A]">
+              <div className="mt-8 border-t border-border pt-6 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 font-mono text-[9px] text-fg-muted">
                 <span className="font-bold flex items-center gap-1.5 uppercase tracking-wide">
-                  <Sparkles className="h-4.5 w-4.5 text-[#D4F334]" />
+                  <Sparkle className="h-4.5 w-4.5 text-brand" />
                   Dirección Colegiada, Andante Lab 2026
                 </span>
                 <button
                   type="button"
                   onClick={() => setShowManifesto(false)}
-                  className="w-full sm:w-auto px-5 py-3.5 bg-[#0084FF] hover:bg-[#006FD6] dark:bg-[#3D9DFF] text-white font-sans font-bold uppercase tracking-wider rounded-md text-xs cursor-pointer"
+                  className="w-full sm:w-auto px-5 py-3.5 bg-accent hover:bg-accent-hover text-white font-sans font-bold uppercase tracking-wider rounded-md text-xs cursor-pointer"
                 >
                   Entendido, cerrar manifiesto
                 </button>

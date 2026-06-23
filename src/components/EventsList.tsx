@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { ArrowUpRight } from 'lucide-react';
+import { ArrowUpRight } from '@phosphor-icons/react';
 
 interface EventsListProps {
   setView: (view: string) => void;

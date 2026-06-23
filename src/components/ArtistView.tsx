@@ -1,5 +1,5 @@
 import { useState, useMemo } from 'react';
-import { BadgeCheck, Instagram, Globe, Check, MessageCircle, Users, Eye } from 'lucide-react';
+import { SealCheck, InstagramLogo, Globe, Check, ChatCircle, Users, Eye } from '@phosphor-icons/react';
 import { Artist, Artwork, WallMessage } from '../types';
 import { WALL_SEED } from '../data';
 import ArtworkScroller from './ArtworkScroller';
@@ -78,7 +78,7 @@ export default function ArtistView({ artist, artworks, setView, onSelectArtwork 
               {/* Badge verificada */}
               {artist.verified && (
                 <span className="inline-flex items-center gap-1.5 bg-brand text-on-brand px-3 py-1 rounded-full text-[10px] font-mono font-bold uppercase tracking-wider mb-4">
-                  <BadgeCheck className="h-3.5 w-3.5" aria-hidden="true" />
+                  <SealCheck className="h-3.5 w-3.5" aria-hidden="true" />
                   Artista verificada
                 </span>
               )}
@@ -225,7 +225,7 @@ export default function ArtistView({ artist, artworks, setView, onSelectArtwork 
                     aria-label={`Instagram de ${artist.name} (se abre en una pestaña nueva)`}
                     className="h-11 w-11 flex items-center justify-center rounded-md border border-border text-fg hover:border-accent hover:text-[#0084FF] dark:hover:text-[#3D9DFF] transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-accent"
                   >
-                    <Instagram className="h-5 w-5" aria-hidden="true" />
+                    <InstagramLogo className="h-5 w-5" aria-hidden="true" />
                   </a>
                 )}
                 {artist.socials?.website && (
@@ -254,7 +254,7 @@ export default function ArtistView({ artist, artworks, setView, onSelectArtwork 
               </div>
               <div className="flex flex-col">
                 <dt className="flex items-center gap-1.5 text-[10px] font-mono font-bold uppercase tracking-wider text-neutral-500 dark:text-neutral-400">
-                  <MessageCircle className="h-3.5 w-3.5" aria-hidden="true" /> Mensajes
+                  <ChatCircle className="h-3.5 w-3.5" aria-hidden="true" /> Mensajes
                 </dt>
                 <dd className="font-mono font-bold text-2xl text-fg tabular-nums mt-1">
                   {nf(visibleMessageCount)}

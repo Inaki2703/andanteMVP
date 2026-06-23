@@ -1,4 +1,4 @@
-import { CheckCircle2, ShieldCheck, Sparkles, Truck } from 'lucide-react';
+import { CheckCircle, ShieldCheck, Sparkle, Truck } from '@phosphor-icons/react';
 import { ARTWORKS_DATA, ARTISTS_DATA } from '../data';
 import { Artwork } from '../types';
 import ExpoActivaSection from './ExpoActivaSection';
@@ -68,7 +68,7 @@ export default function LandingView({ setView, onSelectArtwork }: LandingViewPro
             {/* Proposition 1 */}
             <div className="flex flex-col items-center lg:items-start text-center lg:text-left space-y-3">
               <div className="h-10 w-10 bg-sky-50 dark:bg-sky-950/40 rounded-full flex items-center justify-center font-bold text-accent">
-                <CheckCircle2 className="h-5 w-5" />
+                <CheckCircle className="h-5 w-5" />
               </div>
               <h3 className="font-sans font-black text-sm text-fg">
                 Curaduría con criterio
@@ -107,7 +107,7 @@ export default function LandingView({ setView, onSelectArtwork }: LandingViewPro
             {/* Proposition 4 */}
             <div className="flex flex-col items-center lg:items-start text-center lg:text-left space-y-3">
               <div className="h-10 w-10 bg-sky-50 dark:bg-sky-950/40 rounded-full flex items-center justify-center font-bold text-accent">
-                <Sparkles className="h-5 w-5" />
+                <Sparkle className="h-5 w-5" />
               </div>
               <h3 className="font-sans font-black text-sm text-fg">
                 Comisión justa

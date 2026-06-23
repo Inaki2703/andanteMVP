@@ -1,5 +1,5 @@
 import { useRef, useState, useEffect, useCallback, KeyboardEvent } from 'react';
-import { ChevronLeft, ChevronRight } from 'lucide-react';
+import { CaretLeft, CaretRight } from '@phosphor-icons/react';
 import { Artwork } from '../types';
 import ArtworkCard from './ArtworkCard';
 
@@ -85,7 +85,7 @@ export default function ArtworkScroller({ artworks, artistName, onSelectArtwork 
             aria-label="Ver obras anteriores"
             className={arrowBase}
           >
-            <ChevronLeft className="h-5 w-5" aria-hidden="true" />
+            <CaretLeft className="h-5 w-5" aria-hidden="true" />
           </button>
           <button
             type="button"
@@ -94,7 +94,7 @@ export default function ArtworkScroller({ artworks, artistName, onSelectArtwork 
             aria-label="Ver más obras"
             className={arrowBase}
           >
-            <ChevronRight className="h-5 w-5" aria-hidden="true" />
+            <CaretRight className="h-5 w-5" aria-hidden="true" />
           </button>
         </div>
       </div>

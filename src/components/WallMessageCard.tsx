@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Heart, MoreHorizontal, Flag, Pin, PinOff, EyeOff, Trash2 } from 'lucide-react';
+import { Heart, DotsThree, Flag, PushPin, PushPinSlash, EyeSlash, Trash } from '@phosphor-icons/react';
 import { WallMessage } from '../types';
 import { STICKER_PALETTE } from '../data';
 import { formatRelativeTime } from '../utils/relativeTime';
@@ -75,7 +75,7 @@ export default function WallMessageCard({
               aria-label="Más acciones"
               className="h-8 w-8 flex items-center justify-center rounded-full text-neutral-400 hover:text-fg hover:bg-[#F2F2F2] dark:hover:bg-elevated transition-colors cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-accent"
             >
-              <MoreHorizontal className="h-4 w-4" aria-hidden="true" />
+              <DotsThree className="h-4 w-4" aria-hidden="true" />
             </button>
             {menuOpen && (
               <>
@@ -88,14 +88,14 @@ export default function WallMessageCard({
                   {artistMode ? (
                     <>
                       <button type="button" role="menuitem" className={menuItem} onClick={() => { onTogglePin?.(message.id); close(); }}>
-                        {message.pinned ? <PinOff className="h-3.5 w-3.5" aria-hidden="true" /> : <Pin className="h-3.5 w-3.5" aria-hidden="true" />}
+                        {message.pinned ? <PushPinSlash className="h-3.5 w-3.5" aria-hidden="true" /> : <PushPin className="h-3.5 w-3.5" aria-hidden="true" />}
                         {message.pinned ? 'Quitar fijado' : 'Fijar arriba'}
                       </button>
                       <button type="button" role="menuitem" className={menuItem} onClick={() => { onHide?.(message.id); close(); }}>
-                        <EyeOff className="h-3.5 w-3.5" aria-hidden="true" /> Ocultar
+                        <EyeSlash className="h-3.5 w-3.5" aria-hidden="true" /> Ocultar
                       </button>
                       <button type="button" role="menuitem" className={`${menuItem} text-red-600 dark:text-red-400`} onClick={() => { onDelete?.(message.id); close(); }}>
-                        <Trash2 className="h-3.5 w-3.5" aria-hidden="true" /> Eliminar
+                        <Trash className="h-3.5 w-3.5" aria-hidden="true" /> Eliminar
                       </button>
                     </>
                   ) : (
@@ -134,7 +134,8 @@ export default function WallMessageCard({
           className="inline-flex items-center gap-1.5 text-xs font-mono font-bold text-neutral-500 dark:text-neutral-400 hover:text-red-500 transition-colors cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-accent rounded-md px-1.5 py-1 -ml-1.5"
         >
           <Heart
-            className={`h-4 w-4 stroke-[1.75] transition-colors ${liked ? 'fill-red-500 text-red-500 stroke-red-500' : ''}`}
+            weight={liked ? 'fill' : 'regular'}
+            className={`h-4 w-4 transition-colors ${liked ? 'text-red-500' : ''}`}
             aria-hidden="true"
           />
           <span className="tabular-nums">{message.hearts}</span>

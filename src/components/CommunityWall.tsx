@@ -1,5 +1,5 @@
 import { useState, Dispatch, SetStateAction } from 'react';
-import { Pin, CheckCircle2 } from 'lucide-react';
+import { PushPin, CheckCircle } from '@phosphor-icons/react';
 import { WallMessage } from '../types';
 import WallComposer, { WallDraft } from './WallComposer';
 import WallMessageCard from './WallMessageCard';
@@ -120,7 +120,7 @@ export default function CommunityWall({ artistId, artistName, messages, setMessa
           role="status"
           className="mt-4 flex items-center gap-2 text-sm text-fg bg-[#E8F5FF] dark:bg-sky-950/40 border border-[#0084FF]/30 rounded-xl px-4 py-3"
         >
-          <CheckCircle2 className="h-4 w-4 flex-shrink-0 text-accent" aria-hidden="true" />
+          <CheckCircle className="h-4 w-4 flex-shrink-0 text-accent" aria-hidden="true" />
           <span>{notice}</span>
         </div>
       )}
@@ -136,7 +136,7 @@ export default function CommunityWall({ artistId, artistName, messages, setMessa
           {pinned.map((m) => (
             <div key={m.id} className="relative">
               <span className="absolute -top-2.5 left-5 z-10 inline-flex items-center gap-1 bg-accent dark:bg-[#3D9DFF] text-white text-[9px] font-mono font-bold uppercase tracking-wider px-2 py-0.5 rounded-full">
-                <Pin className="h-3 w-3" aria-hidden="true" /> Fijado
+                <PushPin className="h-3 w-3" aria-hidden="true" /> Fijado
               </span>
               <WallMessageCard
                 message={m}

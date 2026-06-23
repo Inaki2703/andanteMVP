@@ -1,5 +1,5 @@
 import { useState, useRef } from 'react';
-import { AlertCircle } from 'lucide-react';
+import { WarningCircle } from '@phosphor-icons/react';
 import { STICKER_PALETTE } from '../data';
 import { containsBannedWord, MIN_COMPOSE_MS, RATE_LIMIT_MS } from '../utils/moderation';
 
@@ -155,7 +155,7 @@ export default function WallComposer({ onSubmit }: WallComposerProps) {
           role="alert"
           className="flex items-start gap-2 text-sm text-fg bg-warning-bg border border-brand rounded-xl px-4 py-3"
         >
-          <AlertCircle className="h-4 w-4 mt-0.5 flex-shrink-0 text-[#8A7A00] dark:text-brand" aria-hidden="true" />
+          <WarningCircle className="h-4 w-4 mt-0.5 flex-shrink-0 text-[#8A7A00] dark:text-brand" aria-hidden="true" />
           <span className="leading-relaxed">{error}</span>
         </div>
       )}

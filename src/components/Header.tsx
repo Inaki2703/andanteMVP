@@ -1,6 +1,6 @@
 import { useState, useRef, useEffect } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
-import { ShoppingBag, ChevronDown } from 'lucide-react';
+import { ShoppingBag, CaretDown } from '@phosphor-icons/react';
 
 interface Exhibition {
   id: string;
@@ -155,7 +155,7 @@ export default function Header({
                 transition={{ duration: 0.25, ease: [0.4, 0, 0.2, 1] }}
                 className="text-fg"
               >
-                <ChevronDown size={17} strokeWidth={2} />
+                <CaretDown size={17} weight="bold" />
               </motion.span>
             </button>
 
@@ -189,7 +189,7 @@ export default function Header({
               className="relative text-fg hover:opacity-70 transition-opacity"
               aria-label="Ver carrito"
             >
-              <ShoppingBag size={22} strokeWidth={1.6} />
+              <ShoppingBag size={22} />
               {cartCount > 0 && (
                 <span className="absolute -top-1.5 -right-1.5 h-4 w-4 bg-brand text-black text-[8px] font-bold rounded-full flex items-center justify-center">
                   {cartCount}

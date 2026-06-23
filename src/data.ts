@@ -1,4 +1,4 @@
-import { Artwork, Artist, Exhibition, Venue } from './types';
+import { Artwork, Artist, Exhibition, Venue, WallMessage, Sticker } from './types';
 
 export const EXHIBITION_DATA: Exhibition = {
   id: 'luz-activa',
@@ -17,7 +17,66 @@ export const ARTISTS_DATA: Artist[] = [
     name: 'Elena del Monte',
     bio: '"Exploro el caos a través del orden cromático."',
     image: 'https://images.unsplash.com/photo-1544005313-94ddf0286df2?auto=format&fit=crop&q=80&w=200',
-    specialty: 'Pintura Abstracta & Refracciones'
+    specialty: 'Pintura Abstracta & Refracciones',
+    // --- Perfil completo para la página de semblanza ---
+    slug: 'elena-del-monte',
+    portrait: 'https://images.unsplash.com/photo-1544005313-94ddf0286df2?auto=format&fit=crop&q=80&w=1500',
+    tagline: 'Pintura abstracta & refracciones · Buenos Aires',
+    quote: 'No pinto la luz: la dejo entrar y veo qué decide hacer con el color.',
+    semblanza: `Empecé mezclando pigmentos en la cocina de mi abuela, buscando un azul que no existía en ningún tubo. Desde entonces no he parado de perseguir colores que todavía no tienen nombre.
+
+Mi obra nace de una obsesión simple: entender cómo la luz cambia lo que creemos que es fijo. Trabajo con barnices difractores y microcristales minerales para que cada cuadro responda al momento del día y a quién lo mira. Una misma pieza no se ve igual a las nueve de la mañana que al atardecer, y eso, para mí, es lo más honesto que puede hacer la pintura.
+
+Vivo y trabajo en Buenos Aires, en un taller que da al norte. Me gusta pensar que mis obras no se terminan cuando salen de ahí, sino cuando alguien las cuelga en su casa y empieza a vivir con ellas.`,
+    verified: true,
+    socials: {
+      instagram: 'https://instagram.com/elenadelmonte.art',
+      website: 'https://elenadelmonte.art'
+    },
+    followers: 1284,
+    views: 8730,
+    exhibitions: [
+      {
+        id: 'cv-arte-mundialista',
+        title: 'Arte Mundialista',
+        venue: 'Café Norte',
+        city: 'San Isidro',
+        year: 2026,
+        type: 'Colectiva'
+      },
+      {
+        id: 'cv-refracciones',
+        title: 'Refracciones',
+        venue: 'Atendido Estudio',
+        city: 'Palermo',
+        year: 2025,
+        type: 'Individual'
+      },
+      {
+        id: 'cv-luz-de-barrio',
+        title: 'Luz de Barrio',
+        venue: 'Librería del Pasaje',
+        city: 'San Telmo',
+        year: 2024,
+        type: 'Colectiva'
+      },
+      {
+        id: 'cv-pigmento-vivo',
+        title: 'Pigmento Vivo',
+        venue: 'Casa Tomada',
+        city: 'Rosario',
+        year: 2023,
+        type: 'Individual'
+      },
+      {
+        id: 'cv-primeros-azules',
+        title: 'Primeros Azules',
+        venue: 'Espacio Cabildo',
+        city: 'La Plata',
+        year: 2022,
+        type: 'Colectiva'
+      }
+    ]
   },
   {
     id: 'carlos-r',
@@ -120,6 +179,45 @@ export const ARTWORKS_DATA: Artwork[] = [
     dimensions: '300 x 100 x 80 cm',
     year: 2024,
     description: 'Instalación de sitio específico. Consta de 15 piezas flotantes esculpidas al calor, suspendidas para filtrar la luz solar directa, convirtiendo las pinceladas de sombra coloreada en materia física móvil.'
+  },
+  {
+    id: 'prisma-suspendido',
+    title: 'Prisma Suspendido',
+    artistId: 'elena-del-monte',
+    artistName: 'Elena del Monte',
+    price: 2100,
+    image: 'https://images.unsplash.com/photo-1558865869-c93f6f8482af?auto=format&fit=crop&q=80&w=800',
+    status: 'Disponible',
+    medium: 'Acrílico fluido y resina cristalina sobre panel de madera de abedul.',
+    dimensions: '100 x 100 cm',
+    year: 2025,
+    description: 'Capas de resina translúcida atrapan el pigmento como si fuera luz detenida. Según el ángulo, el azul se vuelve verde y el verde se vuelve oro.'
+  },
+  {
+    id: 'umbral-cromatico',
+    title: 'Umbral Cromático',
+    artistId: 'elena-del-monte',
+    artistName: 'Elena del Monte',
+    price: 1750,
+    image: 'https://images.unsplash.com/photo-1536924940846-227afb31e2a5?auto=format&fit=crop&q=80&w=800',
+    status: 'Disponible',
+    medium: 'Óleo y barniz difractor sobre lienzo de algodón.',
+    dimensions: '90 x 120 cm',
+    year: 2024,
+    description: 'Un degradado que nunca se queda quieto: pensado para colgarse frente a una ventana, cambia con cada hora del día.'
+  },
+  {
+    id: 'eco-de-luz',
+    title: 'Eco de Luz',
+    artistId: 'elena-del-monte',
+    artistName: 'Elena del Monte',
+    price: 3300,
+    image: 'https://images.unsplash.com/photo-1549887534-1541e9326642?auto=format&fit=crop&q=80&w=800',
+    status: 'Reservado',
+    medium: 'Pigmentos minerales y pan de oro sobre lino belga.',
+    dimensions: '150 x 110 cm',
+    year: 2026,
+    description: 'La obra más reciente de la serie. El pan de oro devuelve destellos cálidos que reverberan sobre los azules fríos del fondo.'
   }
 ];
 
@@ -157,3 +255,100 @@ Somos un puente nómade híbrido: curamos exposiciones físicas rigurosas que ha
 
 Cada obra adquirida en Andante es una parte física que fue pensada para dialogar en comunidad, acompañada de un certificado digital encriptado de autenticidad y entrega cuidada puerta a puerta.
 `;
+
+// --- Muro de comunidad ---
+
+// Paleta CERRADA de stickers (sin subida de imágenes). Cada uno con texto alternativo accesible.
+export const STICKER_PALETTE: Sticker[] = [
+  { emoji: '🎨', alt: 'paleta de pintura' },
+  { emoji: '✨', alt: 'destellos' },
+  { emoji: '❤️', alt: 'corazón' },
+  { emoji: '👏', alt: 'aplausos' },
+  { emoji: '🙌', alt: 'manos en alto' },
+  { emoji: '🌿', alt: 'rama de hojas' },
+  { emoji: '🔥', alt: 'fuego' },
+  { emoji: '👀', alt: 'ojos mirando' },
+  { emoji: '🪄', alt: 'varita mágica' },
+  { emoji: '☕', alt: 'taza de café' }
+];
+
+// Lista mock de palabras vetadas para la moderación del cliente (~10).
+export const BANNED_WORDS: string[] = [
+  'idiota',
+  'estúpido',
+  'estúpida',
+  'basura',
+  'imbécil',
+  'tonto',
+  'feo',
+  'horrible',
+  'spam',
+  'estafa'
+];
+
+// Helper para sembrar timestamps relativos al momento en que corre la demo,
+// así "hace 2 h" siempre es coherente sin importar la fecha.
+const minutesAgo = (m: number): string => new Date(Date.now() - m * 60_000).toISOString();
+
+// SEMBRADO del muro de Elena del Monte: nunca nace vacío.
+export const WALL_SEED: WallMessage[] = [
+  {
+    id: 'wall-welcome',
+    artistId: 'elena-del-monte',
+    author: 'Elena del Monte',
+    role: 'artista',
+    text: '¡Bienvenides a mi muro! Acá voy dejando lo que voy descubriendo en el taller. Gracias por pasar a mirar.',
+    sticker: '🎨',
+    createdAt: minutesAgo(60 * 24 * 6), // hace 6 días
+    hearts: 42,
+    pinned: true
+  },
+  {
+    id: 'wall-cafe',
+    artistId: 'elena-del-monte',
+    author: 'Café Norte',
+    role: 'espacio',
+    text: 'Es un gusto tener las obras de Elena colgadas en nuestras paredes. Vení a verlas con un café de por medio. ☕',
+    sticker: '🌿',
+    createdAt: minutesAgo(60 * 26), // hace ~1 día
+    hearts: 18
+  },
+  {
+    id: 'wall-v1',
+    artistId: 'elena-del-monte',
+    author: 'Mariana T.',
+    role: 'visitante',
+    text: 'Vi "Eco de Luz" en persona y no pude dejar de mirarla. El oro cambia con cada paso. Una genia.',
+    sticker: '✨',
+    createdAt: minutesAgo(60 * 5), // hace 5 h
+    hearts: 9
+  },
+  {
+    id: 'wall-v2',
+    artistId: 'elena-del-monte',
+    author: 'Joaco',
+    role: 'visitante',
+    sticker: '🔥',
+    createdAt: minutesAgo(135), // hace ~2 h
+    hearts: 4
+  },
+  {
+    id: 'wall-v3',
+    artistId: 'elena-del-monte',
+    author: 'Coleccionista anónime',
+    role: 'visitante',
+    text: 'Me llevé "Prisma Suspendido" para el living. Cada mañana se ve distinta. Gracias, Elena.',
+    sticker: '🙌',
+    createdAt: minutesAgo(48), // hace 48 min
+    hearts: 12
+  },
+  {
+    id: 'wall-v4',
+    artistId: 'elena-del-monte',
+    author: 'Sol',
+    role: 'visitante',
+    text: '¿Va a haber una activación con vos este mes? Me encantaría ir.',
+    createdAt: minutesAgo(15), // hace 15 min
+    hearts: 2
+  }
+];

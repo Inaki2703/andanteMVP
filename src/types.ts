@@ -12,12 +12,60 @@ export interface Artwork {
   description: string;
 }
 
+export interface ArtistSocials {
+  instagram?: string;
+  website?: string;
+}
+
+// Una entrada del CV expositivo (trayectoria), más reciente primero.
+export interface ExhibitionCredit {
+  id: string;
+  title: string;
+  venue: string; // espacio anfitrión
+  city: string;
+  year: number;
+  type: 'Individual' | 'Colectiva';
+}
+
 export interface Artist {
   id: string;
   name: string;
   bio: string;
   image: string;
   specialty: string;
+  // --- Campos de la página de semblanza (opcionales: solo artistas con perfil completo) ---
+  slug?: string;
+  portrait?: string; // retrato a sangre para el hero
+  tagline?: string; // medio + ciudad (Body Large)
+  semblanza?: string; // narrativa en 1ª persona (puede tener varios párrafos con \n\n)
+  quote?: string; // cita destacada (Syne Italic)
+  verified?: boolean;
+  socials?: ArtistSocials;
+  followers?: number;
+  views?: number;
+  exhibitions?: ExhibitionCredit[];
+}
+
+// --- Muro de comunidad ---
+export type WallAuthorRole = 'artista' | 'espacio' | 'visitante';
+
+export interface WallMessage {
+  id: string;
+  artistId: string; // a qué muro pertenece
+  author: string;
+  role: WallAuthorRole;
+  text?: string;
+  sticker?: string; // emoji de la paleta cerrada
+  createdAt: string; // ISO timestamp
+  hearts: number;
+  pinned?: boolean;
+  hidden?: boolean;
+}
+
+// Sticker de la paleta cerrada, con texto alternativo accesible.
+export interface Sticker {
+  emoji: string;
+  alt: string;
 }
 
 export interface Exhibition {

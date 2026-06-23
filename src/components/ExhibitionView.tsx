@@ -9,9 +9,10 @@ import CurvedLoop from './CurvedLoop';
 interface ExhibitionViewProps {
   onSelectArtwork: (artwork: Artwork) => void;
   setView: (view: string) => void;
+  onSelectArtist: (slug: string) => void;
 }
 
-export default function ExhibitionView({ onSelectArtwork, setView }: ExhibitionViewProps) {
+export default function ExhibitionView({ onSelectArtwork, setView, onSelectArtist }: ExhibitionViewProps) {
   // Filter pieces that are currently showcased in Cafe Norte
   const activeExhibitionWorks = ARTWORKS_DATA.filter(
     (art) => art.id === 'ref-01' || art.id === 'glow-04' || art.id === 'concrete-shadow'
@@ -147,10 +148,27 @@ export default function ExhibitionView({ onSelectArtwork, setView }: ExhibitionV
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-              {ARTISTS_DATA.filter((artist) => activeExhibitionWorks.some((art) => art.artistId === artist.id)).map((artist) => (
+              {ARTISTS_DATA.filter((artist) => activeExhibitionWorks.some((art) => art.artistId === artist.id)).map((artist) => {
+                const hasProfile = Boolean(artist.slug);
+                const openProfile = () => {
+                  if (artist.slug) onSelectArtist(artist.slug);
+                };
+                return (
                 <div
                   key={artist.id}
-                  className="group flex flex-col items-center sm:items-start text-center sm:text-left bg-white dark:bg-[#111111] border border-[#E6E6E6] dark:border-[#2D2D2D]/60 rounded-[24px] p-6 hover:shadow-lg transition-all duration-300 relative overflow-hidden"
+                  role={hasProfile ? 'button' : undefined}
+                  tabIndex={hasProfile ? 0 : undefined}
+                  aria-label={hasProfile ? `Ver la semblanza de ${artist.name}` : undefined}
+                  onClick={hasProfile ? openProfile : undefined}
+                  onKeyDown={hasProfile ? (e) => {
+                    if (e.key === 'Enter' || e.key === ' ') {
+                      e.preventDefault();
+                      openProfile();
+                    }
+                  } : undefined}
+                  className={`group flex flex-col items-center sm:items-start text-center sm:text-left bg-white dark:bg-[#111111] border border-[#E6E6E6] dark:border-[#2D2D2D]/60 rounded-[24px] p-6 hover:shadow-lg transition-all duration-300 relative overflow-hidden ${
+                    hasProfile ? 'cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-[#0084FF] dark:focus-visible:ring-[#3D9DFF] focus-visible:ring-offset-2 dark:focus-visible:ring-offset-[#0E0E0E]' : ''
+                  }`}
                 >
                   <div className="absolute top-4 right-4 text-xs font-mono font-black text-neutral-200 dark:text-neutral-800 group-hover:text-[#0084FF]/25 dark:group-hover:text-[#3D9DFF]/25 transition-colors uppercase select-none pointer-events-none">
                     {artist.specialty.split(' ')[0]}
@@ -183,8 +201,17 @@ export default function ExhibitionView({ onSelectArtwork, setView }: ExhibitionV
                       {artist.bio}
                     </p>
                   </div>
+
+                  {/* Semblanza affordance (solo si tiene perfil) */}
+                  {hasProfile && (
+                    <span className="mt-4 inline-flex items-center gap-1 text-[10px] font-mono font-bold text-[#0084FF] dark:text-[#3D9DFF] uppercase tracking-wider group-hover:underline">
+                      Leer su semblanza
+                      <span aria-hidden="true">↗</span>
+                    </span>
+                  )}
                 </div>
-              ))}
+                );
+              })}
             </div>
           </div>
         </div>

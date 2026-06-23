@@ -4,13 +4,14 @@ import { BookOpen, X, ShieldAlert, Heart, HelpCircle, Sparkles } from 'lucide-re
 
 // Shared imports
 import { Artwork, CartItem, ShippingInfo, PaymentInfo } from './types';
-import { ARTWORKS_DATA, MANIFIESTO } from './data';
+import { ARTWORKS_DATA, ARTISTS_DATA, MANIFIESTO } from './data';
 
 // Component imports
 import Header from './components/Header';
 import MainMenu from './components/MainMenu';
 import LandingView from './components/LandingView';
 import ExhibitionView from './components/ExhibitionView';
+import ArtistView from './components/ArtistView';
 import ArtworkDetailModal from './components/ArtworkDetailModal';
 import CartView from './components/CartView';
 import CheckoutView from './components/CheckoutView';
@@ -23,8 +24,19 @@ export default function App() {
   const [menuOpen, setMenuOpen] = useState<boolean>(false);
   const [showManifesto, setShowManifesto] = useState<boolean>(false);
 
-  // Theme support
-  const [theme, setTheme] = useState<'light' | 'dark'>('light');
+  // Selected artist for the semblanza page (mock "route" /artista/:slug)
+  const [selectedArtistSlug, setSelectedArtistSlug] = useState<string | null>(null);
+
+  const handleSelectArtist = (slug: string) => {
+    setSelectedArtistSlug(slug);
+    setMenuOpen(false);
+    setView('artist');
+  };
+
+  // Theme support — el tema inicial sigue la preferencia del sistema; el toggle la sobrescribe.
+  const [theme, setTheme] = useState<'light' | 'dark'>(() =>
+    window.matchMedia?.('(prefers-color-scheme: dark)').matches ? 'dark' : 'light'
+  );
 
   // Dynamic products catalog state
   const [artworks, setArtworks] = useState<Artwork[]>(ARTWORKS_DATA);
@@ -41,11 +53,8 @@ export default function App() {
   // Synchronize dynamic client theme classes with the document element
   useEffect(() => {
     const root = window.document.documentElement;
-    if (theme === 'dark') {
-      root.classList.add('dark');
-    } else {
-      root.classList.remove('dark');
-    }
+    root.classList.toggle('dark', theme === 'dark');
+    root.classList.toggle('light', theme === 'light');
   }, [theme]);
 
   // Page title syncer
@@ -109,7 +118,7 @@ export default function App() {
     <div className="flex flex-col min-h-screen bg-[#F5F5F3] dark:bg-[#0E0E0E] grid-dot-pattern text-[#333333] dark:text-[#F2F2F2] font-sans tracking-normal relative md:pb-0 pb-16 transition-colors duration-400">
       
       {/* 1. Header Area with dynamic dark status */}
-      {currentView !== 'checkout' && currentView !== 'cart' && currentView !== 'exhibition' && currentView !== 'success' && (
+      {currentView !== 'checkout' && currentView !== 'cart' && currentView !== 'exhibition' && currentView !== 'success' && currentView !== 'artist' && (
         <Header
           currentView={currentView}
           setView={setView}
@@ -153,8 +162,25 @@ export default function App() {
               const activeArt = artworks.find(a => a.id === art.id) || art;
               setSelectedArtwork(activeArt);
             }}
+            onSelectArtist={handleSelectArtist}
           />
         )}
+
+        {currentView === 'artist' && (() => {
+          const artist = ARTISTS_DATA.find((a) => a.slug === selectedArtistSlug);
+          if (!artist) return null;
+          return (
+            <ArtistView
+              artist={artist}
+              artworks={artworks}
+              setView={setView}
+              onSelectArtwork={(art) => {
+                const activeArt = artworks.find((a) => a.id === art.id) || art;
+                setSelectedArtwork(activeArt);
+              }}
+            />
+          );
+        })()}
 
         {(currentView === 'cart' || currentView === 'checkout') && (
           <CheckoutView

@@ -35,6 +35,19 @@ html, body {
   scroll-behavior: smooth;
 }
 
+/* ── Section scroll-snap (solo activo en la landing vía .snap-scroll en <html>) ──
+   proximity = un scroll pequeño solo desplaza un poco; uno más decidido
+   engancha y centra la siguiente sección. scroll-padding mantiene el centrado
+   correcto pese al header fijo. */
+html.snap-scroll {
+  scroll-snap-type: y proximity;
+}
+
+.snap-section {
+  scroll-snap-align: center;
+  scroll-snap-stop: always;
+}
+
 /* Custom scrollbars */
 ::-webkit-scrollbar {
   width: 8px;

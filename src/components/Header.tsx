@@ -1,5 +1,79 @@
-import { useState } from 'react';
-import { ShoppingBag, Sun, Moon, ChevronDown, X } from 'lucide-react';
+import { useState, useRef, useEffect } from 'react';
+import { motion, AnimatePresence } from 'motion/react';
+import { ShoppingBag, ChevronDown } from 'lucide-react';
+
+interface Exhibition {
+  id: string;
+  title: string;
+  venue: string;
+  year: string;
+  active?: boolean;
+  image: string;
+}
+
+const EXHIBITIONS: Exhibition[] = [
+  {
+    id: 'arte-mundialista',
+    title: 'Arte mundialista',
+    venue: 'Café Norte',
+    year: '2026',
+    active: true,
+    image: 'https://images.unsplash.com/photo-1554118811-1e0d58224f24?auto=format&fit=crop&q=80&w=80',
+  },
+  {
+    id: 'refracciones',
+    title: 'Refracciones',
+    venue: 'Librería Sur',
+    year: '2025',
+    image: 'https://images.unsplash.com/photo-1541961017774-22349e4a1262?auto=format&fit=crop&q=80&w=80',
+  },
+  {
+    id: 'luz-de-barrio',
+    title: 'Luz de Barrio',
+    venue: 'Bar La Bruja',
+    year: '2025',
+    image: 'https://images.unsplash.com/photo-1518998053901-5348d3961a04?auto=format&fit=crop&q=80&w=80',
+  },
+  {
+    id: 'pigmento-vivo',
+    title: 'Pigmento Vivo',
+    venue: 'Estudio Abierto',
+    year: '2024',
+    image: 'https://images.unsplash.com/photo-1579783902614-a3fb3927b6a5?auto=format&fit=crop&q=80&w=80',
+  },
+  {
+    id: 'primeros-azules',
+    title: 'Primeros Azules',
+    venue: 'Casa Cultural',
+    year: '2024',
+    image: 'https://images.unsplash.com/photo-1518640467707-6811f4a6ab73?auto=format&fit=crop&q=80&w=80',
+  },
+];
+
+// Nav dimensions
+const W = 352;
+const H = 106;
+const CR = 12; // corner radius
+const NR = 18; // notch (semicircle) radius — prominently visible
+const DX = 216; // divider X position (left section = 216px, right = 136px)
+
+// SVG path: rounded rect + two concave semicircle notches at top & bottom of divider
+const TICKET_PATH = [
+  `M${CR},0`,
+  `L${DX - NR},0`,
+  `A${NR},${NR} 0 0,1 ${DX + NR},0`,   // top notch — arc goes DOWN into nav
+  `L${W - CR},0`,
+  `A${CR},${CR} 0 0,1 ${W},${CR}`,       // top-right corner
+  `L${W},${H - CR}`,
+  `A${CR},${CR} 0 0,1 ${W - CR},${H}`,   // bottom-right corner
+  `L${DX + NR},${H}`,
+  `A${NR},${NR} 0 0,1 ${DX - NR},${H}`, // bottom notch — arc goes UP into nav
+  `L${CR},${H}`,
+  `A${CR},${CR} 0 0,1 0,${H - CR}`,      // bottom-left corner
+  `L0,${CR}`,
+  `A${CR},${CR} 0 0,1 ${CR},0`,          // top-left corner
+  'Z',
+].join(' ');
 
 interface HeaderProps {
   currentView: string;
@@ -12,133 +86,185 @@ interface HeaderProps {
 }
 
 export default function Header({
-  currentView,
   setView,
   cartCount,
   menuOpen,
   setMenuOpen,
-  theme,
-  setTheme
 }: HeaderProps) {
   const [dropdownOpen, setDropdownOpen] = useState(false);
+  const dropdownRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    function handleClickOutside(e: MouseEvent) {
+      if (dropdownRef.current && !dropdownRef.current.contains(e.target as Node)) {
+        setDropdownOpen(false);
+      }
+    }
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, []);
+
+  const activeExhibition = EXHIBITIONS.find((e) => e.active) ?? EXHIBITIONS[0];
 
   return (
-    <nav className="fixed top-4 right-4 sm:top-8 sm:right-8 z-50 flex items-stretch h-16 sm:h-20 bg-white/95 dark:bg-[#1A1A1A]/95 backdrop-blur border border-neutral-900 dark:border-neutral-700 rounded-2xl overflow-hidden shadow-2xl transition-colors duration-300">
-      
-      {/* 1. Theme and Cart Section */}
-      <div className="relative flex items-center gap-3 px-4 sm:px-6 border-r border-[#333333]/30 dark:border-[#555555]/40">
-        {/* Visual Corner Cutouts */}
-        <div className="absolute -top-1.5 -left-1.5 w-3 h-3 bg-[#F5F5F3] dark:bg-[#0E0E0E] rounded-full border border-neutral-900 dark:border-neutral-700"></div>
-        <div className="absolute -bottom-1.5 -left-1.5 w-3 h-3 bg-[#F5F5F3] dark:bg-[#0E0E0E] rounded-full border border-neutral-900 dark:border-neutral-700"></div>
-        <div className="absolute -top-1.5 -right-1.5 w-3 h-3 bg-[#F5F5F3] dark:bg-[#0E0E0E] rounded-full border border-neutral-900 dark:border-neutral-700"></div>
-        <div className="absolute -bottom-1.5 -right-1.5 w-3 h-3 bg-[#F5F5F3] dark:bg-[#0E0E0E] rounded-full border border-neutral-900 dark:border-neutral-700"></div>
+    <div className="fixed top-6 right-6 z-50" ref={dropdownRef}>
 
-        {/* Theme Toggle */}
-        <button
-          onClick={() => setTheme(theme === 'light' ? 'dark' : 'light')}
-          className="p-1.5 hover:bg-neutral-100 dark:hover:bg-neutral-800 rounded-full transition-colors text-neutral-800 dark:text-neutral-200"
-          title={theme === 'light' ? 'Cambiar a Modo Oscuro' : 'Cambiar a Modo Claro'}
+      {/* ── Ticket nav ── */}
+      <div className="relative" style={{ width: W, height: H }}>
+
+        {/* Fill — clipped to ticket shape */}
+        <div
+          className="absolute inset-0 bg-[#FAFAF7] dark:bg-[#1A1A1A]"
+          style={{ clipPath: `path("${TICKET_PATH}")` }}
+        />
+
+        {/* SVG border — traces the same ticket path */}
+        <svg
+          className="absolute inset-0 pointer-events-none"
+          width={W} height={H}
+          viewBox={`0 0 ${W} ${H}`}
+          fill="none"
         >
-          {theme === 'light' ? <Moon className="h-4.5 w-4.5" /> : <Sun className="h-4.5 w-4.5 text-[#D4F334]" />}
-        </button>
+          <path
+            d={TICKET_PATH}
+            stroke="#D0CFC9"
+            strokeWidth="1"
+          />
+        </svg>
 
-        {/* Cart with dynamic count */}
-        <button
-          onClick={() => {
-            setMenuOpen(false);
-            setView('checkout');
-          }}
-          className="relative p-1.5 hover:bg-neutral-100 dark:hover:bg-neutral-800 rounded-full transition-colors text-neutral-800 dark:text-neutral-200"
-          title="Ver selección"
-        >
-          <ShoppingBag className="h-4.5 w-4.5" />
-          {cartCount > 0 && (
-            <span className="absolute -top-1 -right-1 h-4 w-4 bg-[#0084FF] text-white text-[8px] font-mono rounded-full font-bold flex items-center justify-center animate-pulse">
-              {cartCount}
-            </span>
-          )}
-        </button>
-      </div>
+        {/* Content */}
+        <div className="relative z-10 flex items-stretch h-full">
 
-      {/* 2. Brand and Dropdown Selector Section */}
-      <div className="relative flex items-center px-4 sm:px-6 border-r border-[#333333]/30 dark:border-[#555555]/40">
-        {/* Visual Corner Cutouts */}
-        <div className="absolute -top-1.5 -right-1.5 w-3 h-3 bg-[#F5F5F3] dark:bg-[#0E0E0E] rounded-full border border-neutral-900 dark:border-neutral-700"></div>
-        <div className="absolute -bottom-1.5 -right-1.5 w-3 h-3 bg-[#F5F5F3] dark:bg-[#0E0E0E] rounded-full border border-neutral-900 dark:border-neutral-700"></div>
-
-        <button
-          onClick={() => setDropdownOpen(!dropdownOpen)}
-          className="flex items-center gap-2 group text-left select-none outline-none focus:outline-none"
-        >
-          <span className="font-sans font-bold text-xs sm:text-sm tracking-tight text-neutral-800 dark:text-neutral-200 uppercase">
-            andante <span className="text-[#0084FF] dark:text-[#3D9DFF] group-hover:text-[#D4F334]">:)</span>
-          </span>
-          <span className="px-1.5 py-0.5 bg-[#D4F334] text-[#333333] text-[9px] font-mono font-bold rounded">
-            {currentView === 'landing' ? 'SALA PRINCIPAL' : currentView === 'exhibition' ? 'EXPO' : 'CHECKOUT'}
-          </span>
-          <ChevronDown className={`h-3 w-3 text-neutral-500 transition-transform duration-200 ${dropdownOpen ? 'rotate-180' : ''}`} />
-        </button>
-
-        {/* Dropdown Options Absolute Overlay with Siena-Film Styling */}
-        {dropdownOpen && (
-          <div className="absolute top-[102%] left-1/2 -translate-x-1/2 mt-1 w-44 bg-white dark:bg-[#1E1E1E] border border-neutral-900 dark:border-neutral-700 rounded-xl overflow-hidden shadow-2xl z-50 py-1 animate-fade-in">
+          {/* Left: brand + pill — ancho fijo = DX para que el divisor alinee con el notch */}
+          <div
+            className="flex flex-col justify-center gap-2 shrink-0"
+            style={{ width: DX, paddingLeft: 24, paddingRight: 16 }}
+          >
             <button
-              onClick={() => {
-                setView('landing');
-                setDropdownOpen(false);
-              }}
-              className={`w-full text-left px-4 py-2.5 text-xs font-mono font-bold hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors flex items-center justify-between ${currentView === 'landing' ? 'text-[#0084FF] bg-neutral-50 dark:bg-neutral-800/50' : 'text-neutral-700 dark:text-neutral-300'}`}
+              onClick={() => setDropdownOpen((o) => !o)}
+              className="flex items-center gap-1.5 w-fit select-none outline-none"
             >
-              <span>01 / SALA PRINCIPAL</span>
-              {currentView === 'landing' && <span className="h-1.5 w-1.5 bg-[#0084FF] rounded-full animate-ping" />}
+              <span
+                className="text-[#1A1A1A] dark:text-[#F2F2F2] text-[22px] leading-none"
+                style={{ fontFamily: "'Syne', sans-serif", fontWeight: 700 }}
+              >
+                andante
+              </span>
+              <motion.span
+                animate={{ rotate: dropdownOpen ? 180 : 0 }}
+                transition={{ duration: 0.25, ease: [0.4, 0, 0.2, 1] }}
+                className="text-[#1A1A1A] dark:text-[#F2F2F2]"
+              >
+                <ChevronDown size={17} strokeWidth={2} />
+              </motion.span>
             </button>
+
             <button
-              onClick={() => {
-                setView('exhibition');
-                setDropdownOpen(false);
-              }}
-              className={`w-full text-left px-4 py-2.5 text-xs font-mono font-bold hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors flex items-center justify-between ${currentView === 'exhibition' ? 'text-[#0084FF] bg-neutral-50 dark:bg-neutral-800/50' : 'text-neutral-700 dark:text-neutral-300'}`}
+              onClick={() => setView('exhibition')}
+              className="flex items-center gap-1.5 w-fit px-2 py-[3px] rounded bg-[#D5F149] hover:bg-[#c9e83f] transition-colors"
             >
-              <span>02 / EXHIBICIÓN</span>
-              {currentView === 'exhibition' && <span className="h-1.5 w-1.5 bg-[#0084FF] rounded-full animate-ping" />}
+              <span className="text-[10px]">🎨</span>
+              <span
+                className="text-[11px] text-black leading-none"
+                style={{ fontFamily: "'Syne Mono', monospace" }}
+              >
+                {activeExhibition.title}
+              </span>
             </button>
-            <button
-               onClick={() => {
-                 setView('checkout');
-                 setDropdownOpen(false);
-               }}
-               className={`w-full text-left px-4 py-2.5 text-xs font-mono font-bold hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors flex items-center justify-between ${currentView === 'checkout' || currentView === 'cart' ? 'text-[#0084FF] bg-neutral-50 dark:bg-neutral-800/50' : 'text-neutral-700 dark:text-neutral-300'}`}
-             >
-               <span>03 / ADQUISICIÓN</span>
-               {(currentView === 'checkout' || currentView === 'cart') && <span className="h-1.5 w-1.5 bg-[#0084FF] rounded-full animate-ping" />}
-             </button>
           </div>
+
+          {/* Dashed vertical divider — positioned at DX */}
+          <div
+            className="self-stretch w-px shrink-0"
+            style={{
+              backgroundImage:
+                'repeating-linear-gradient(to bottom, #C4C3BD 0px, #C4C3BD 5px, transparent 5px, transparent 10px)',
+            }}
+          />
+
+          {/* Right: cart + hamburger */}
+          <div className="flex items-center gap-4 px-5">
+            <button
+              onClick={() => { setMenuOpen(false); setView('checkout'); }}
+              className="relative text-[#1A1A1A] dark:text-[#F2F2F2] hover:opacity-70 transition-opacity"
+              aria-label="Ver carrito"
+            >
+              <ShoppingBag size={22} strokeWidth={1.6} />
+              {cartCount > 0 && (
+                <span className="absolute -top-1.5 -right-1.5 h-4 w-4 bg-[#D5F149] text-black text-[8px] font-bold rounded-full flex items-center justify-center">
+                  {cartCount}
+                </span>
+              )}
+            </button>
+
+            <button
+              onClick={() => setMenuOpen(!menuOpen)}
+              className="flex flex-col gap-[5px] group select-none outline-none"
+              aria-label="Menú"
+            >
+              <span className="block w-[22px] h-[1.5px] bg-[#1A1A1A] dark:bg-[#F2F2F2] transition-all duration-200 group-hover:w-3.5" />
+              <span className="block w-[22px] h-[1.5px] bg-[#1A1A1A] dark:bg-[#F2F2F2]" />
+              <span className="block w-[22px] h-[1.5px] bg-[#1A1A1A] dark:bg-[#F2F2F2] transition-all duration-200 group-hover:w-3.5" />
+            </button>
+          </div>
+
+        </div>
+      </div>
+
+      {/* ── Dropdown exhibitions list ── */}
+      <AnimatePresence>
+        {dropdownOpen && (
+          <motion.div
+            initial={{ opacity: 0, y: -8, scaleY: 0.95 }}
+            animate={{ opacity: 1, y: 0, scaleY: 1 }}
+            exit={{ opacity: 0, y: -8, scaleY: 0.95 }}
+            transition={{ duration: 0.22, ease: [0.4, 0, 0.2, 1] }}
+            style={{ transformOrigin: 'top', width: W }}
+            className="mt-2 bg-[#FAFAF7] dark:bg-[#1A1A1A] border border-[#D0CFC9] dark:border-[#333] rounded-xl overflow-hidden shadow-xl"
+          >
+            <div className="px-5 py-3 border-b border-[#E8E7E2] dark:border-[#2A2A2A]">
+              <span
+                className="text-[10px] text-[#888] uppercase tracking-widest"
+                style={{ fontFamily: "'Syne Mono', monospace" }}
+              >
+                Exposiciones
+              </span>
+            </div>
+
+            {EXHIBITIONS.map((expo, i) => (
+              <motion.button
+                key={expo.id}
+                initial={{ opacity: 0, x: -8 }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{ delay: i * 0.04, duration: 0.18 }}
+                onClick={() => { setView('exhibition'); setDropdownOpen(false); }}
+                className="w-full flex items-center gap-3 px-5 py-3 hover:bg-[#F0EFE9] dark:hover:bg-[#242424] transition-colors border-b border-[#E8E7E2] dark:border-[#2A2A2A] last:border-0"
+              >
+                <div className="shrink-0 w-9 h-9 rounded overflow-hidden bg-[#E0DED8]">
+                  <img src={expo.image} alt={expo.title} className="w-full h-full object-cover" />
+                </div>
+                <div className="flex-1 text-left min-w-0">
+                  <p
+                    className="text-[13px] text-[#1A1A1A] dark:text-[#F2F2F2] leading-tight truncate"
+                    style={{ fontFamily: "'Syne', sans-serif", fontWeight: 600 }}
+                  >
+                    {expo.title}
+                  </p>
+                  <p
+                    className="text-[10px] text-[#888] truncate mt-0.5"
+                    style={{ fontFamily: "'Syne Mono', monospace" }}
+                  >
+                    {expo.venue} · {expo.year}
+                  </p>
+                </div>
+                {expo.active && (
+                  <span className="shrink-0 w-2 h-2 rounded-full bg-[#D5F149]" />
+                )}
+              </motion.button>
+            ))}
+          </motion.div>
         )}
-      </div>
-
-      {/* 3. Menu Hamburger Icon Section (siena-film standard layout lines shrinking on hover) */}
-      <div className="relative flex items-center px-4 sm:px-6">
-        {/* Visual Corner Cutouts */}
-        <div className="absolute -top-1.5 -right-1.5 w-3 h-3 bg-[#F5F5F3] dark:bg-[#0E0E0E] rounded-full border border-neutral-900 dark:border-neutral-700"></div>
-        <div className="absolute -bottom-1.5 -right-1.5 w-3 h-3 bg-[#F5F5F3] dark:bg-[#0E0E0E] rounded-full border border-neutral-900 dark:border-neutral-700"></div>
-
-        <button
-          onClick={() => setMenuOpen(!menuOpen)}
-          className="flex flex-col gap-1.5 group select-none outline-none focus:outline-none"
-          aria-label="Alternar menú"
-        >
-          {menuOpen ? (
-            <X className="h-5 w-5 text-neutral-800 dark:text-neutral-200 transition-transform duration-200 rotate-90 hover:rotate-180" />
-          ) : (
-            <>
-              <div className="w-6 h-[2px] sm:w-7 bg-neutral-800 dark:bg-neutral-200 transition-all duration-200 group-hover:w-4"></div>
-              <div className="w-6 h-[2px] sm:w-7 bg-neutral-800 dark:bg-neutral-200 transition-all duration-200"></div>
-              <div className="w-6 h-[2px] sm:w-7 bg-neutral-800 dark:bg-neutral-200 transition-all duration-200 group-hover:w-4"></div>
-            </>
-          )}
-        </button>
-      </div>
-
-    </nav>
+      </AnimatePresence>
+    </div>
   );
 }

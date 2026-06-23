@@ -67,6 +67,50 @@ export default function App() {
     window.scrollTo({ top: 0, behavior: 'instant' });
   }, [currentView]);
 
+  // Section scroll-snap solo en la landing (paradas centradas por sección)
+  useEffect(() => {
+    const root = window.document.documentElement;
+    root.classList.toggle('snap-scroll', currentView === 'landing');
+    return () => root.classList.remove('snap-scroll');
+  }, [currentView]);
+
+  // Infinite scroll loop — only loops when the user actively pushes PAST an edge,
+  // never automatically. Reaching the footer lets you rest there; one extra wheel
+  // gesture downward instantly reveals the hero again (and vice-versa at the top).
+  useEffect(() => {
+    const noLoop = ['checkout', 'cart', 'success'];
+    if (noLoop.includes(currentView)) return;
+
+    let locked = false;
+
+    const onWheel = (e: WheelEvent) => {
+      if (locked) return;
+
+      const { scrollY, innerHeight } = window;
+      const pageH = document.documentElement.scrollHeight;
+      const atBottom = scrollY + innerHeight >= pageH - 2;
+      const atTop = scrollY <= 2;
+
+      // Continuing to push DOWN while already resting at the footer → reveal hero again.
+      if (e.deltaY > 0 && atBottom) {
+        e.preventDefault();
+        locked = true;
+        window.scrollTo({ top: 0, behavior: 'instant' });
+        setTimeout(() => { locked = false; }, 250);
+      }
+      // Pushing UP while already at the very top → jump to the footer.
+      else if (e.deltaY < 0 && atTop) {
+        e.preventDefault();
+        locked = true;
+        window.scrollTo({ top: pageH - innerHeight, behavior: 'instant' });
+        setTimeout(() => { locked = false; }, 250);
+      }
+    };
+
+    window.addEventListener('wheel', onWheel, { passive: false });
+    return () => window.removeEventListener('wheel', onWheel);
+  }, [currentView]);
+
   // Cart operations
   const handleAddToCart = (artwork: Artwork) => {
     setCart((prev) => {

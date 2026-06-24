@@ -77,6 +77,7 @@ export interface Exhibition {
   dateRange: string;
   curatorText: string;
   image: string;
+  mapsUrl: string;
 }
 
 export interface CartItem {

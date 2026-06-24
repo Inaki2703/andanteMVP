@@ -6,9 +6,10 @@ export const EXHIBITION_DATA: Exhibition = {
   subtitle: 'Exposición Activa — Café Norte',
   locationName: 'Café Norte',
   address: 'Calle General Alvear 45, Planta Baja',
-  dateRange: 'Junio 01 – Julio 15, 2026',
+  dateRange: 'Junio 23 – Agosto 25, 2026',
   curatorText: 'La luz no solo ilumina, esculpe. Los cinco creadores reunidos en esta muestra investigan el impacto de la luz natural y artificial sobre las superficies cotidianas, creando diálogos efímeros a lo largo del día. Esta exposición itinerante busca resignificar y descentralizar las paredes ordinarias, transformando un café de barrio en una verdadera sala de contemplación estética.',
-  image: 'https://images.unsplash.com/photo-1554118811-1e0d58224f24?auto=format&fit=crop&q=80&w=1200' // Stylish coffee shop with art feel
+  image: 'https://images.unsplash.com/photo-1554118811-1e0d58224f24?auto=format&fit=crop&q=80&w=1200', // Stylish coffee shop with art feel
+  mapsUrl: 'https://www.google.com/maps/search/?api=1&query=Caf%C3%A9+Norte+Calle+General+Alvear+45+San+Isidro',
 };
 
 export const ARTISTS_DATA: Artist[] = [

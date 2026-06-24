@@ -60,6 +60,13 @@ export default function App() {
     root.classList.toggle('light', theme === 'light');
   }, [theme]);
 
+  // Scroll-snap suave en la vista de exposición (concepto curatorial)
+  useEffect(() => {
+    const root = window.document.documentElement;
+    root.classList.toggle('exhibition-snap', currentView === 'exhibition');
+    return () => root.classList.remove('exhibition-snap');
+  }, [currentView]);
+
   // Page title syncer
   useEffect(() => {
     document.title = "Andante — Galería Itinerante Digital";

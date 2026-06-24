@@ -2,9 +2,13 @@ import { useEffect, useState } from 'react';
 
 interface CurvedLoopProps {
   marqueeText?: string;
+  centerBadgeText?: string;
 }
 
-export default function CurvedLoop({ marqueeText = "ARTE ✦ MUNDIALISTA" }: CurvedLoopProps) {
+export default function CurvedLoop({
+  marqueeText = "ARTE ✦ MUNDIALISTA",
+  centerBadgeText = "MUESTRA SANTIAGO",
+}: CurvedLoopProps) {
   const [offset, setOffset] = useState(0);
 
   // Animate the text sliding along the path using requestAnimationFrame for pristine frame rates
@@ -69,7 +73,7 @@ export default function CurvedLoop({ marqueeText = "ARTE ✦ MUNDIALISTA" }: Cur
           <div className="px-5 py-2 bg-neutral-900 dark:bg-tab border border-neutral-700/60 dark:border-neutral-800 rounded-full shadow-2xl backdrop-blur-md flex items-center gap-2 transform hover:scale-105 transition-transform duration-350">
             <span className="w-2 h-2 rounded-full bg-brand animate-ping" />
             <span className="text-[10px] sm:text-xs font-mono font-extrabold text-white tracking-[0.2em] uppercase">
-              MUESTRA SANTIAGO
+              {centerBadgeText}
             </span>
           </div>
         </div>

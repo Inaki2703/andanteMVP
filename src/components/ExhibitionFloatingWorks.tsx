@@ -74,7 +74,7 @@ function FloatingCard({
         <div className="relative overflow-hidden aspect-square rounded-[14px] bg-neutral-100 dark:bg-neutral-900">
           <img
             src={artwork.image}
-            alt={artwork.title}
+            alt=""
             referrerPolicy="no-referrer"
             draggable={false}
             className="w-full h-full object-cover pointer-events-none"
@@ -122,7 +122,7 @@ export default function ExhibitionFloatingWorks({
         >
           <img
             src={backgroundImage}
-            alt="Muestra de Exposición Activa"
+            alt=""
             referrerPolicy="no-referrer"
             className="absolute inset-0 w-full h-full object-cover"
           />

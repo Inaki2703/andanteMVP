@@ -142,9 +142,10 @@ export default function CheckoutView({
     onChange: (val: string) => void,
     type: string = 'text'
   ) => {
+    const error = formErrors[id];
     return (
-      <div className="bg-input dark:bg-canvas rounded-xl px-4 py-1.5 transition-all focus-within:ring-2 focus-within:ring-accent/20 border border-neutral-200/60 dark:border-neutral-800 text-left">
-        <label htmlFor={id} className="text-[9px] sm:text-[10px] font-mono text-neutral-400 dark:text-neutral-500 uppercase font-black tracking-wider block">
+      <div className={`bg-input dark:bg-canvas rounded-xl px-4 py-1.5 transition-all focus-within:ring-2 focus-within:ring-accent border text-left ${error ? 'border-red-500/70' : 'border-neutral-200/60 dark:border-neutral-800'}`}>
+        <label htmlFor={id} className="text-[9px] sm:text-[10px] font-mono text-fg-muted uppercase font-black tracking-wider block">
           {label}
         </label>
         <input
@@ -152,6 +153,8 @@ export default function CheckoutView({
           type={type}
           value={value}
           placeholder={placeholder}
+          aria-invalid={error ? true : undefined}
+          aria-describedby={error ? `${id}-error` : undefined}
           onChange={(e) => {
             onChange(e.target.value);
             if (formErrors[id]) {
@@ -164,6 +167,11 @@ export default function CheckoutView({
           }}
           className="w-full bg-transparent border-none outline-none font-sans text-xs sm:text-sm font-medium text-neutral-800 dark:text-neutral-100 p-0 mt-0.5 focus:ring-0 focus:outline-none"
         />
+        {error && (
+          <span id={`${id}-error`} className="text-[9px] font-sans text-red-500 dark:text-red-400 font-bold block mt-0.5">
+            {error}
+          </span>
+        )}
       </div>
     );
   };
@@ -183,9 +191,9 @@ export default function CheckoutView({
       <div className="flex-shrink-0">
         <button
           onClick={() => setView('exhibition')}
-          className="flex items-center gap-2 text-[10px] sm:text-xs font-mono font-black text-neutral-500 dark:text-neutral-400 hover:text-accent uppercase tracking-widest pb-3 sm:pb-4 transition-colors cursor-pointer select-none"
+          className="focus-ring flex items-center gap-2 text-[10px] sm:text-xs font-mono font-black text-fg-secondary hover:text-accent uppercase tracking-widest pb-3 sm:pb-4 transition-colors cursor-pointer select-none"
         >
-          <span>←</span>
+          <span aria-hidden="true">←</span>
           <span>VOLVER A CATÁLOGO</span>
         </button>
       </div>
@@ -218,7 +226,7 @@ export default function CheckoutView({
               <button
                 type="button"
                 onClick={fillSampleData}
-                className="bg-brand-soft hover:bg-brand-soft-hover text-brand-soft-text dark:bg-brand-soft dark:text-brand-soft-text font-mono text-[9px] font-black tracking-widest px-3.5 py-1.5 rounded-lg transition-all shadow-xs uppercase select-none border border-transparent whitespace-nowrap cursor-pointer hover:scale-[1.02]"
+                className="focus-ring bg-brand-soft hover:bg-brand-soft-hover text-brand-soft-text dark:bg-brand-soft dark:text-brand-soft-text font-mono text-[9px] font-black tracking-widest px-3.5 py-1.5 rounded-lg transition-all shadow-xs uppercase select-none border border-transparent whitespace-nowrap cursor-pointer hover:scale-[1.02]"
               >
                 AUTORELLENAR
               </button>
@@ -226,7 +234,7 @@ export default function CheckoutView({
 
             {/* Form Error alert if validation triggers */}
             {Object.keys(formErrors).length > 0 && (
-              <div className="bg-red-500/10 border border-red-500/30 p-2.5 rounded-xl text-[10px] font-mono text-red-500 space-y-1">
+              <div role="alert" className="bg-red-500/10 border border-red-500/30 p-2.5 rounded-xl text-[10px] font-mono text-red-500 space-y-1">
                 <p className="font-black text-xs uppercase tracking-wider">⚠️ REVISA LAS SECCIONES SEÑALADAS EN ROJO</p>
                 <p className="text-[10px] sm:text-xs">Por favor, completa correctamente todos los datos requeridos en el formulario para procesar tu adquisición de forma segura.</p>
               </div>
@@ -293,14 +301,15 @@ export default function CheckoutView({
                   </div>
                   
                   {/* Clean Segmented Control Switch */}
-                  <div className="bg-neutral-100 dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-800 p-0.5 rounded-lg flex items-center gap-0.5">
+                  <div role="group" aria-label="Opción de entrega" className="bg-neutral-100 dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-800 p-0.5 rounded-lg flex items-center gap-0.5">
                     <button
                       type="button"
                       onClick={() => setDeliveryMethod('domicilio')}
-                      className={`px-2.5 py-1 text-[8.5px] font-mono uppercase font-black tracking-wider rounded-md transition-all cursor-pointer ${
+                      aria-pressed={deliveryMethod === 'domicilio'}
+                      className={`focus-ring px-2.5 py-1 text-[8.5px] font-mono uppercase font-black tracking-wider rounded-md transition-all cursor-pointer ${
                         deliveryMethod === 'domicilio'
                           ? 'bg-white dark:bg-tab text-accent shadow-xs border border-neutral-200/20'
-                          : 'text-neutral-400 hover:text-neutral-600 dark:hover:text-neutral-200'
+                          : 'text-fg-muted hover:text-neutral-600 dark:hover:text-neutral-200'
                       }`}
                     >
                       Domicilio
@@ -308,10 +317,11 @@ export default function CheckoutView({
                     <button
                       type="button"
                       onClick={() => setDeliveryMethod('sede')}
-                      className={`px-2.5 py-1 text-[8.5px] font-mono uppercase font-black tracking-wider rounded-md transition-all cursor-pointer ${
+                      aria-pressed={deliveryMethod === 'sede'}
+                      className={`focus-ring px-2.5 py-1 text-[8.5px] font-mono uppercase font-black tracking-wider rounded-md transition-all cursor-pointer ${
                         deliveryMethod === 'sede'
                           ? 'bg-white dark:bg-tab text-accent shadow-xs border border-neutral-200/20'
-                          : 'text-neutral-400 hover:text-neutral-600 dark:hover:text-neutral-200'
+                          : 'text-fg-muted hover:text-neutral-600 dark:hover:text-neutral-200'
                       }`}
                     >
                       Pasar por ella
@@ -379,8 +389,8 @@ export default function CheckoutView({
 
                 <div className="grid grid-cols-1 sm:grid-cols-12 gap-2.5">
                   <div className="sm:col-span-6">
-                    <div className="bg-input dark:bg-canvas rounded-xl px-4 py-1.5 transition-all focus-within:ring-2 focus-within:ring-accent/20 border border-neutral-200/60 dark:border-neutral-800 text-left">
-                      <label htmlFor="cardNumberInput" className="text-[9px] sm:text-[10px] font-mono text-neutral-400 dark:text-neutral-500 uppercase font-black tracking-wider block">
+                    <div className={`bg-input dark:bg-canvas rounded-xl px-4 py-1.5 transition-all focus-within:ring-2 focus-within:ring-accent border text-left ${formErrors.cardNumber ? 'border-red-500/70' : 'border-neutral-200/60 dark:border-neutral-800'}`}>
+                      <label htmlFor="cardNumberInput" className="text-[9px] sm:text-[10px] font-mono text-fg-muted uppercase font-black tracking-wider block">
                         Número de Tarjeta *
                       </label>
                       <input
@@ -388,6 +398,8 @@ export default function CheckoutView({
                         type="text"
                         value={payment.cardNumber}
                         placeholder="4532 •••• •••• 8820"
+                        aria-invalid={formErrors.cardNumber ? true : undefined}
+                        aria-describedby={formErrors.cardNumber ? 'cardNumberInput-error' : undefined}
                         onChange={(e) => {
                           handleCardNumberChange(e);
                           if (formErrors.cardNumber) {
@@ -400,12 +412,17 @@ export default function CheckoutView({
                         }}
                         className="w-full bg-transparent border-none outline-none font-sans text-xs sm:text-sm font-medium text-neutral-800 dark:text-neutral-100 p-0 mt-0.5 focus:ring-0 focus:outline-none"
                       />
+                      {formErrors.cardNumber && (
+                        <span id="cardNumberInput-error" className="text-[9px] font-sans text-red-500 dark:text-red-400 font-bold block mt-0.5">
+                          {formErrors.cardNumber}
+                        </span>
+                      )}
                     </div>
                   </div>
 
                   <div className="sm:col-span-3">
-                    <div className="bg-input dark:bg-canvas rounded-xl px-4 py-1.5 transition-all focus-within:ring-2 focus-within:ring-accent/20 border border-neutral-200/60 dark:border-neutral-800 text-left">
-                      <label htmlFor="expiryInput" className="text-[9px] sm:text-[10px] font-mono text-neutral-400 dark:text-neutral-500 uppercase font-black tracking-wider block">
+                    <div className={`bg-input dark:bg-canvas rounded-xl px-4 py-1.5 transition-all focus-within:ring-2 focus-within:ring-accent border text-left ${formErrors.expiryDate ? 'border-red-500/70' : 'border-neutral-200/60 dark:border-neutral-800'}`}>
+                      <label htmlFor="expiryInput" className="text-[9px] sm:text-[10px] font-mono text-fg-muted uppercase font-black tracking-wider block">
                         Expiración *
                       </label>
                       <input
@@ -413,6 +430,8 @@ export default function CheckoutView({
                         type="text"
                         value={payment.expiryDate}
                         placeholder="MM/AA"
+                        aria-invalid={formErrors.expiryDate ? true : undefined}
+                        aria-describedby={formErrors.expiryDate ? 'expiryInput-error' : undefined}
                         onChange={(e) => {
                           handleExpiryChange(e);
                           if (formErrors.expiryDate) {
@@ -425,12 +444,17 @@ export default function CheckoutView({
                         }}
                         className="w-full bg-transparent border-none outline-none font-sans text-xs sm:text-sm font-medium text-neutral-800 dark:text-neutral-100 p-0 mt-0.5 focus:ring-0 focus:outline-none"
                       />
+                      {formErrors.expiryDate && (
+                        <span id="expiryInput-error" className="text-[9px] font-sans text-red-500 dark:text-red-400 font-bold block mt-0.5">
+                          {formErrors.expiryDate}
+                        </span>
+                      )}
                     </div>
                   </div>
 
                   <div className="sm:col-span-3">
-                    <div className="bg-input dark:bg-canvas rounded-xl px-4 py-1.5 transition-all focus-within:ring-2 focus-within:ring-accent/20 border border-neutral-200/60 dark:border-neutral-800 text-left">
-                      <label htmlFor="cvvInput" className="text-[9px] sm:text-[10px] font-mono text-neutral-400 dark:text-neutral-500 uppercase font-black tracking-wider block">
+                    <div className={`bg-input dark:bg-canvas rounded-xl px-4 py-1.5 transition-all focus-within:ring-2 focus-within:ring-accent border text-left ${formErrors.cvv ? 'border-red-500/70' : 'border-neutral-200/60 dark:border-neutral-800'}`}>
+                      <label htmlFor="cvvInput" className="text-[9px] sm:text-[10px] font-mono text-fg-muted uppercase font-black tracking-wider block">
                         CVC/CVV *
                       </label>
                       <input
@@ -438,6 +462,8 @@ export default function CheckoutView({
                         type="password"
                         value={payment.cvv}
                         placeholder="•••"
+                        aria-invalid={formErrors.cvv ? true : undefined}
+                        aria-describedby={formErrors.cvv ? 'cvvInput-error' : undefined}
                         onChange={(e) => {
                           handleCVVChange(e);
                           if (formErrors.cvv) {
@@ -450,6 +476,11 @@ export default function CheckoutView({
                         }}
                         className="w-full bg-transparent border-none outline-none font-sans text-xs sm:text-sm font-medium text-neutral-800 dark:text-neutral-100 p-0 mt-0.5 focus:ring-0 focus:outline-none"
                       />
+                      {formErrors.cvv && (
+                        <span id="cvvInput-error" className="text-[9px] font-sans text-red-500 dark:text-red-400 font-bold block mt-0.5">
+                          {formErrors.cvv}
+                        </span>
+                      )}
                     </div>
                   </div>
                 </div>
@@ -462,7 +493,7 @@ export default function CheckoutView({
               <button
                 type="submit"
                 disabled={isSubmitting || cart.length === 0}
-                className="w-full bg-accent hover:bg-accent-hover active:scale-[0.99] text-white font-sans text-xs font-black uppercase tracking-widest py-3.5 rounded-xl transition-all duration-150 shadow-md flex items-center justify-center space-x-2 border border-white/5 cursor-pointer select-none"
+                className="focus-ring w-full bg-accent hover:bg-accent-hover active:scale-[0.99] text-on-accent font-sans text-xs font-black uppercase tracking-widest py-3.5 rounded-xl transition-all duration-150 shadow-md flex items-center justify-center space-x-2 border border-white/5 cursor-pointer select-none"
               >
                 {isSubmitting ? (
                   <>
@@ -539,7 +570,7 @@ export default function CheckoutView({
                 <div key={item.artwork.id} className="flex gap-3 items-center bg-inset p-2.5 rounded-xl border border-neutral-800/40 relative group">
                   <img
                     src={item.artwork.image}
-                    alt={item.artwork.title}
+                    alt=""
                     referrerPolicy="no-referrer"
                     className="w-12 h-12 object-cover rounded-lg border border-neutral-800 flex-shrink-0"
                   />
@@ -566,10 +597,11 @@ export default function CheckoutView({
                     <button
                       type="button"
                       onClick={() => onRemoveItem(item.artwork.id)}
-                      className="p-1 text-neutral-500 hover:text-red-400 hover:bg-elevated rounded transition-colors cursor-pointer"
+                      className="focus-ring p-1 text-neutral-500 hover:text-red-400 hover:bg-elevated rounded transition-colors cursor-pointer"
                       title="Eliminar de la bolsa"
+                      aria-label={`Eliminar ${item.artwork.title} de la bolsa`}
                     >
-                      <Trash className="h-3.5 w-3.5" />
+                      <Trash className="h-3.5 w-3.5" aria-hidden="true" />
                     </button>
                   </div>
                 </div>

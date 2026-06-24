@@ -41,7 +41,7 @@ export default function MainMenu({ setView, setMenuOpen, onOpenManifesto }: Main
                 <div key={item.view} className="group">
                   <button
                     onClick={() => handleNavigate(item.view)}
-                    className="flex items-start text-left w-full focus:outline-none focus:text-accent"
+                    className="focus-ring flex items-start text-left w-full"
                   >
                     <span className="font-mono text-sm sm:text-base text-accent mr-4 sm:mr-6 font-bold mt-1">
                       {item.num}
@@ -67,7 +67,7 @@ export default function MainMenu({ setView, setMenuOpen, onOpenManifesto }: Main
                     setMenuOpen(false);
                     onOpenManifesto();
                   }}
-                  className="flex items-start text-left w-full focus:outline-none"
+                  className="focus-ring flex items-start text-left w-full"
                 >
                   <span className="font-mono text-sm sm:text-base text-accent mr-4 sm:mr-6 font-bold mt-1">
                     04
@@ -117,7 +117,7 @@ export default function MainMenu({ setView, setMenuOpen, onOpenManifesto }: Main
                 >
                   <img
                     src={venue.image}
-                    alt={venue.name}
+                    alt=""
                     referrerPolicy="no-referrer"
                     className="w-14 h-14 object-cover rounded-xl border border-border flex-shrink-0 bg-white"
                   />

@@ -189,7 +189,10 @@ export default function App() {
   return (
     <ClickSpark>
     <div ref={pageRef} className="flex flex-col min-h-screen bg-page grid-dot-pattern text-fg font-sans tracking-normal relative md:pb-0 pb-16 transition-colors duration-400">
-      
+
+      {/* Skip link — primer elemento enfocable (WCAG 2.4.1) */}
+      <a href="#main" className="skip-link">Saltar al contenido</a>
+
       {/* 1. Header Area with dynamic dark status */}
       {currentView !== 'checkout' && currentView !== 'cart' && currentView !== 'exhibition' && currentView !== 'success' && currentView !== 'artist' && (
         <Header
@@ -215,7 +218,7 @@ export default function App() {
       </AnimatePresence>
 
       {/* 3. Core App Content router */}
-      <main className="flex-grow">
+      <main id="main" className="flex-grow">
         {currentView === 'landing' && (
           <LandingView
             setView={setView}
@@ -287,22 +290,28 @@ export default function App() {
 
       {/* 5. Floating Action Strip helper for mobile screens */}
       {currentView !== 'checkout' && currentView !== 'cart' && currentView !== 'success' && (
-        <div className="md:hidden fixed bottom-0 left-0 right-0 z-30 bg-white/90 dark:bg-canvas/90 backdrop-blur-md border-t border-border px-4 py-3.5 flex justify-around select-none">
+        <nav
+          aria-label="Navegación principal"
+          className="md:hidden fixed bottom-0 left-0 right-0 z-30 bg-white/90 dark:bg-canvas/90 backdrop-blur-md border-t border-border px-4 py-3.5 flex justify-around select-none"
+        >
           <button
             onClick={() => setView('landing')}
-            className={`flex flex-col items-center gap-0.5 text-[9px] font-mono font-black uppercase tracking-wider ${currentView === 'landing' ? 'text-accent' : 'text-fg-muted'}`}
+            aria-current={currentView === 'landing' ? 'page' : undefined}
+            className={`focus-ring flex flex-col items-center gap-0.5 text-[9px] font-mono font-black uppercase tracking-wider ${currentView === 'landing' ? 'text-accent' : 'text-fg-muted'}`}
           >
             <span>Inicio</span>
           </button>
           <button
             onClick={() => setView('exhibition')}
-            className={`flex flex-col items-center gap-0.5 text-[9px] font-mono font-black uppercase tracking-wider ${currentView === 'exhibition' ? 'text-accent' : 'text-fg-muted'}`}
+            aria-current={currentView === 'exhibition' ? 'page' : undefined}
+            className={`focus-ring flex flex-col items-center gap-0.5 text-[9px] font-mono font-black uppercase tracking-wider ${currentView === 'exhibition' ? 'text-accent' : 'text-fg-muted'}`}
           >
             <span>Exhibición</span>
           </button>
           <button
             onClick={() => setView('cart')}
-            className={`relative flex flex-col items-center gap-0.5 text-[9px] font-mono font-black uppercase tracking-wider ${currentView === 'cart' ? 'text-accent' : 'text-fg-muted'}`}
+            aria-current={currentView === 'cart' ? 'page' : undefined}
+            className={`focus-ring relative flex flex-col items-center gap-0.5 text-[9px] font-mono font-black uppercase tracking-wider ${currentView === 'cart' ? 'text-accent' : 'text-fg-muted'}`}
           >
             <span>Selección</span>
             {cart.length > 0 && (
@@ -311,7 +320,7 @@ export default function App() {
               </span>
             )}
           </button>
-        </div>
+        </nav>
       )}
 
       {/* 6. MODAL DETAIL OVERLAY: Artwork Dossier specifications panel */}
@@ -365,9 +374,10 @@ export default function App() {
                 </div>
                 <button
                   onClick={() => setShowManifesto(false)}
-                  className="p-1.5 hover:bg-elevated text-fg rounded-full transition-colors cursor-pointer"
+                  aria-label="Cerrar manifiesto"
+                  className="focus-ring p-1.5 hover:bg-elevated text-fg rounded-full transition-colors cursor-pointer"
                 >
-                  <X className="h-5 w-5" />
+                  <X className="h-5 w-5" aria-hidden="true" />
                 </button>
               </div>
 
@@ -386,7 +396,7 @@ export default function App() {
                 <button
                   type="button"
                   onClick={() => setShowManifesto(false)}
-                  className="w-full sm:w-auto px-5 py-3.5 bg-accent hover:bg-accent-hover text-white font-sans font-bold uppercase tracking-wider rounded-md text-xs cursor-pointer"
+                  className="focus-ring w-full sm:w-auto px-5 py-3.5 bg-accent hover:bg-accent-hover text-on-accent font-sans font-bold uppercase tracking-wider rounded-md text-xs cursor-pointer"
                 >
                   Entendido, cerrar manifiesto
                 </button>

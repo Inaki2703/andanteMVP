@@ -16,7 +16,10 @@
 
   /* Azul */
   --azul: #0084FF;
-  --azul-hover: #006FD6;
+  /* Azul accesible: variante oscura para texto/iconos y fondos con texto blanco
+     (AA ≥4.5:1 sobre humo-warm/white y con texto blanco encima). */
+  --azul-accessible: #0067CC;
+  --azul-hover: #005FB8;
   --azul-soft: #E8F5FF;
   --azul-dark: #3D9DFF;
   --azul-dark-hover: #0084FF;
@@ -27,19 +30,20 @@
   --humo-warm: #FAF7F0;
   --humo-border: #E6E6E6;
   --pattern-dot: #DAD5C4;
-  --pattern-dot-dark: #474747;
+  --pattern-dot-dark: #383838;
 
   /* Carbón */
   --carbon: #333333;
   --carbon-light: #5C5C5C;
-  --carbon-muted: #8A8A8A;
+  --carbon-muted: #707070;
   --carbon-footer: #222222;
-  --carbon-muted-dark: #7A7A7A;
+  --carbon-muted-dark: #8C8C8C;
   --carbon-text-dark: #B8B8B8;
 
   /* Neutros estructurales */
   --white: #FFFFFF;
   --black: #0E0E0E;
+  --carbon-bg-dark: #2B2B2B;
   --surface-dark-1: #1A1A1A;
   --surface-dark-2: #1E1E1E;
   --surface-dark-3: #1F1F1F;
@@ -78,7 +82,7 @@
 .light {
   --ds-brand: var(--lima);
   --ds-brand-hover: var(--lima-hover);
-  --ds-accent: var(--azul);
+  --ds-accent: var(--azul-accessible);
   --ds-accent-hover: var(--azul-hover);
   --ds-accent-soft: var(--azul-soft);
   --ds-fg: var(--carbon);
@@ -119,9 +123,10 @@
   --ds-fg-secondary: var(--carbon-text-dark);
   --ds-fg-muted: var(--carbon-muted-dark);
   --ds-on-brand: var(--carbon);
-  --ds-on-accent: var(--white);
+  /* Texto oscuro sobre el azul claro (#3D9DFF) para AA en botones (≈6.8:1). */
+  --ds-on-accent: var(--black);
   --ds-on-inverse: var(--humo);
-  --ds-bg-page: var(--black);
+  --ds-bg-page: var(--carbon-bg-dark);
   --ds-bg-canvas: var(--surface-dark-1);
   --ds-bg-surface: var(--surface-dark-2);
   --ds-bg-surface-raised: var(--surface-dark-3);
@@ -259,6 +264,37 @@ html.landing-reveal .snap-section.reveal-in {
 
 .dark ::-webkit-scrollbar-thumb:hover {
   background: var(--carbon-light);
+}
+
+/* Indicador de foco homologado (2.4.7). Aplica a cualquier control con la
+   clase .focus-ring; usa outline para no depender del color de fondo. */
+.focus-ring:focus-visible {
+  outline: 2px solid var(--ds-accent);
+  outline-offset: 2px;
+  border-radius: 6px;
+}
+
+/* Skip link "Saltar al contenido" (2.4.1). Oculto hasta recibir foco. */
+.skip-link {
+  position: fixed;
+  left: 16px;
+  top: -64px;
+  z-index: 100;
+  background: var(--ds-bg-canvas);
+  color: var(--ds-fg);
+  border: 1px solid var(--ds-border-strong);
+  padding: 10px 16px;
+  border-radius: 10px;
+  font-family: var(--font-mono);
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  transition: top 0.18s ease;
+}
+.skip-link:focus {
+  top: 16px;
+  outline: 2px solid var(--ds-accent);
+  outline-offset: 2px;
 }
 
 .radius-sm { border-radius: 8px; }
@@ -400,6 +436,12 @@ html.landing-reveal .snap-section.reveal-in {
   .empty-breathe,
   .marquee-track {
     animation: none !important;
+  }
+  /* Evita el desplazamiento suave (incl. el pager por secciones) si el usuario
+     pide reducir movimiento. */
+  html,
+  body {
+    scroll-behavior: auto;
   }
 }
 

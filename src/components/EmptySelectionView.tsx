@@ -92,7 +92,7 @@ export default function EmptySelectionView({
               </span>
             </div>
 
-            <h2 className="font-sans font-bold text-[clamp(1.75rem,5.5vw,3.25rem)] text-fg tracking-tighter leading-[1.02] max-w-[14ch] sm:max-w-[16ch]">
+            <h1 className="font-sans font-bold text-[clamp(1.75rem,5.5vw,3.25rem)] text-fg tracking-tighter leading-[1.02] max-w-[14ch] sm:max-w-[16ch]">
               Tu colección está esperando su{' '}
               <span className="relative inline-block">
                 <span className="relative z-10">primera pieza.</span>
@@ -101,7 +101,7 @@ export default function EmptySelectionView({
                   aria-hidden="true"
                 />
               </span>
-            </h2>
+            </h1>
 
             <p className="font-sans text-sm sm:text-base text-fg-secondary leading-relaxed max-w-md pl-0 sm:pl-1">
               Todavía no has guardado ni comprado nada. Anda la galería y encuentra algo que te haga sentir.
@@ -149,7 +149,7 @@ export default function EmptySelectionView({
                   key={art.id}
                   type="button"
                   onClick={() => onSelectArtwork(art)}
-                  className={`absolute ${layout.className} rounded-2xl overflow-hidden border-2 border-border-strong bg-surface-raised cursor-pointer transition-smooth hover:scale-[1.04] hover:z-40 focus:outline-none focus:ring-2 focus:ring-accent ${prefersReducedMotion ? '' : `empty-float ${layout.delay}`.trim()}`}
+                  className={`absolute ${layout.className} rounded-2xl overflow-hidden border-2 border-border-strong bg-surface-raised cursor-pointer transition-smooth hover:scale-[1.04] hover:z-40 focus:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 focus-visible:ring-offset-page ${prefersReducedMotion ? '' : `empty-float ${layout.delay}`.trim()}`}
                   aria-label={`Ver ${art.title} de ${art.artistName}`}
                 >
                   <img

@@ -28,15 +28,15 @@ export default function CartView({
         <div className="inline-flex p-5 rounded-full bg-elevated dark:bg-elevated border border-border text-fg-muted mb-6 shadow-sm">
           <Trash className="h-10 w-10" weight="light" />
         </div>
-        <h2 className="font-sans font-bold text-3xl text-fg tracking-tight">
+        <h1 className="font-sans font-bold text-3xl text-fg tracking-tight">
           Tu Selección está vacía.
-        </h2>
+        </h1>
         <p className="font-sans text-sm text-fg-secondary mt-4 leading-relaxed max-w-sm mx-auto">
           ¿Aún no has encontrado una obra original que dialogue con tu mirada? Recorre la muestra activa y añade una de nuestras piezas únicas.
         </p>
         <button
           onClick={() => setView('exhibition')}
-          className="mt-8 bg-accent hover:bg-accent-hover dark:hover:bg-accent text-on-accent font-sans font-semibold text-xs uppercase tracking-wider px-8 py-4 rounded-md shadow-md transition-all cursor-pointer"
+          className="focus-ring mt-8 bg-accent hover:bg-accent-hover dark:hover:bg-accent text-on-accent font-sans font-semibold text-xs uppercase tracking-wider px-8 py-4 rounded-md shadow-md transition-all cursor-pointer"
         >
           Explorar sala activa
         </button>
@@ -76,7 +76,7 @@ export default function CartView({
               {/* Thumbnail of art block */}
               <img
                 src={item.artwork.image}
-                alt={item.artwork.title}
+                alt=""
                 referrerPolicy="no-referrer"
                 className="w-20 h-20 sm:w-24 sm:h-24 object-cover rounded-xl border border-border flex-shrink-0 bg-surface-raised"
               />
@@ -90,10 +90,11 @@ export default function CartView({
                     </span>
                     <button
                       onClick={() => onRemoveItem(item.artwork.id)}
-                      className="p-1.5 text-fg-secondary hover:text-error rounded-full hover:bg-neutral-200 dark:hover:bg-border transition-colors focus:outline-none flex-shrink-0 cursor-pointer"
+                      className="focus-ring p-1.5 text-fg-secondary hover:text-error rounded-full hover:bg-neutral-200 dark:hover:bg-border transition-colors flex-shrink-0 cursor-pointer"
                       title="Quitar de mi selección"
+                      aria-label={`Quitar ${item.artwork.title} de mi selección`}
                     >
-                      <Trash className="h-4.5 w-4.5" />
+                      <Trash className="h-4.5 w-4.5" aria-hidden="true" />
                     </button>
                   </div>
                   
@@ -124,9 +125,9 @@ export default function CartView({
           {/* Return anchor link */}
           <button
             onClick={() => setView('exhibition')}
-            className="inline-flex items-center text-xs font-mono text-accent hover:underline font-bold mt-4 cursor-pointer"
+            className="focus-ring inline-flex items-center text-xs font-mono text-accent hover:underline font-bold mt-4 cursor-pointer"
           >
-            <ArrowLeft className="h-4 w-4 mr-1.5" />
+            <ArrowLeft className="h-4 w-4 mr-1.5" aria-hidden="true" />
             <span>Seguir recorriendo la sala</span>
           </button>
         </div>
@@ -162,10 +163,10 @@ export default function CartView({
           <button
             onClick={() => setView('checkout')}
             id="proceed-to-checkout"
-            className="w-full bg-accent hover:bg-accent-hover dark:hover:bg-accent text-on-accent font-sans font-semibold text-xs uppercase tracking-wider py-4 rounded-md transition-all shadow-md active:scale-98 flex items-center justify-center space-x-2 cursor-pointer"
+            className="focus-ring w-full bg-accent hover:bg-accent-hover dark:hover:bg-accent text-on-accent font-sans font-semibold text-xs uppercase tracking-wider py-4 rounded-md transition-all shadow-md active:scale-98 flex items-center justify-center space-x-2 cursor-pointer"
           >
             <span>Paso 2: Continuar al Checkout</span>
-            <ArrowRight className="h-4 w-4" />
+            <ArrowRight className="h-4 w-4" aria-hidden="true" />
           </button>
 
           {/* Guarantee Badges panel with responsive design details */}

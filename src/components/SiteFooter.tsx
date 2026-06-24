@@ -1,4 +1,4 @@
-import { Fragment } from 'react';
+import { Fragment, useId, useState } from 'react';
 import ScrollFloatText from './ScrollFloatText';
 
 const HOME_VALUE_PROPS = [
@@ -43,37 +43,67 @@ function BrandParagraph() {
 }
 
 function SubscriptionBlock() {
+  const emailId = useId();
+  const statusId = useId();
+  const [email, setEmail] = useState('');
+  const [status, setStatus] = useState('');
+
+  const handleSubscribe = () => {
+    if (!email.trim() || !email.includes('@')) {
+      setStatus('Introduce un correo electrónico válido.');
+      return;
+    }
+    setStatus('¡Gracias por suscribirte a Andante!');
+    setEmail('');
+  };
+
   return (
-    <div className="space-y-4 w-full max-w-[400px] lg:justify-self-end">
-      <span className="text-[10px] font-mono tracking-widest text-brand font-bold block uppercase text-right">
+    <form
+      className="space-y-4 w-full max-w-[400px] lg:justify-self-end"
+      onSubmit={(e) => {
+        e.preventDefault();
+        handleSubscribe();
+      }}
+    >
+      <label
+        htmlFor={emailId}
+        className="text-[10px] font-mono tracking-widest text-brand font-bold block uppercase text-right"
+      >
         Suscripción
-      </span>
-      <div className="relative border-b border-neutral-600 pb-3 flex items-center justify-between">
+      </label>
+      <div className="relative border-b border-neutral-600 pb-3 flex items-center justify-between focus-within:border-brand transition-colors">
         <input
+          id={emailId}
           type="email"
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
           placeholder="TU EMAIL AQUÍ"
-          className="bg-transparent border-none outline-none font-sans font-bold text-sm text-on-inverse placeholder-neutral-500 w-full uppercase focus:ring-0 focus:outline-none"
+          aria-describedby={status ? statusId : undefined}
+          className="bg-transparent border-none outline-none font-sans font-bold text-sm text-on-inverse placeholder-neutral-400 w-full uppercase focus:ring-0 focus:outline-none"
         />
         <button
-          type="button"
-          onClick={() => alert('¡Gracias por suscribirte a Andante!')}
-          className="p-1 text-brand hover:text-brand-hover font-bold text-lg cursor-pointer"
+          type="submit"
+          aria-label="Suscribirme"
+          className="focus-ring p-1 text-brand hover:text-brand-hover font-bold text-lg cursor-pointer"
         >
-          ↗
+          <span aria-hidden="true">↗</span>
         </button>
       </div>
-      <div className="flex gap-6 sm:gap-8 text-[10px] font-mono text-neutral-400 justify-end pt-1">
-        <a href="#instagram" className="hover:text-on-inverse transition-colors">
+      <p id={statusId} role="status" aria-live="polite" className="text-[10px] font-mono text-on-inverse text-right min-h-[1.2em]">
+        {status}
+      </p>
+      <div className="flex gap-6 sm:gap-8 text-[10px] font-mono text-neutral-300 justify-end pt-1">
+        <a href="#instagram" className="focus-ring rounded hover:text-on-inverse transition-colors">
           INSTAGRAM
         </a>
-        <a href="#twitter" className="hover:text-on-inverse transition-colors">
+        <a href="#twitter" className="focus-ring rounded hover:text-on-inverse transition-colors">
           TWITTER
         </a>
-        <a href="#behance" className="hover:text-on-inverse transition-colors">
+        <a href="#behance" className="focus-ring rounded hover:text-on-inverse transition-colors">
           BEHANCE
         </a>
       </div>
-    </div>
+    </form>
   );
 }
 

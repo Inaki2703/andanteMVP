@@ -40,11 +40,12 @@ export default function ArtworkDetailModal({
         {/* Floating circular Close button on upper right corner */}
         <button
           onClick={onClose}
-          className="absolute top-5 right-5 sm:top-6 sm:right-6 z-20 h-9 w-9 rounded-full bg-black/90 hover:bg-black text-white dark:bg-neutral-800 dark:hover:bg-neutral-700 flex items-center justify-center shadow-lg transition-transform hover:scale-105 active:scale-95 cursor-pointer border border-white/10"
+          className="focus-ring absolute top-5 right-5 sm:top-6 sm:right-6 z-20 h-9 w-9 rounded-full bg-black/90 hover:bg-black text-white dark:bg-neutral-800 dark:hover:bg-neutral-700 flex items-center justify-center shadow-lg transition-transform hover:scale-105 active:scale-95 cursor-pointer border border-white/10"
           title="Cerrar vista"
+          aria-label="Cerrar vista de la obra"
         >
           {/* Custom double diagonal arrows or clean exit icon mapping Siena's style */}
-          <svg className="h-4 w-4 stroke-white fill-none" viewBox="0 0 24 24" strokeWidth="2.5">
+          <svg className="h-4 w-4 stroke-white fill-none" viewBox="0 0 24 24" strokeWidth="2.5" aria-hidden="true">
             <path strokeLinecap="round" strokeLinejoin="round" d="M3.75 3.75v4.5m0-4.5h4.5m-4.5 0L9 9M20.25 20.25v-4.5m0 4.5h-4.5m4.5 0L15 15" />
           </svg>
         </button>
@@ -167,7 +168,7 @@ export default function ArtworkDetailModal({
                 disabled
                 className="px-5 py-2.5 rounded-full bg-neutral-200 dark:bg-neutral-800 text-neutral-450 dark:text-neutral-500 font-sans text-[10px] sm:text-xs uppercase tracking-wider font-extrabold cursor-not-allowed"
               >
-                Vendido ({artwork.status})
+                {artwork.status === 'Reservado' ? 'Reservado' : 'Vendido'}
               </button>
             )}
 

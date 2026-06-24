@@ -28,7 +28,7 @@ export default function LandingView({ setView, onSelectArtwork }: LandingViewPro
           <div className="relative rounded-[32px] md:rounded-[40px] overflow-hidden shadow-sm h-full group">
             <img
               src="https://images.unsplash.com/photo-1579783902614-a3fb3927b6a5?auto=format&fit=crop&q=80&w=1500"
-              alt="Andante Editorial Flower Hero Background"
+              alt=""
               referrerPolicy="no-referrer"
               className="w-full h-full object-cover transform duration-[8000ms] scale-102 hover:scale-105"
             />

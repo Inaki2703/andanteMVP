@@ -45,19 +45,22 @@ export default function ExhibitionView({ onSelectArtwork, setView, onSelectArtis
               <div className="flex flex-wrap items-center gap-2 sm:gap-3 text-neutral-500 dark:text-neutral-400 text-[10px] sm:text-xs font-mono font-black uppercase tracking-wider select-none">
                 <button
                   onClick={() => setView('landing')}
-                  className="hover:text-accent transition-colors flex items-center gap-1 cursor-pointer focus:outline-none"
+                  className="focus-ring hover:text-accent transition-colors flex items-center gap-1 cursor-pointer"
                 >
-                  <span>🏠 Sala Principal</span>
+                  <span><span aria-hidden="true">🏠</span> Sala Principal</span>
                 </button>
                 <span className="text-neutral-300 dark:text-neutral-700">/</span>
                 <span className="text-neutral-800 dark:text-neutral-200">Exposición Activa</span>
               </div>
 
+              {/* Título principal de la vista (h1) para anclar la jerarquía */}
+              <h1 className="sr-only">{EXHIBITION_DATA.title}</h1>
+
               <a
                 href={EXHIBITION_DATA.mapsUrl}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-block w-fit border border-accent text-accent px-3 py-0.5 text-[9px] sm:text-[10px] font-mono font-extrabold tracking-[0.12em] rounded-sm uppercase leading-snug hover:bg-accent-soft transition-colors cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 dark:focus-visible:ring-offset-page"
+                className="inline-block w-fit border border-accent text-accent px-3 py-1 text-[11px] sm:text-xs font-mono font-extrabold tracking-[0.12em] rounded-sm uppercase leading-snug hover:bg-accent-soft transition-colors cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 dark:focus-visible:ring-offset-page"
               >
                 {sedeLabel}
               </a>

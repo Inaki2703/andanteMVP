@@ -46,14 +46,15 @@ function FloatChar({
 }
 
 export default function ScrollFloatText({ text, className = '' }: ScrollFloatTextProps) {
-  const ref = useRef<HTMLHeadingElement>(null);
+  const ref = useRef<HTMLDivElement>(null);
   const reducedMotion = useReducedMotion();
   const inView = useInView(ref, { once: false, amount: 0.6 });
   const chars = text.split('');
 
   return (
-    <h2
+    <div
       ref={ref}
+      aria-hidden="true"
       className={`flex w-full items-end justify-between font-sans font-extrabold text-brand select-none leading-[0.8] tracking-tighter whitespace-nowrap text-[clamp(4rem,15vw,10rem)] ${className}`}
     >
       {chars.map((char, i) => (
@@ -61,6 +62,6 @@ export default function ScrollFloatText({ text, className = '' }: ScrollFloatTex
           <FloatChar char={char} index={i} inView={inView} reducedMotion={!!reducedMotion} />
         </Fragment>
       ))}
-    </h2>
+    </div>
   );
 }

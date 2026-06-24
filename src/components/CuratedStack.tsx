@@ -120,7 +120,7 @@ export default function CuratedStack({ artworks, onSelectArtwork }: CuratedStack
               <div className="relative flex-1 overflow-hidden">
                 <img
                   src={art.image}
-                  alt={art.title}
+                  alt=""
                   referrerPolicy="no-referrer"
                   className="w-full h-full object-cover"
                 />
@@ -129,7 +129,7 @@ export default function CuratedStack({ artworks, onSelectArtwork }: CuratedStack
                     art.status === 'Disponible'
                       ? 'bg-brand text-on-brand'
                       : art.status === 'Reservado'
-                      ? 'bg-accent text-white'
+                      ? 'bg-accent text-on-accent'
                       : 'bg-neutral-800 text-white'
                   }`}
                 >

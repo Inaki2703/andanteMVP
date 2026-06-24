@@ -170,7 +170,8 @@ export default function SuccessView({
       <div className="border border-border rounded-2xl overflow-hidden shadow-sm">
         <button
           onClick={() => setShowCertificate(!showCertificate)}
-          className="w-full bg-elevated dark:bg-elevated hover:bg-neutral-200 dark:hover:bg-elevated p-5 flex items-center justify-between text-left font-mono text-xs focus:outline-none cursor-pointer border-none"
+          aria-expanded={showCertificate}
+          className="focus-ring w-full bg-elevated dark:bg-elevated hover:bg-neutral-200 dark:hover:bg-elevated p-5 flex items-center justify-between text-left font-mono text-xs cursor-pointer border-none"
         >
           <div className="flex items-center space-x-3 text-fg">
             <FileText className="h-5 w-5 text-accent stroke-[1.5]" />
@@ -273,15 +274,15 @@ export default function SuccessView({
               <button
                 type="button"
                 onClick={copyHashToClipboard}
-                className="w-full sm:w-auto inline-flex items-center justify-center space-x-2 bg-elevated dark:bg-elevated hover:bg-border dark:hover:bg-border px-4 py-2.5 rounded-lg border border-border transition-colors focus:outline-none cursor-pointer"
+                className="focus-ring w-full sm:w-auto inline-flex items-center justify-center space-x-2 bg-elevated dark:bg-elevated hover:bg-border dark:hover:bg-border px-4 py-2.5 rounded-lg border border-border transition-colors cursor-pointer"
               >
-                <Copy className="h-4 w-4 text-accent" />
+                <Copy className="h-4 w-4 text-accent" aria-hidden="true" />
                 <span>{copiedHash ? '¡Hash copiado!' : 'Copiar Hash de adqusición'}</span>
               </button>
 
               <button
                 type="button"
-                className="w-full sm:w-auto inline-flex items-center justify-center space-x-2 bg-elevated dark:bg-elevated hover:bg-border dark:hover:bg-border px-4 py-2.5 rounded-lg border border-border transition-colors focus:outline-none cursor-pointer"
+                className="focus-ring w-full sm:w-auto inline-flex items-center justify-center space-x-2 bg-elevated dark:bg-elevated hover:bg-border dark:hover:bg-border px-4 py-2.5 rounded-lg border border-border transition-colors cursor-pointer"
                 onClick={downloadMockPdf}
               >
                 {downloadedPdf ? (
@@ -306,7 +307,7 @@ export default function SuccessView({
       <div className="flex flex-col sm:flex-row items-center gap-4 justify-between border-t border-border pt-8">
         <button
           onClick={copyReceiptLink}
-          className="text-xs font-mono text-fg-secondary hover:text-accent font-bold flex items-center space-x-1.5 focus:outline-none cursor-pointer"
+          className="focus-ring text-xs font-mono text-fg-secondary hover:text-accent font-bold flex items-center space-x-1.5 cursor-pointer"
         >
           {copiedReceipt ? (
             <>
@@ -323,10 +324,10 @@ export default function SuccessView({
 
         <button
           onClick={handleReturnToGallery}
-          className="w-full sm:w-auto bg-accent hover:bg-accent-hover dark:hover:bg-accent text-on-accent font-sans font-semibold text-xs uppercase tracking-wider px-8 py-4.5 rounded-md transition-all flex items-center justify-center space-x-2 cursor-pointer"
+          className="focus-ring w-full sm:w-auto bg-accent hover:bg-accent-hover dark:hover:bg-accent text-on-accent font-sans font-semibold text-xs uppercase tracking-wider px-8 py-4.5 rounded-md transition-all flex items-center justify-center space-x-2 cursor-pointer"
         >
           <span>Regresar a la Galería</span>
-          <ArrowRight className="h-4 w-4" />
+          <ArrowRight className="h-4 w-4" aria-hidden="true" />
         </button>
       </div>
 

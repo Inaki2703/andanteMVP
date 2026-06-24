@@ -71,14 +71,14 @@ export default function ArtistDetailModal({ artist, onClose }: ArtistDetailModal
         animate={{ opacity: 1, scale: 1, y: 0 }}
         exit={{ opacity: 0, scale: 0.98, y: 10 }}
         transition={{ duration: 0.35, ease: [0.22, 1, 0.36, 1] }}
-        className="absolute inset-3 sm:inset-6 md:inset-[40px] bg-footer text-on-inverse rounded-[28px] md:rounded-[40px] overflow-hidden shadow-2xl"
+        className="absolute inset-3 sm:inset-6 md:inset-[40px] bg-white dark:bg-footer text-fg rounded-[28px] md:rounded-[40px] overflow-hidden shadow-2xl"
       >
         {/* Cerrar */}
         <button
           ref={closeBtnRef}
           onClick={onClose}
           aria-label="Cerrar semblanza"
-          className="focus-ring absolute top-5 right-5 sm:top-7 sm:right-7 z-30 h-10 w-10 rounded-full bg-white/10 hover:bg-white/20 text-on-inverse flex items-center justify-center transition-colors cursor-pointer border border-white/10"
+          className="focus-ring absolute top-5 right-5 sm:top-7 sm:right-7 z-30 h-10 w-10 rounded-full bg-fg/10 hover:bg-fg/20 text-fg flex items-center justify-center transition-colors cursor-pointer border border-fg/10"
         >
           <X className="h-5 w-5" aria-hidden="true" />
         </button>
@@ -106,11 +106,11 @@ export default function ArtistDetailModal({ artist, onClose }: ArtistDetailModal
                         Artista verificada
                       </span>
                     )}
-                    <h2 className="font-mono uppercase text-on-inverse text-[clamp(2.25rem,6vw,4rem)] leading-[1.05] break-words">
+                    <h2 className="font-mono uppercase text-fg text-[clamp(2.25rem,6vw,4rem)] leading-[1.05] break-words">
                       {artist.name}
                     </h2>
                     {artist.tagline && (
-                      <p className="text-base text-on-inverse/70">{artist.tagline}</p>
+                      <p className="text-base text-fg/70">{artist.tagline}</p>
                     )}
                   </div>
 
@@ -122,7 +122,7 @@ export default function ArtistDetailModal({ artist, onClose }: ArtistDetailModal
                           target="_blank"
                           rel="noopener noreferrer"
                           aria-label={`Instagram de ${artist.name} (se abre en una pestaña nueva)`}
-                          className="focus-ring h-12 w-12 flex items-center justify-center rounded-[12px] border border-white/10 text-on-inverse hover:border-white/30 transition-colors"
+                          className="focus-ring h-12 w-12 flex items-center justify-center rounded-[12px] border border-fg/10 text-fg hover:border-fg/30 transition-colors"
                         >
                           <InstagramLogo className="h-5 w-5" aria-hidden="true" />
                         </a>
@@ -133,7 +133,7 @@ export default function ArtistDetailModal({ artist, onClose }: ArtistDetailModal
                           target="_blank"
                           rel="noopener noreferrer"
                           aria-label={`Sitio web de ${artist.name} (se abre en una pestaña nueva)`}
-                          className="focus-ring h-12 w-12 flex items-center justify-center rounded-[12px] border border-white/10 text-on-inverse hover:border-white/30 transition-colors"
+                          className="focus-ring h-12 w-12 flex items-center justify-center rounded-[12px] border border-fg/10 text-fg hover:border-fg/30 transition-colors"
                         >
                           <Globe className="h-5 w-5" aria-hidden="true" />
                         </a>
@@ -143,7 +143,7 @@ export default function ArtistDetailModal({ artist, onClose }: ArtistDetailModal
                 </div>
 
                 {artist.semblanza && (
-                  <div className="flex-1 min-w-0 font-mono text-[15px] sm:text-base leading-[1.6] text-on-inverse/75 flex flex-col gap-6">
+                  <div className="flex-1 min-w-0 font-mono text-[15px] sm:text-base leading-[1.6] text-fg/75 flex flex-col gap-6">
                     {artist.semblanza.trim().split('\n\n').map((p, i) => (
                       <p key={i}>{p}</p>
                     ))}
@@ -155,12 +155,12 @@ export default function ArtistDetailModal({ artist, onClose }: ArtistDetailModal
               {exhibitions.length > 0 && (
                 <div
                   aria-hidden="true"
-                  className="inline-flex w-fit items-center gap-2.5 rounded-full border border-white/25 bg-white/10 px-4 py-2.5 text-on-inverse shadow-[0_0_0_1px_rgba(255,255,255,0.04)_inset]"
+                  className="inline-flex w-fit items-center gap-2.5 rounded-full border border-fg/25 bg-fg/10 px-4 py-2.5 text-fg dark:shadow-[0_0_0_1px_rgba(255,255,255,0.04)_inset]"
                 >
                   <span className="font-mono text-[11px] font-semibold uppercase tracking-[0.18em]">
                     Trayectoria
                   </span>
-                  <span className="flex h-5 w-5 items-center justify-center rounded-full bg-white/15 text-xs animate-bounce">
+                  <span className="flex h-5 w-5 items-center justify-center rounded-full bg-fg/15 text-xs animate-bounce">
                     ↓
                   </span>
                 </div>
@@ -172,7 +172,7 @@ export default function ArtistDetailModal({ artist, onClose }: ArtistDetailModal
           {exhibitions.length > 0 && (
             <section className="snap-start snap-always min-h-full flex flex-col justify-center px-6 sm:px-10 md:px-[64px] py-16 md:py-[80px]">
               <div className="mx-auto w-full max-w-[1100px] flex flex-col gap-8 sm:gap-10">
-                <p className="font-mono text-xs uppercase tracking-widest text-on-inverse/70">
+                <p className="font-mono text-xs uppercase tracking-widest text-fg/70">
                   — Dónde ha colgado
                 </p>
                 <ul
@@ -181,7 +181,7 @@ export default function ArtistDetailModal({ artist, onClose }: ArtistDetailModal
                     setActiveImages(null);
                     setHovered(null);
                   }}
-                  className="border-b border-white/10"
+                  className="border-b border-fg/10"
                 >
                   {exhibitions.map((expo, i) => (
                     <li
@@ -190,7 +190,7 @@ export default function ArtistDetailModal({ artist, onClose }: ArtistDetailModal
                         setHovered(i);
                         setActiveImages(expo.images && expo.images.length ? expo.images : null);
                       }}
-                      className="group border-t border-white/10 py-6"
+                      className="group border-t border-fg/10 py-6"
                       style={{
                         opacity: hovered !== null && hovered !== i ? 0.4 : 1,
                         transition: 'opacity 0.35s ease',
@@ -198,20 +198,20 @@ export default function ArtistDetailModal({ artist, onClose }: ArtistDetailModal
                     >
                       <div className="flex items-center justify-between gap-6">
                         <div className="flex flex-col gap-1.5 min-w-0">
-                          <h3 className="font-sans font-bold text-lg sm:text-xl text-on-inverse truncate transition-transform duration-300 group-hover:translate-x-2">
+                          <h3 className="font-sans font-bold text-lg sm:text-xl text-fg truncate transition-transform duration-300 group-hover:translate-x-2">
                             {expo.title}
                           </h3>
-                          <p className="font-mono text-[13px] text-on-inverse/60">
+                          <p className="font-mono text-[13px] text-fg/60">
                             <span>{expo.venue}</span>
-                            <span className="text-white/20"> · </span>
+                            <span className="text-fg/20"> · </span>
                             <span>{expo.city}</span>
                           </p>
                         </div>
                         <div className="flex items-center gap-4 sm:gap-6 shrink-0">
-                          <span className="font-mono text-sm text-on-inverse/60 tabular-nums">
+                          <span className="font-mono text-sm text-fg/60 tabular-nums">
                             {expo.year}
                           </span>
-                          <span className="font-mono text-[10px] uppercase tracking-wider border border-white/30 rounded-[4px] px-2 py-1 text-on-inverse/70">
+                          <span className="font-mono text-[10px] uppercase tracking-wider border border-fg/30 rounded-[4px] px-2 py-1 text-fg/70">
                             {expo.type}
                           </span>
                         </div>

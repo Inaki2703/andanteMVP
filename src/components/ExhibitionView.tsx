@@ -27,7 +27,7 @@ export default function ExhibitionView({ onSelectArtwork, setView, onSelectArtis
       left: '',
       title: artist.name.toUpperCase(),
       right: `(${specialtyWord})`,
-      onClick: artist.slug ? () => onSelectArtist(artist.slug!) : undefined,
+      onClick: () => onSelectArtist(artist.id),
     };
   });
 
@@ -35,6 +35,9 @@ export default function ExhibitionView({ onSelectArtwork, setView, onSelectArtis
 
   return (
     <div className="animate-fade-in pb-20 bg-transparent text-fg">
+
+      {/* Zona superior (inicio real): se clona para el wrap hacia adelante */}
+      <div data-exhibition-top>
 
       {/* 1. NAV + MARQUEE */}
       <section className="px-6 pt-5 sm:pt-8 mb-16 sm:mb-24 bg-transparent">
@@ -89,6 +92,8 @@ export default function ExhibitionView({ onSelectArtwork, setView, onSelectArtis
           backgroundImage={EXHIBITION_DATA.image}
           onSelectArtwork={onSelectArtwork}
         />
+      </div>
+
       </div>
 
       {/* 3. CONCEPTO CURATORIAL — snap + decrypt */}

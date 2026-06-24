@@ -11,7 +11,7 @@ import Header from './components/Header';
 import MainMenu from './components/MainMenu';
 import LandingView from './components/LandingView';
 import ExhibitionView from './components/ExhibitionView';
-import ArtistView from './components/ArtistView';
+import ArtistDetailModal from './components/ArtistDetailModal';
 import ArtworkDetailModal from './components/ArtworkDetailModal';
 import CartView from './components/CartView';
 import CheckoutView from './components/CheckoutView';
@@ -26,13 +26,13 @@ export default function App() {
   const [menuOpen, setMenuOpen] = useState<boolean>(false);
   const [showManifesto, setShowManifesto] = useState<boolean>(false);
 
-  // Selected artist for the semblanza page (mock "route" /artista/:slug)
-  const [selectedArtistSlug, setSelectedArtistSlug] = useState<string | null>(null);
+  // Artista seleccionado para el pop-up de semblanza (por id, disponible en cualquier vista).
+  const [selectedArtistId, setSelectedArtistId] = useState<string | null>(null);
 
-  const handleSelectArtist = (slug: string) => {
-    setSelectedArtistSlug(slug);
+  const handleSelectArtist = (artistId: string) => {
+    // Abre la semblanza como pop-up encima de la vista actual (sin cambiar de ruta).
+    setSelectedArtistId(artistId);
     setMenuOpen(false);
-    setView('artist');
   };
 
   // Theme support — el tema inicial sigue la preferencia del sistema; el toggle la sobrescribe.
@@ -90,6 +90,10 @@ export default function App() {
         Array.from(document.querySelectorAll<HTMLElement>('.exhibition-snap-section')),
       pageRef,
       enableWrap: false,
+      wrapForward: true,
+      loopUpAtTop: true,
+      wrapForwardCloneSource: () =>
+        document.querySelector<HTMLElement>('[data-exhibition-top]'),
       shouldIntercept: () => {
         const sections = Array.from(
           document.querySelectorAll<HTMLElement>('.exhibition-snap-section')
@@ -222,6 +226,7 @@ export default function App() {
         {currentView === 'landing' && (
           <LandingView
             setView={setView}
+            onSelectArtist={handleSelectArtist}
             onSelectArtwork={(art) => {
               // Get live reactive artwork status from state
               const activeArt = artworks.find(a => a.id === art.id) || art;
@@ -241,22 +246,6 @@ export default function App() {
             onSelectArtist={handleSelectArtist}
           />
         )}
-
-        {currentView === 'artist' && (() => {
-          const artist = ARTISTS_DATA.find((a) => a.slug === selectedArtistSlug);
-          if (!artist) return null;
-          return (
-            <ArtistView
-              artist={artist}
-              artworks={artworks}
-              setView={setView}
-              onSelectArtwork={(art) => {
-                const activeArt = artworks.find((a) => a.id === art.id) || art;
-                setSelectedArtwork(activeArt);
-              }}
-            />
-          );
-        })()}
 
         {(currentView === 'cart' || currentView === 'checkout') && (
           <CheckoutView
@@ -322,6 +311,20 @@ export default function App() {
           </button>
         </nav>
       )}
+
+      {/* MODAL OVERLAY: Semblanza del artista (pop-up) */}
+      <AnimatePresence>
+        {selectedArtistId && (() => {
+          const artist = ARTISTS_DATA.find((a) => a.id === selectedArtistId);
+          if (!artist) return null;
+          return (
+            <ArtistDetailModal
+              artist={artist}
+              onClose={() => setSelectedArtistId(null)}
+            />
+          );
+        })()}
+      </AnimatePresence>
 
       {/* 6. MODAL DETAIL OVERLAY: Artwork Dossier specifications panel */}
       <AnimatePresence>

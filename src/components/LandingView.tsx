@@ -8,12 +8,13 @@ import EventsList from './EventsList';
 interface LandingViewProps {
   setView: (view: string) => void;
   onSelectArtwork: (artwork: Artwork) => void;
+  onSelectArtist: (artistId: string) => void;
 }
 
 // Orden curado para el stack "Curado a mano" (se barajan en este orden).
 const CURATED_IDS = ['marea-01', 'geo-vacuo', 'frag-urbano'];
 
-export default function LandingView({ setView, onSelectArtwork }: LandingViewProps) {
+export default function LandingView({ setView, onSelectArtwork, onSelectArtist }: LandingViewProps) {
   // Piezas del stack curado, en el orden definido arriba.
   const curatedArtworks = CURATED_IDS
     .map((id) => ARTWORKS_DATA.find((a) => a.id === id))
@@ -51,10 +52,14 @@ export default function LandingView({ setView, onSelectArtwork }: LandingViewPro
       <ExpoActivaSection setView={setView} />
 
       {/* SECTION 3: CURADO A MANO — stack de cartas que se barajan al hacer scroll */}
-      <CuratedStack artworks={curatedArtworks} onSelectArtwork={onSelectArtwork} />
+      <CuratedStack
+        artworks={curatedArtworks}
+        onSelectArtwork={onSelectArtwork}
+        onSelectArtist={onSelectArtist}
+      />
 
       {/* SECTION 4: CONOCE A QUIENES LO CREAN — hoja de nombres con foto en hover */}
-      <ArtistsNames artists={ARTISTS_DATA} setView={setView} />
+      <ArtistsNames artists={ARTISTS_DATA} onSelectArtist={onSelectArtist} />
 
       {/* SECTION 5: QUÉ MÁS ANDA PASANDO — lista grande de eventos */}
       <EventsList setView={setView} />

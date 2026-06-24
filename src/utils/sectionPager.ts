@@ -4,6 +4,12 @@ export interface SectionPagerOptions {
   getSections: () => HTMLElement[];
   pageRef: RefObject<HTMLDivElement | null>;
   enableWrap?: boolean;
+  /** Habilita el wrap hacia adelante al pasar la última sección (footer ↓ → inicio). */
+  wrapForward?: boolean;
+  /** Habilita el wrap hacia atrás al hacer scroll arriba en el borde superior (inicio ↑ → footer). */
+  loopUpAtTop?: boolean;
+  /** Elemento a clonar/aterrizar como "inicio" en el wrap hacia adelante (default sections[0]). */
+  wrapForwardCloneSource?: () => HTMLElement | null;
   /** Si retorna false, el wheel no se intercepta (scroll nativo). */
   shouldIntercept?: () => boolean;
 }
@@ -78,6 +84,9 @@ export function setupSectionPager({
   getSections,
   pageRef,
   enableWrap = false,
+  wrapForward = false,
+  loopUpAtTop = false,
+  wrapForwardCloneSource,
   shouldIntercept = () => true,
 }: SectionPagerOptions): () => void {
   let index = 0;
@@ -123,15 +132,42 @@ export function setupSectionPager({
     }, 720);
   };
 
+  const landAfterWrap = (dir: 1 | -1) => {
+    const now = getSections();
+    if (dir === 1) {
+      window.scrollTo({ top: 0, behavior: 'instant' as ScrollBehavior });
+      index = 0;
+    } else {
+      const last = now.length - 1;
+      if (now[last]) centerScroll(now[last], 'instant' as ScrollBehavior);
+      index = last;
+    }
+  };
+
   const wrap = (dir: 1 | -1) => {
-    if (!enableWrap) return;
     const page = pageRef.current;
     const sections = getSections();
     if (!page || sections.length === 0) return;
+    // Para adelante, el "inicio" puede ser una zona superior distinta a sections[0].
+    const source =
+      dir === 1 ? (wrapForwardCloneSource?.() ?? sections[0]) : sections[sections.length - 1];
+    if (!source) return;
+
     locked = true;
     clearPeek();
 
-    const source = dir === 1 ? sections[0] : sections[sections.length - 1];
+    // Movimiento reducido: salto instantáneo sin animar el clon.
+    const prefersReducedMotion =
+      typeof window.matchMedia === 'function' &&
+      window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if (prefersReducedMotion) {
+      landAfterWrap(dir);
+      requestAnimationFrame(() => {
+        locked = false;
+      });
+      return;
+    }
+
     const clone = source.cloneNode(true) as HTMLElement;
     Object.assign(clone.style, {
       position: 'fixed',
@@ -140,10 +176,19 @@ export function setupSectionPager({
       width: '100%',
       height: '100vh',
       margin: '0',
+      // El inicio es más alto que el viewport: mostrar sólo su porción superior
+      // (lo que se ve en scrollY = 0). El footer es más bajo: se centra.
+      overflow: 'hidden',
       zIndex: '60',
       pointerEvents: 'none',
       transform: dir === 1 ? 'translateY(100%)' : 'translateY(-100%)',
     });
+    if (dir === -1) {
+      // Centrar verticalmente el contenido clonado (footer) dentro del overlay 100vh.
+      clone.style.display = 'flex';
+      clone.style.flexDirection = 'column';
+      clone.style.justifyContent = 'center';
+    }
     document.body.appendChild(clone);
     void clone.offsetHeight;
 
@@ -155,15 +200,7 @@ export function setupSectionPager({
     window.setTimeout(() => {
       page.style.transition = 'none';
       page.style.transform = 'none';
-      const now = getSections();
-      if (dir === 1) {
-        window.scrollTo({ top: 0, behavior: 'instant' as ScrollBehavior });
-        index = 0;
-      } else {
-        const last = now.length - 1;
-        if (now[last]) centerScroll(now[last], 'instant' as ScrollBehavior);
-        index = last;
-      }
+      landAfterWrap(dir);
       clone.remove();
       requestAnimationFrame(() => {
         locked = false;
@@ -172,6 +209,14 @@ export function setupSectionPager({
   };
 
   const onWheel = (e: WheelEvent) => {
+    // Borde superior de la página: scroll arriba dispara el wrap hacia atrás
+    // (inicio ↑ → footer), incluso en zona de scroll nativo.
+    if (loopUpAtTop && !locked && e.deltaY < 0 && window.scrollY <= 2) {
+      e.preventDefault();
+      wrap(-1);
+      return;
+    }
+
     const intercepting = shouldIntercept();
 
     if (!intercepting) {
@@ -251,7 +296,7 @@ export function setupSectionPager({
         }
       }
     } else if (target >= n) {
-      if (enableWrap) wrap(1);
+      if (enableWrap || wrapForward) wrap(1);
       else clearPeek();
     } else {
       goTo(target);

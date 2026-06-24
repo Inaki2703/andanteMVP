@@ -4,7 +4,7 @@ import { Artist } from '../types';
 
 interface ArtistsNamesProps {
   artists: Artist[];
-  setView: (view: string) => void;
+  onSelectArtist: (artistId: string) => void;
 }
 
 // Envolventes geométricas distintas por artista real (estilo brandnewschool /about)
@@ -34,7 +34,7 @@ type Entry =
   | { kind: 'artist'; artist: Artist; artistIndex: number }
   | { kind: 'filler'; name: string };
 
-export default function ArtistsNames({ artists, setView }: ArtistsNamesProps) {
+export default function ArtistsNames({ artists, onSelectArtist }: ArtistsNamesProps) {
   const [hovered, setHovered] = useState<number | null>(null);
   const floatRef = useRef<HTMLDivElement>(null);
 
@@ -96,7 +96,7 @@ export default function ArtistsNames({ artists, setView }: ArtistsNamesProps) {
                   }}
                   onMouseMove={moveFloat}
                   onMouseLeave={() => setHovered((h) => (h === ai ? null : h))}
-                  onClick={() => setView('exhibition')}
+                  onClick={() => onSelectArtist(entry.artist.id)}
                   className="cursor-pointer transition-colors duration-200"
                   style={{ color: hovered === ai ? '#0084FF' : undefined }}
                 >

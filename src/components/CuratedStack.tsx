@@ -5,13 +5,14 @@ import { formatPrice } from '../utils/formatPrice';
 interface CuratedStackProps {
   artworks: Artwork[];
   onSelectArtwork: (artwork: Artwork) => void;
+  onSelectArtist: (artistId: string) => void;
 }
 
 // Sección "Curado a mano" como un stack de cartas que se barajan hacia arriba
 // conforme se hace scroll (estilo riseatseven). El pager de App.tsx delega cada
 // gesto en __pagerStep; mientras queden cartas, consume el gesto (no cambia de
 // sección). __pagerEnter fija la carta inicial según la dirección de entrada.
-export default function CuratedStack({ artworks, onSelectArtwork }: CuratedStackProps) {
+export default function CuratedStack({ artworks, onSelectArtwork, onSelectArtist }: CuratedStackProps) {
   const sectionRef = useRef<HTMLElement>(null);
   const [index, setIndex] = useState(0);
   const idxRef = useRef(0);
@@ -143,7 +144,17 @@ export default function CuratedStack({ artworks, onSelectArtwork }: CuratedStack
                     {art.title}
                   </h3>
                   <p className="font-mono text-[10px] uppercase tracking-wider text-neutral-500 truncate mt-0.5">
-                    por {art.artistName}
+                    por{' '}
+                    <button
+                      type="button"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        onSelectArtist(art.artistId);
+                      }}
+                      className="focus-ring underline-offset-2 hover:underline hover:text-accent transition-colors cursor-pointer"
+                    >
+                      {art.artistName}
+                    </button>
                   </p>
                 </div>
                 <span className="shrink-0 px-3 py-1 rounded-full bg-[#E8F5FF] dark:bg-sky-950/40 text-accent text-xs font-mono font-bold">

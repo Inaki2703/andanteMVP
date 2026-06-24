@@ -43,7 +43,13 @@ Vivo y trabajo en Buenos Aires, en un taller que da al norte. Me gusta pensar qu
         venue: 'Café Norte',
         city: 'San Isidro',
         year: 2026,
-        type: 'Colectiva'
+        type: 'Colectiva',
+        images: [
+          'https://images.unsplash.com/photo-1541961017774-22349e4a1262?auto=format&fit=crop&q=80&w=600',
+          'https://images.unsplash.com/photo-1531913764164-f85c52e6e654?auto=format&fit=crop&q=80&w=600',
+          'https://images.unsplash.com/photo-1577083552431-6e5fd01aa342?auto=format&fit=crop&q=80&w=600',
+          'https://images.unsplash.com/photo-1460661419201-fd4cecdf8a8b?auto=format&fit=crop&q=80&w=600'
+        ]
       },
       {
         id: 'cv-refracciones',
@@ -51,7 +57,13 @@ Vivo y trabajo en Buenos Aires, en un taller que da al norte. Me gusta pensar qu
         venue: 'Atendido Estudio',
         city: 'Palermo',
         year: 2025,
-        type: 'Individual'
+        type: 'Individual',
+        images: [
+          'https://images.unsplash.com/photo-1502691876148-a846f102ca52?auto=format&fit=crop&q=80&w=600',
+          'https://images.unsplash.com/photo-1549887534-1541e9326642?auto=format&fit=crop&q=80&w=600',
+          'https://images.unsplash.com/photo-1536924940846-227afb31e2a5?auto=format&fit=crop&q=80&w=600',
+          'https://images.unsplash.com/photo-1558865869-c93f6f8482af?auto=format&fit=crop&q=80&w=600'
+        ]
       },
       {
         id: 'cv-luz-de-barrio',
@@ -59,7 +71,13 @@ Vivo y trabajo en Buenos Aires, en un taller que da al norte. Me gusta pensar qu
         venue: 'Librería del Pasaje',
         city: 'San Telmo',
         year: 2024,
-        type: 'Colectiva'
+        type: 'Colectiva',
+        images: [
+          'https://images.unsplash.com/photo-1513364776144-60967b0f800f?auto=format&fit=crop&q=80&w=600',
+          'https://images.unsplash.com/photo-1492691527719-9d1e07e534b4?auto=format&fit=crop&q=80&w=600',
+          'https://images.unsplash.com/photo-1579783900882-c0d3dad7b119?auto=format&fit=crop&q=80&w=600',
+          'https://images.unsplash.com/photo-1550684848-fac1c5b4e853?auto=format&fit=crop&q=80&w=600'
+        ]
       },
       {
         id: 'cv-pigmento-vivo',
@@ -67,7 +85,13 @@ Vivo y trabajo en Buenos Aires, en un taller que da al norte. Me gusta pensar qu
         venue: 'Casa Tomada',
         city: 'Rosario',
         year: 2023,
-        type: 'Individual'
+        type: 'Individual',
+        images: [
+          'https://images.unsplash.com/photo-1541701494587-cb58502866ab?auto=format&fit=crop&q=80&w=600',
+          'https://images.unsplash.com/photo-1501339847302-ac426a4a7cbb?auto=format&fit=crop&q=80&w=600',
+          'https://images.unsplash.com/photo-1441986300917-64674bd600d8?auto=format&fit=crop&q=80&w=600',
+          'https://images.unsplash.com/photo-1481627834876-b7833e8f5570?auto=format&fit=crop&q=80&w=600'
+        ]
       },
       {
         id: 'cv-primeros-azules',
@@ -75,7 +99,13 @@ Vivo y trabajo en Buenos Aires, en un taller que da al norte. Me gusta pensar qu
         venue: 'Espacio Cabildo',
         city: 'La Plata',
         year: 2022,
-        type: 'Colectiva'
+        type: 'Colectiva',
+        images: [
+          'https://images.unsplash.com/photo-1554188248-986adbb73be4?auto=format&fit=crop&q=80&w=600',
+          'https://images.unsplash.com/photo-1452802447250-470a88ac82bc?auto=format&fit=crop&q=80&w=600',
+          'https://images.unsplash.com/photo-1547826039-bfc35e0f1ea8?auto=format&fit=crop&q=80&w=600',
+          'https://images.unsplash.com/photo-1525909002-1b05e0c869d8?auto=format&fit=crop&q=80&w=600'
+        ]
       }
     ]
   },

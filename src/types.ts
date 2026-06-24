@@ -25,6 +25,7 @@ export interface ExhibitionCredit {
   city: string;
   year: number;
   type: 'Individual' | 'Colectiva';
+  images?: string[]; // imágenes de la muestra para el image-trail en hover
 }
 
 export interface Artist {

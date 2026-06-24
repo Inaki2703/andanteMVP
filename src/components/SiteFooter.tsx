@@ -121,7 +121,7 @@ export default function SiteFooter({ variant }: SiteFooterProps) {
 
   return (
     <footer
-      className={`snap-section flex-shrink-0 p-6 flex flex-col justify-center transition-colors duration-[var(--dur-base)]${
+      className={`snap-section flex-shrink-0 p-6 pb-[max(1.5rem,env(safe-area-inset-bottom))] flex flex-col justify-center transition-colors duration-[var(--dur-base)]${
         variant === 'exhibition' ? ' exhibition-snap-section' : ' snap-target-end'
       }`}
     >

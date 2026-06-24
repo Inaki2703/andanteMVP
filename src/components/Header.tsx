@@ -1,6 +1,7 @@
 import { useState, useRef, useEffect, useMemo } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import { ShoppingBag, CaretDown, Sun, Moon } from '@phosphor-icons/react';
+import { MEDIA, cvImage } from '../constants/media';
 
 interface Exhibition {
   id: string;
@@ -18,35 +19,35 @@ const EXHIBITIONS: Exhibition[] = [
     venue: 'Café Norte',
     year: '2026',
     active: true,
-    image: 'https://images.unsplash.com/photo-1554118811-1e0d58224f24?auto=format&fit=crop&q=80&w=80',
+    image: MEDIA.exhibition.luzActiva,
   },
   {
     id: 'refracciones',
     title: 'Refracciones',
     venue: 'Librería Sur',
     year: '2025',
-    image: 'https://images.unsplash.com/photo-1541961017774-22349e4a1262?auto=format&fit=crop&q=80&w=80',
+    image: cvImage('elena-del-monte', 'cv-refracciones', 1),
   },
   {
     id: 'luz-de-barrio',
     title: 'Luz de Barrio',
     venue: 'Bar La Bruja',
     year: '2025',
-    image: 'https://images.unsplash.com/photo-1518998053901-5348d3961a04?auto=format&fit=crop&q=80&w=80',
+    image: cvImage('elena-del-monte', 'cv-luz-de-barrio', 1),
   },
   {
     id: 'pigmento-vivo',
     title: 'Pigmento Vivo',
     venue: 'Estudio Abierto',
     year: '2024',
-    image: 'https://images.unsplash.com/photo-1579783902614-a3fb3927b6a5?auto=format&fit=crop&q=80&w=80',
+    image: cvImage('elena-del-monte', 'cv-pigmento-vivo', 1),
   },
   {
     id: 'primeros-azules',
     title: 'Primeros Azules',
     venue: 'Casa Cultural',
     year: '2024',
-    image: 'https://images.unsplash.com/photo-1518640467707-6811f4a6ab73?auto=format&fit=crop&q=80&w=80',
+    image: cvImage('elena-del-monte', 'cv-primeros-azules', 1),
   },
 ];
 
@@ -207,20 +208,21 @@ export default function Header({
   }, []);
 
   return (
-    <div className="fixed top-[38px] right-[38px] z-50" ref={dropdownRef}>
+    <div
+      className="fixed z-50 top-6 left-6 right-6 md:top-[38px] md:left-auto md:right-[38px] md:w-[368px]"
+      ref={dropdownRef}
+    >
 
-      {/* ── Ticket nav (Figma 67:476) ── */}
+      {/* ── Ticket nav (Figma 67:476) — mobile: ancho del hero (inset p-6) ── */}
       <div
-        className="relative drop-shadow-[0_1px_3px_rgba(51,51,51,0.08)] dark:drop-shadow-[0_2px_10px_rgba(0,0,0,0.45)]"
-        style={{ width: W, height: H }}
+        className="relative w-full aspect-[368/105] drop-shadow-[0_1px_3px_rgba(51,51,51,0.08)] dark:drop-shadow-[0_2px_10px_rgba(0,0,0,0.45)]"
       >
 
         {/* Forma ticket: fill = fondo de página (sin patrón de puntos) + stroke sutil */}
         <svg
-          className="absolute inset-0 pointer-events-none overflow-visible"
-          width={W}
-          height={H}
+          className="absolute inset-0 w-full h-full pointer-events-none overflow-visible"
           viewBox={`0 0 ${W} ${H}`}
+          preserveAspectRatio="none"
           fill="none"
           aria-hidden
         >
@@ -239,14 +241,13 @@ export default function Header({
           />
         </svg>
 
-        <div className="relative z-10 flex items-stretch h-full">
+        <div className="absolute inset-0 z-10 flex items-stretch">
 
           {/* Izquierda: marca + toggle */}
           <div
-            className="flex flex-col justify-center shrink-0"
-            style={{ width: DX, paddingLeft: 20, paddingRight: 16 }}
+            className="flex flex-col justify-center shrink-0 w-[61.41%] pl-[5.4%] pr-[4.3%]"
           >
-            <div className="flex flex-col gap-2 w-[158px]">
+            <div className="flex flex-col gap-2 w-full max-w-[158px]">
               <div className="flex items-center justify-between w-full h-8">
                 <button
                   onClick={() => setDropdownOpen((o) => !o)}
@@ -285,11 +286,10 @@ export default function Header({
 
           {/* Divisor punteado — alineado con las muescas del ticket */}
           <div
-            className="absolute w-[2px] -translate-x-1/2 pointer-events-none"
+            className="absolute w-[2px] -translate-x-1/2 pointer-events-none left-[61.41%]"
             style={{
-              left: DX,
-              top: TICKET_NR,
-              bottom: TICKET_NR,
+              top: `${(TICKET_NR / H) * 100}%`,
+              bottom: `${(TICKET_NR / H) * 100}%`,
               backgroundImage:
                 'repeating-linear-gradient(to bottom, var(--ds-fg-muted) 0px, var(--ds-fg-muted) 7px, transparent 7px, transparent 13px)',
             }}
@@ -297,7 +297,7 @@ export default function Header({
           />
 
           {/* Derecha: carrito + menú */}
-          <div className="flex flex-1 items-center justify-end gap-6 pr-6">
+          <div className="flex flex-1 items-center justify-end gap-4 sm:gap-6 pr-[4.3%] md:pr-6">
             <button
               onClick={() => { setMenuOpen(false); setView('checkout'); }}
               className="focus-ring relative flex items-center justify-center w-8 h-8 text-[#333] dark:text-[#F2F2F2] hover:opacity-70 transition-opacity duration-[var(--dur-fast)]"
@@ -334,8 +334,8 @@ export default function Header({
             animate={{ opacity: 1, y: 0, scaleY: 1 }}
             exit={{ opacity: 0, y: -8, scaleY: 0.95 }}
             transition={{ duration: 0.22, ease: [0.22, 1, 0.36, 1] }}
-            style={{ transformOrigin: 'top', width: W }}
-            className="mt-2 bg-page border border-[var(--ds-border)] rounded-[24px] md:rounded-[32px] overflow-hidden shadow-xl"
+            style={{ transformOrigin: 'top' }}
+            className="mt-2 w-full bg-page border border-[var(--ds-border)] rounded-[24px] md:rounded-[32px] overflow-hidden shadow-xl"
           >
             <div className="px-5 py-3 border-b border-[#E8E7E2] dark:border-[#2A2A2A]">
               <span

@@ -1,4 +1,11 @@
 import { Artwork, Artist, Exhibition, Venue, WallMessage, Sticker } from './types';
+import {
+  MEDIA,
+  artistImage,
+  artworkImage,
+  cvImages,
+  venueImage,
+} from './constants/media';
 
 export const EXHIBITION_DATA: Exhibition = {
   id: 'luz-activa',
@@ -8,7 +15,7 @@ export const EXHIBITION_DATA: Exhibition = {
   address: 'Calle General Alvear 45, Planta Baja',
   dateRange: 'Junio 23 – Agosto 25, 2026',
   curatorText: 'La luz no solo ilumina, esculpe. Los cinco creadores reunidos en esta muestra investigan el impacto de la luz natural y artificial sobre las superficies cotidianas, creando diálogos efímeros a lo largo del día. Esta exposición itinerante busca resignificar y descentralizar las paredes ordinarias, transformando un café de barrio en una verdadera sala de contemplación estética.',
-  image: 'https://images.unsplash.com/photo-1554118811-1e0d58224f24?auto=format&fit=crop&q=80&w=1200', // Stylish coffee shop with art feel
+  image: MEDIA.exhibition.luzActiva,
   mapsUrl: 'https://www.google.com/maps/search/?api=1&query=Caf%C3%A9+Norte+Calle+General+Alvear+45+San+Isidro',
 };
 
@@ -17,11 +24,11 @@ export const ARTISTS_DATA: Artist[] = [
     id: 'elena-del-monte',
     name: 'Elena del Monte',
     bio: '"Exploro el caos a través del orden cromático."',
-    image: 'https://images.unsplash.com/photo-1544005313-94ddf0286df2?auto=format&fit=crop&q=80&w=200',
+    image: artistImage('elena-del-monte'),
     specialty: 'Pintura Abstracta & Refracciones',
     // --- Perfil completo para la página de semblanza ---
     slug: 'elena-del-monte',
-    portrait: 'https://images.unsplash.com/photo-1544005313-94ddf0286df2?auto=format&fit=crop&q=80&w=1500',
+    portrait: artistImage('elena-del-monte'),
     tagline: 'Pintura abstracta & refracciones · Buenos Aires',
     quote: 'No pinto la luz: la dejo entrar y veo qué decide hacer con el color.',
     semblanza: `Empecé mezclando pigmentos en la cocina de mi abuela, buscando un azul que no existía en ningún tubo. Desde entonces no he parado de perseguir colores que todavía no tienen nombre.
@@ -44,12 +51,7 @@ Vivo y trabajo en Buenos Aires, en un taller que da al norte. Me gusta pensar qu
         city: 'San Isidro',
         year: 2026,
         type: 'Colectiva',
-        images: [
-          'https://images.unsplash.com/photo-1541961017774-22349e4a1262?auto=format&fit=crop&q=80&w=600',
-          'https://images.unsplash.com/photo-1531913764164-f85c52e6e654?auto=format&fit=crop&q=80&w=600',
-          'https://images.unsplash.com/photo-1577083552431-6e5fd01aa342?auto=format&fit=crop&q=80&w=600',
-          'https://images.unsplash.com/photo-1460661419201-fd4cecdf8a8b?auto=format&fit=crop&q=80&w=600'
-        ]
+        images: cvImages('elena-del-monte', 'cv-arte-mundialista')
       },
       {
         id: 'cv-refracciones',
@@ -58,12 +60,7 @@ Vivo y trabajo en Buenos Aires, en un taller que da al norte. Me gusta pensar qu
         city: 'Palermo',
         year: 2025,
         type: 'Individual',
-        images: [
-          'https://images.unsplash.com/photo-1502691876148-a846f102ca52?auto=format&fit=crop&q=80&w=600',
-          'https://images.unsplash.com/photo-1549887534-1541e9326642?auto=format&fit=crop&q=80&w=600',
-          'https://images.unsplash.com/photo-1536924940846-227afb31e2a5?auto=format&fit=crop&q=80&w=600',
-          'https://images.unsplash.com/photo-1558865869-c93f6f8482af?auto=format&fit=crop&q=80&w=600'
-        ]
+        images: cvImages('elena-del-monte', 'cv-refracciones')
       },
       {
         id: 'cv-luz-de-barrio',
@@ -72,12 +69,7 @@ Vivo y trabajo en Buenos Aires, en un taller que da al norte. Me gusta pensar qu
         city: 'San Telmo',
         year: 2024,
         type: 'Colectiva',
-        images: [
-          'https://images.unsplash.com/photo-1513364776144-60967b0f800f?auto=format&fit=crop&q=80&w=600',
-          'https://images.unsplash.com/photo-1492691527719-9d1e07e534b4?auto=format&fit=crop&q=80&w=600',
-          'https://images.unsplash.com/photo-1579783900882-c0d3dad7b119?auto=format&fit=crop&q=80&w=600',
-          'https://images.unsplash.com/photo-1550684848-fac1c5b4e853?auto=format&fit=crop&q=80&w=600'
-        ]
+        images: cvImages('elena-del-monte', 'cv-luz-de-barrio')
       },
       {
         id: 'cv-pigmento-vivo',
@@ -86,12 +78,7 @@ Vivo y trabajo en Buenos Aires, en un taller que da al norte. Me gusta pensar qu
         city: 'Rosario',
         year: 2023,
         type: 'Individual',
-        images: [
-          'https://images.unsplash.com/photo-1541701494587-cb58502866ab?auto=format&fit=crop&q=80&w=600',
-          'https://images.unsplash.com/photo-1501339847302-ac426a4a7cbb?auto=format&fit=crop&q=80&w=600',
-          'https://images.unsplash.com/photo-1441986300917-64674bd600d8?auto=format&fit=crop&q=80&w=600',
-          'https://images.unsplash.com/photo-1481627834876-b7833e8f5570?auto=format&fit=crop&q=80&w=600'
-        ]
+        images: cvImages('elena-del-monte', 'cv-pigmento-vivo')
       },
       {
         id: 'cv-primeros-azules',
@@ -100,12 +87,7 @@ Vivo y trabajo en Buenos Aires, en un taller que da al norte. Me gusta pensar qu
         city: 'La Plata',
         year: 2022,
         type: 'Colectiva',
-        images: [
-          'https://images.unsplash.com/photo-1554188248-986adbb73be4?auto=format&fit=crop&q=80&w=600',
-          'https://images.unsplash.com/photo-1452802447250-470a88ac82bc?auto=format&fit=crop&q=80&w=600',
-          'https://images.unsplash.com/photo-1547826039-bfc35e0f1ea8?auto=format&fit=crop&q=80&w=600',
-          'https://images.unsplash.com/photo-1525909002-1b05e0c869d8?auto=format&fit=crop&q=80&w=600'
-        ]
+        images: cvImages('elena-del-monte', 'cv-primeros-azules')
       }
     ]
   },
@@ -113,21 +95,21 @@ Vivo y trabajo en Buenos Aires, en un taller que da al norte. Me gusta pensar qu
     id: 'carlos-r',
     name: 'Carlos R.',
     bio: '"La geometría es el lenguaje de lo invisible."',
-    image: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&q=80&w=200',
+    image: artistImage('carlos-r'),
     specialty: 'Arte Geométrico & Vacío'
   },
   {
     id: 'sara-m',
     name: 'Sara M.',
     bio: '"Narrativas urbanas en capas de color."',
-    image: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&q=80&w=200',
+    image: artistImage('sara-m'),
     specialty: 'Instalaciones & Difracción'
   },
   {
     id: 'mateo-j',
     name: 'Mateo J.',
     bio: '"Capturando la luz que otros ignoran."',
-    image: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&q=80&w=200',
+    image: artistImage('mateo-j'),
     specialty: 'Fotografía & Larga Exposición'
   }
 ];
@@ -139,7 +121,7 @@ export const ARTWORKS_DATA: Artwork[] = [
     artistId: 'elena-del-monte',
     artistName: 'Elena del Monte',
     price: 1200,
-    image: 'https://images.unsplash.com/photo-1541701494587-cb58502866ab?auto=format&fit=crop&q=80&w=800',
+    image: artworkImage('ref-01'),
     status: 'Disponible',
     medium: 'Acrílico polimérico fluido y barniz difractor sobre lienzo puro de algodón montado en bastidor flotante.',
     dimensions: '120 x 120 cm',
@@ -152,7 +134,7 @@ export const ARTWORKS_DATA: Artwork[] = [
     artistId: 'carlos-r',
     artistName: 'Carlos R.',
     price: 950,
-    image: 'https://images.unsplash.com/photo-1550684848-fac1c5b4e853?auto=format&fit=crop&q=80&w=800',
+    image: artworkImage('glow-04'),
     status: 'Disponible',
     medium: 'Panel de acrílico translúcido grabado con CNC láser de precisión, matriz LED difusa y control algorítmico dinámico.',
     dimensions: '80 x 60 x 5 cm',
@@ -165,7 +147,7 @@ export const ARTWORKS_DATA: Artwork[] = [
     artistId: 'sara-m',
     artistName: 'Sara M.',
     price: 1500,
-    image: 'https://images.unsplash.com/photo-1579783900882-c0d3dad7b119?auto=format&fit=crop&q=80&w=800',
+    image: artworkImage('concrete-shadow'),
     status: 'Reservado',
     medium: 'Escultura brutalista en hormigón pigmentado con base de acero corten y apliques pulidos de latón naval.',
     dimensions: '45 x 30 x 25 cm',
@@ -178,7 +160,7 @@ export const ARTWORKS_DATA: Artwork[] = [
     artistId: 'elena-del-monte',
     artistName: 'Elena del Monte',
     price: 4200,
-    image: 'https://images.unsplash.com/photo-1513364776144-60967b0f800f?auto=format&fit=crop&q=80&w=800',
+    image: artworkImage('marea-01'),
     status: 'Disponible',
     medium: 'Óleo y pigmentos puros sobre lino belga. Obra de gran escala.',
     dimensions: '180 x 150 cm',
@@ -191,7 +173,7 @@ export const ARTWORKS_DATA: Artwork[] = [
     artistId: 'carlos-r',
     artistName: 'Carlos R.',
     price: 3850,
-    image: 'https://images.unsplash.com/photo-1492691527719-9d1e07e534b4?auto=format&fit=crop&q=80&w=800',
+    image: artworkImage('geo-vacuo'),
     status: 'Disponible',
     medium: 'Impresión giclée en papel de algodón de archivo, enmarcada bajo vidrio de museo antirreflejo.',
     dimensions: '100 x 80 cm',
@@ -204,7 +186,7 @@ export const ARTWORKS_DATA: Artwork[] = [
     artistId: 'sara-m',
     artistName: 'Sara M.',
     price: 5110,
-    image: 'https://images.unsplash.com/photo-1502691876148-a846f102ca52?auto=format&fit=crop&q=80&w=800',
+    image: artworkImage('frag-urbano'),
     status: 'Vendido',
     medium: 'Placas suspendidas de vidrio fundido coloreado con óxidos metálicos, cables tensados de acero estructural.',
     dimensions: '300 x 100 x 80 cm',
@@ -217,7 +199,7 @@ export const ARTWORKS_DATA: Artwork[] = [
     artistId: 'elena-del-monte',
     artistName: 'Elena del Monte',
     price: 2100,
-    image: 'https://images.unsplash.com/photo-1558865869-c93f6f8482af?auto=format&fit=crop&q=80&w=800',
+    image: artworkImage('prisma-suspendido'),
     status: 'Disponible',
     medium: 'Acrílico fluido y resina cristalina sobre panel de madera de abedul.',
     dimensions: '100 x 100 cm',
@@ -230,7 +212,7 @@ export const ARTWORKS_DATA: Artwork[] = [
     artistId: 'elena-del-monte',
     artistName: 'Elena del Monte',
     price: 1750,
-    image: 'https://images.unsplash.com/photo-1536924940846-227afb31e2a5?auto=format&fit=crop&q=80&w=800',
+    image: artworkImage('umbral-cromatico'),
     status: 'Disponible',
     medium: 'Óleo y barniz difractor sobre lienzo de algodón.',
     dimensions: '90 x 120 cm',
@@ -243,7 +225,7 @@ export const ARTWORKS_DATA: Artwork[] = [
     artistId: 'elena-del-monte',
     artistName: 'Elena del Monte',
     price: 3300,
-    image: 'https://images.unsplash.com/photo-1549887534-1541e9326642?auto=format&fit=crop&q=80&w=800',
+    image: artworkImage('eco-de-luz'),
     status: 'Reservado',
     medium: 'Pigmentos minerales y pan de oro sobre lino belga.',
     dimensions: '150 x 110 cm',
@@ -259,7 +241,7 @@ export const VENUES_DATA: Venue[] = [
     type: 'Cafetería de Especialidad & Tostadero',
     address: 'Calle General Alvear 45, Planta Baja, San Isidro',
     activeExhibitionsCount: 1,
-    image: 'https://images.unsplash.com/photo-1501339847302-ac426a4a7cbb?auto=format&fit=crop&q=80&w=500'
+    image: venueImage('cafe-norte'),
   },
   {
     id: 'atendido-estudio',
@@ -267,7 +249,7 @@ export const VENUES_DATA: Venue[] = [
     type: 'Concept Store & Taller de Encuadernación',
     address: 'Avenida Coronel Díaz 1845, Palermo',
     activeExhibitionsCount: 0,
-    image: 'https://images.unsplash.com/photo-1441986300917-64674bd600d8?auto=format&fit=crop&q=80&w=500'
+    image: venueImage('atendido-estudio'),
   },
   {
     id: 'libreria-pasaje',
@@ -275,7 +257,7 @@ export const VENUES_DATA: Venue[] = [
     type: 'Librería de Editores & Espacio de Té',
     address: 'Pasaje del Sol 14, San Telmo',
     activeExhibitionsCount: 0,
-    image: 'https://images.unsplash.com/photo-1481627834876-b7833e8f5570?auto=format&fit=crop&q=80&w=500'
+    image: venueImage('libreria-pasaje'),
   }
 ];
 

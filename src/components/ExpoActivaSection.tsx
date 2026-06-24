@@ -10,22 +10,14 @@ import {
 } from 'react';
 import { createPortal } from 'react-dom';
 import { EXHIBITION_DATA } from '../data';
+import { ARTE_MUNDIALISTA_CAROUSEL_IMAGES } from '../constants/arteMundialista';
+import { useCoarsePointer } from '../hooks/useCoarsePointer';
 
 interface ExpoActivaSectionProps {
   setView: (view: string) => void;
 }
 
-// Selección curada de obras para la fila de fotos
-const IMAGES = [
-  'https://images.unsplash.com/photo-1541701494587-cb58502866ab?auto=format&fit=crop&q=80&w=800',
-  'https://images.unsplash.com/photo-1550684848-fac1c5b4e853?auto=format&fit=crop&q=80&w=800',
-  'https://images.unsplash.com/photo-1579783900882-c0d3dad7b119?auto=format&fit=crop&q=80&w=800',
-  'https://images.unsplash.com/photo-1513364776144-60967b0f800f?auto=format&fit=crop&q=80&w=800',
-  'https://images.unsplash.com/photo-1492691527719-9d1e07e534b4?auto=format&fit=crop&q=80&w=800',
-  'https://images.unsplash.com/photo-1554118811-1e0d58224f24?auto=format&fit=crop&q=80&w=800',
-  'https://images.unsplash.com/photo-1558865869-c93f6f8482af?auto=format&fit=crop&q=80&w=800',
-  'https://images.unsplash.com/photo-1536924940846-227afb31e2a5?auto=format&fit=crop&q=80&w=800',
-];
+const IMAGES = ARTE_MUNDIALISTA_CAROUSEL_IMAGES;
 
 // Alturas irregulares + offsetY escalonado (patrón del mock: extremos bajos, centro alto).
 const TILES = [
@@ -37,6 +29,7 @@ const TILES = [
   { w: 270, h: 250, offsetY: -8 },
   { w: 340, h: 205, offsetY: 12 },
   { w: 250, h: 220, offsetY: -4 },
+  { w: 280, h: 230, offsetY: 10 },
 ];
 
 const BASE_SPEED = 1.4;
@@ -160,6 +153,7 @@ export default function ExpoActivaSection({ setView }: ExpoActivaSectionProps) {
   const trackRef = useRef<HTMLDivElement>(null);
   const cursorRef = useRef<HTMLDivElement>(null);
   const [hovering, setHovering] = useState(false);
+  const coarsePointer = useCoarsePointer();
   const speed = useRef({ cur: BASE_SPEED, target: BASE_SPEED });
   const scrollBoostRef = useRef(0); // boost scroll-driven del marquee curvo
   const carouselVelRef = useRef(0); // boost scroll-driven del carrusel
@@ -231,14 +225,16 @@ export default function ExpoActivaSection({ setView }: ExpoActivaSectionProps) {
     <section
       ref={sectionRef}
       data-free-scroll
-      onMouseEnter={(e) => {
+      onMouseEnter={coarsePointer ? undefined : (e) => {
         setHovering(true);
         moveCursor(e);
       }}
-      onMouseLeave={() => setHovering(false)}
-      onMouseMove={moveCursor}
+      onMouseLeave={coarsePointer ? undefined : () => setHovering(false)}
+      onMouseMove={coarsePointer ? undefined : moveCursor}
       onClick={() => setView('exhibition')}
-      className="relative min-h-dvh flex flex-col justify-center gap-8 sm:gap-10 py-16 cursor-none select-none"
+      className={`relative min-h-dvh flex flex-col justify-center gap-8 sm:gap-10 pb-16 pt-[calc(1.5rem+((100vw-3rem)*105/368)+2rem)] md:py-16 select-none ${
+        coarsePointer ? 'cursor-pointer' : 'cursor-none'
+      }`}
     >
       <div className="px-6 sm:px-10 flex items-center justify-between gap-4 relative z-30">
         <div className="flex items-center gap-3 text-neutral-600 dark:text-neutral-400">
@@ -308,19 +304,20 @@ export default function ExpoActivaSection({ setView }: ExpoActivaSectionProps) {
         </div>
       </div>
 
-      {createPortal(
-        <div
-          ref={cursorRef}
-          className={`pointer-events-none fixed left-0 top-0 z-[9999] transition-opacity duration-200 ease-out ${
-            hovering ? 'opacity-100' : 'opacity-0'
-          }`}
-        >
-          <span className="inline-flex items-center gap-1.5 rounded-full bg-brand text-on-brand px-4 py-2.5 text-xs font-sans font-extrabold shadow-lg whitespace-nowrap">
-            Ver exposición <span className="text-sm leading-none">↗</span>
-          </span>
-        </div>,
-        document.body
-      )}
+      {!coarsePointer &&
+        createPortal(
+          <div
+            ref={cursorRef}
+            className={`pointer-events-none fixed left-0 top-0 z-[9999] transition-opacity duration-200 ease-out ${
+              hovering ? 'opacity-100' : 'opacity-0'
+            }`}
+          >
+            <span className="inline-flex items-center gap-1.5 rounded-full bg-brand text-on-brand px-4 py-2.5 text-xs font-sans font-extrabold shadow-lg whitespace-nowrap">
+              Ver exposición <span className="text-sm leading-none">↗</span>
+            </span>
+          </div>,
+          document.body
+        )}
     </section>
   );
 }

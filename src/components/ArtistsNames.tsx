@@ -1,6 +1,7 @@
 import { useRef, useState, useMemo, MouseEvent } from 'react';
 import { createPortal } from 'react-dom';
 import { Artist } from '../types';
+import { useCoarsePointer } from '../hooks/useCoarsePointer';
 
 interface ArtistsNamesProps {
   artists: Artist[];
@@ -37,6 +38,8 @@ type Entry =
 export default function ArtistsNames({ artists, onSelectArtist }: ArtistsNamesProps) {
   const [hovered, setHovered] = useState<number | null>(null);
   const floatRef = useRef<HTMLDivElement>(null);
+  const coarsePointer = useCoarsePointer();
+  const showFloatPreview = !coarsePointer;
 
   const moveFloat = (e: MouseEvent) => {
     const el = floatRef.current;
@@ -90,15 +93,15 @@ export default function ArtistsNames({ artists, onSelectArtist }: ArtistsNamesPr
             return (
               <span key={entry.artist.id}>
                 <span
-                  onMouseEnter={(e) => {
+                  onMouseEnter={showFloatPreview ? (e) => {
                     setHovered(ai);
                     moveFloat(e);
-                  }}
-                  onMouseMove={moveFloat}
-                  onMouseLeave={() => setHovered((h) => (h === ai ? null : h))}
+                  } : undefined}
+                  onMouseMove={showFloatPreview ? moveFloat : undefined}
+                  onMouseLeave={showFloatPreview ? () => setHovered((h) => (h === ai ? null : h)) : undefined}
                   onClick={() => onSelectArtist(entry.artist.id)}
-                  className="cursor-pointer transition-colors duration-200"
-                  style={{ color: hovered === ai ? '#0084FF' : undefined }}
+                  className="cursor-pointer transition-colors duration-200 active:text-accent"
+                  style={{ color: hovered === ai && showFloatPreview ? '#0084FF' : undefined }}
                 >
                   {entry.artist.name}
                 </span>
@@ -115,7 +118,8 @@ export default function ArtistsNames({ artists, onSelectArtist }: ArtistsNamesPr
 
       {/* Foto flotante con envolvente geométrica — portal a <body> para que
           `fixed` sea relativo al viewport (sin recortes por transforms). */}
-      {createPortal(
+      {showFloatPreview &&
+        createPortal(
         <div
           ref={floatRef}
           className="pointer-events-none fixed left-0 top-0 z-[80] w-[clamp(200px,20vw,300px)] aspect-[4/5]"
@@ -146,7 +150,7 @@ export default function ArtistsNames({ artists, onSelectArtist }: ArtistsNamesPr
           })}
         </div>,
         document.body
-      )}
+        )}
     </section>
   );
 }

@@ -1,4 +1,5 @@
 import { ARTWORKS_DATA, ARTISTS_DATA } from '../data';
+import { MEDIA } from '../constants/media';
 import { Artwork } from '../types';
 import ExpoActivaSection from './ExpoActivaSection';
 import CuratedStack from './CuratedStack';
@@ -21,7 +22,7 @@ export default function LandingView({ setView, onSelectArtwork, onSelectArtist }
     .filter((a): a is Artwork => Boolean(a));
 
   return (
-    <div className="animate-fade-in-soft pb-16">
+    <div className="animate-fade-in-soft">
 
       {/* SECTION 1: HERO — llena el viewport (h-dvh) con padding uniforme.
           data-free-scroll: fuera del snap (scroll nativo). data-landing-top:
@@ -34,10 +35,9 @@ export default function LandingView({ setView, onSelectArtwork, onSelectArtist }
         <div className="w-full flex-1 min-h-0">
           <div className="relative rounded-[32px] md:rounded-[40px] overflow-hidden shadow-sm h-full group">
             <img
-              src="https://images.unsplash.com/photo-1579783902614-a3fb3927b6a5?auto=format&fit=crop&q=80&w=1500"
+              src={MEDIA.hero.landing}
               alt=""
-              referrerPolicy="no-referrer"
-              className="w-full h-full object-cover transform duration-[8000ms] scale-102 hover:scale-105"
+              className="w-full h-full object-cover transform md:duration-[8000ms] md:scale-102 md:hover:scale-105 motion-reduce:transform-none"
             />
             <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-black/10 flex flex-col justify-end p-8 sm:p-12 md:p-16 text-white text-left">
               <span className="text-[10px] sm:text-xs font-mono tracking-[0.25em] text-brand uppercase font-bold mb-3 sm:mb-4 bg-lime-950/60 backdrop-blur-xs px-3.5 py-1.5 rounded-full w-auto max-w-max">

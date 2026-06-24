@@ -3,7 +3,7 @@ import { useRef, useEffect, useCallback, type ReactNode, type MouseEvent } from 
 type Easing = 'linear' | 'ease-in' | 'ease-out' | 'ease-in-out';
 
 interface ClickSparkProps {
-  /** Color of the spark lines. Defaults to the Andante primary text gray. */
+  /** Color of the spark lines. Defaults to `--ds-fg` (carbón en light, humo en dark). */
   sparkColor?: string;
   /** Length of each spark line at its peak. */
   sparkSize?: number;
@@ -45,6 +45,24 @@ export default function ClickSpark({
 }: ClickSparkProps) {
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
   const sparksRef = useRef<Spark[]>([]);
+  const sparkColorRef = useRef('#333333');
+
+  const resolveSparkColor = useCallback(() => {
+    if (sparkColor) {
+      sparkColorRef.current = sparkColor;
+      return;
+    }
+    const token = getComputedStyle(document.documentElement).getPropertyValue('--ds-fg').trim();
+    sparkColorRef.current = token || '#333333';
+  }, [sparkColor]);
+
+  // Sincroniza el color con light/dark (--ds-fg) al montar y al cambiar tema.
+  useEffect(() => {
+    resolveSparkColor();
+    const observer = new MutationObserver(resolveSparkColor);
+    observer.observe(document.documentElement, { attributes: true, attributeFilter: ['class'] });
+    return () => observer.disconnect();
+  }, [resolveSparkColor]);
 
   // Keep the fixed canvas matched to the viewport (and crisp on retina displays).
   useEffect(() => {
@@ -122,11 +140,7 @@ export default function ClickSpark({
         const x2 = spark.x + (distance + lineLength) * Math.cos(spark.angle);
         const y2 = spark.y + (distance + lineLength) * Math.sin(spark.angle);
 
-        const resolvedColor =
-          sparkColor ??
-          getComputedStyle(document.documentElement).getPropertyValue('--carbon').trim();
-
-        ctx.strokeStyle = resolvedColor || '#333333';
+        ctx.strokeStyle = sparkColorRef.current;
         ctx.lineWidth = sparkWidth;
         ctx.lineCap = 'round';
         ctx.globalAlpha = 1 - eased;

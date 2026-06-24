@@ -178,7 +178,7 @@ export default function App() {
 
   return (
     <ClickSpark>
-    <div ref={pageRef} className="flex flex-col min-h-screen bg-page grid-dot-pattern text-fg font-sans tracking-normal relative md:pb-0 pb-16 transition-colors duration-400">
+    <div ref={pageRef} className="flex flex-col min-h-screen bg-page grid-dot-pattern text-fg font-sans tracking-normal relative transition-colors duration-400">
 
       {/* Skip link — primer elemento enfocable (WCAG 2.4.1) */}
       <a href="#main" className="skip-link">Saltar al contenido</a>
@@ -224,6 +224,8 @@ export default function App() {
         {currentView === 'exhibition' && (
           <ExhibitionView
             setView={setView}
+            menuOpen={menuOpen}
+            setMenuOpen={setMenuOpen}
             onSelectArtwork={(art) => {
               // Get live reactive artwork status from state
               const activeArt = artworks.find(a => a.id === art.id) || art;
@@ -261,41 +263,6 @@ export default function App() {
       {/* 4. Footer editorial compartido (Home + Exposición) */}
       {(currentView === 'landing' || currentView === 'exhibition') && (
         <SiteFooter variant={currentView === 'landing' ? 'home' : 'exhibition'} />
-      )}
-
-      {/* 5. Floating Action Strip helper for mobile screens */}
-      {currentView !== 'checkout' && currentView !== 'cart' && currentView !== 'success' && (
-        <nav
-          aria-label="Navegación principal"
-          className="md:hidden fixed bottom-0 left-0 right-0 z-30 bg-white/90 dark:bg-canvas/90 backdrop-blur-md border-t border-border px-4 py-3.5 flex justify-around select-none"
-        >
-          <button
-            onClick={() => setView('landing')}
-            aria-current={currentView === 'landing' ? 'page' : undefined}
-            className={`focus-ring flex flex-col items-center gap-0.5 text-[9px] font-mono font-black uppercase tracking-wider ${currentView === 'landing' ? 'text-accent' : 'text-fg-muted'}`}
-          >
-            <span>Inicio</span>
-          </button>
-          <button
-            onClick={() => setView('exhibition')}
-            aria-current={currentView === 'exhibition' ? 'page' : undefined}
-            className={`focus-ring flex flex-col items-center gap-0.5 text-[9px] font-mono font-black uppercase tracking-wider ${currentView === 'exhibition' ? 'text-accent' : 'text-fg-muted'}`}
-          >
-            <span>Exhibición</span>
-          </button>
-          <button
-            onClick={() => setView('cart')}
-            aria-current={currentView === 'cart' ? 'page' : undefined}
-            className={`focus-ring relative flex flex-col items-center gap-0.5 text-[9px] font-mono font-black uppercase tracking-wider ${currentView === 'cart' ? 'text-accent' : 'text-fg-muted'}`}
-          >
-            <span>Selección</span>
-            {cart.length > 0 && (
-              <span className="absolute -top-1.5 -right-2.5 h-3.5 w-3.5 bg-accent text-on-accent text-[8px] font-bold flex items-center justify-center rounded-full">
-                {cart.length}
-              </span>
-            )}
-          </button>
-        </nav>
       )}
 
       {/* MODAL OVERLAY: Semblanza del artista (pop-up) */}

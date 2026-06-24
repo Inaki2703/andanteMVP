@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { ArrowUpRight } from '@phosphor-icons/react';
+import { useCoarsePointer } from '../hooks/useCoarsePointer';
 
 export interface EditorialHoverListItem {
   id: string;
@@ -25,7 +26,13 @@ export default function EditorialHoverList({
   variant = 'default',
 }: EditorialHoverListProps) {
   const [hovered, setHovered] = useState<number | null>(null);
+  const coarsePointer = useCoarsePointer();
   const isNameFirst = variant === 'nameFirst';
+
+  const itemOpacity = (i: number) => {
+    if (coarsePointer || hovered === null) return 1;
+    return hovered === i ? 1 : 0.28;
+  };
 
   return (
     <>
@@ -37,17 +44,17 @@ export default function EditorialHoverList({
       </div>
 
       <ul
-        onMouseLeave={() => setHovered(null)}
+        onMouseLeave={coarsePointer ? undefined : () => setHovered(null)}
         className="border-t border-border"
       >
         {items.map((item, i) => (
           <li
             key={item.id}
-            onMouseEnter={() => setHovered(i)}
+            onMouseEnter={coarsePointer ? undefined : () => setHovered(i)}
             onClick={item.onClick}
             className={`group border-b border-border ${item.onClick ? 'cursor-pointer' : ''}`}
             style={{
-              opacity: hovered !== null && hovered !== i ? 0.28 : 1,
+              opacity: itemOpacity(i),
               transition: 'opacity var(--dur-base) var(--ease-standard)',
             }}
           >
@@ -60,7 +67,7 @@ export default function EditorialHoverList({
                     {item.left}
                   </span>
                 )}
-                <h3 className="font-sans font-black uppercase tracking-tight text-fg text-2xl sm:text-4xl lg:text-5xl leading-none truncate transition-transform duration-[var(--dur-base)] ease-[var(--ease-standard)] group-hover:translate-x-2 sm:group-hover:translate-x-5">
+                <h3 className="font-sans font-black uppercase tracking-tight text-fg text-2xl sm:text-4xl lg:text-5xl leading-none truncate transition-transform duration-[var(--dur-base)] ease-[var(--ease-standard)] md:group-hover:translate-x-2 lg:group-hover:translate-x-5">
                   {item.title}
                 </h3>
               </div>
@@ -75,7 +82,7 @@ export default function EditorialHoverList({
                   {item.right}
                 </span>
                 {item.onClick && (
-                  <ArrowUpRight className="h-5 w-5 sm:h-6 sm:w-6 text-neutral-400 group-hover:text-accent dark:group-hover:text-sky-300 group-hover:translate-x-1 group-hover:-translate-y-1 transition-all duration-[var(--dur-fast)] ease-[var(--ease-standard)] shrink-0" />
+                  <ArrowUpRight className="h-5 w-5 sm:h-6 sm:w-6 text-neutral-400 md:group-hover:text-accent dark:md:group-hover:text-sky-300 md:group-hover:translate-x-1 md:group-hover:-translate-y-1 transition-all duration-[var(--dur-fast)] ease-[var(--ease-standard)] shrink-0" />
                 )}
               </div>
             </div>

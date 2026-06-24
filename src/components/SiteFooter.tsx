@@ -53,7 +53,7 @@ function SubscriptionBlock() {
       setStatus('Introduce un correo electrónico válido.');
       return;
     }
-    setStatus('¡Gracias por suscribirte a Andante!');
+    setStatus('¡Gracias! Te buscamos pronto para colaborar.');
     setEmail('');
   };
 
@@ -69,21 +69,24 @@ function SubscriptionBlock() {
         htmlFor={emailId}
         className="text-[10px] font-mono tracking-widest text-brand font-bold block uppercase text-right"
       >
-        Suscripción
+        Colaboremos
       </label>
+      <p className="text-[11px] sm:text-xs text-neutral-300 leading-relaxed text-right">
+        Déjanos tu correo y te buscamos para crear algo juntos.
+      </p>
       <div className="relative border-b border-neutral-600 pb-3 flex items-center justify-between focus-within:border-brand transition-colors">
         <input
           id={emailId}
           type="email"
           value={email}
           onChange={(e) => setEmail(e.target.value)}
-          placeholder="TU EMAIL AQUÍ"
+          placeholder="DÉJANOS TU CORREO"
           aria-describedby={status ? statusId : undefined}
           className="bg-transparent border-none outline-none font-sans font-bold text-sm text-on-inverse placeholder-neutral-400 w-full uppercase focus:ring-0 focus:outline-none"
         />
         <button
           type="submit"
-          aria-label="Suscribirme"
+          aria-label="Enviar mi correo"
           className="focus-ring p-1 text-brand hover:text-brand-hover font-bold text-lg cursor-pointer"
         >
           <span aria-hidden="true">↗</span>
@@ -93,7 +96,12 @@ function SubscriptionBlock() {
         {status}
       </p>
       <div className="flex gap-6 sm:gap-8 text-[10px] font-mono text-neutral-300 justify-end pt-1">
-        <a href="#instagram" className="focus-ring rounded hover:text-on-inverse transition-colors">
+        <a
+          href="https://www.instagram.com/andante_arte_itinerante/"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="focus-ring rounded hover:text-on-inverse transition-colors"
+        >
           INSTAGRAM
         </a>
         <a href="#twitter" className="focus-ring rounded hover:text-on-inverse transition-colors">
@@ -114,7 +122,7 @@ export default function SiteFooter({ variant }: SiteFooterProps) {
   return (
     <footer
       className={`snap-section flex-shrink-0 p-6 flex flex-col justify-center transition-colors duration-400${
-        variant === 'exhibition' ? ' exhibition-snap-section' : ''
+        variant === 'exhibition' ? ' exhibition-snap-section' : ' snap-target-end'
       }`}
     >
       <div className="mx-auto w-full max-w-[1210px]">

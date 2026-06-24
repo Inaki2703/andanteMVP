@@ -25,7 +25,7 @@ export default function MainMenu({ setView, setMenuOpen, onOpenManifesto }: Main
       initial={{ opacity: 0, y: -10 }}
       animate={{ opacity: 1, y: 0 }}
       exit={{ opacity: 0, y: -10 }}
-      transition={{ duration: 0.25, ease: 'easeOut' }}
+      transition={{ duration: 0.25, ease: [0.22, 1, 0.36, 1] }}
       className="fixed inset-0 top-[64px] sm:top-[80px] z-40 bg-canvas overflow-y-auto border-t border-border transition-colors duration-400"
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 sm:py-16 grid grid-cols-1 lg:grid-cols-12 gap-12 sm:gap-16">

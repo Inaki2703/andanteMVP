@@ -14,9 +14,12 @@ export interface SectionPagerOptions {
   shouldIntercept?: () => boolean;
 }
 
-const THRESHOLD = 420;
-const MAX_PEEK = 70;
-const DUR = 760;
+// Umbral bajo: un "flick" decidido basta para snap (antes 420 obligaba a
+// acumular delta y se sentía como "scroll dos veces").
+const THRESHOLD = 160;
+const MAX_PEEK = 48;
+// Homologado con el sistema de motion (--dur-snap / --ease-snap de index.css).
+const DUR = 720;
 const EASE = 'cubic-bezier(0.65, 0, 0.35, 1)';
 
 export function absTop(el: HTMLElement): number {
@@ -114,8 +117,13 @@ export function setupSectionPager({
 
   const clearPeek = () => {
     if (!peekEl) return;
-    peekEl.style.transition = '';
+    // Retorno suave del peek (antes el reset instantáneo causaba el rebote).
+    peekEl.style.transition = 'transform 200ms cubic-bezier(0.22, 1, 0.36, 1)';
     peekEl.style.transform = '';
+    const el = peekEl;
+    window.setTimeout(() => {
+      if (el && !el.style.transform) el.style.transition = '';
+    }, 220);
     peekEl = null;
   };
 
@@ -127,9 +135,11 @@ export function setupSectionPager({
     locked = true;
     index = i;
     centerScroll(el, 'smooth');
+    // El lock cubre la animación de scroll para que el momentum residual de la
+    // rueda no dispare un segundo salto inmediato.
     window.setTimeout(() => {
       locked = false;
-    }, 720);
+    }, DUR + 80);
   };
 
   const landAfterWrap = (dir: 1 | -1) => {
@@ -262,7 +272,7 @@ export function setupSectionPager({
     const dir: 1 | -1 = accum > 0 ? 1 : -1;
 
     if (Math.abs(accum) < THRESHOLD) {
-      applyPeek(dir, Math.abs(accum) * 0.22);
+      applyPeek(dir, Math.abs(accum) * 0.18);
       return;
     }
 
@@ -274,7 +284,7 @@ export function setupSectionPager({
       locked = true;
       window.setTimeout(() => {
         locked = false;
-      }, 620);
+      }, DUR);
       return;
     }
 

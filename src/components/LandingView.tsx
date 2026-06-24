@@ -21,10 +21,16 @@ export default function LandingView({ setView, onSelectArtwork, onSelectArtist }
     .filter((a): a is Artwork => Boolean(a));
 
   return (
-    <div className="animate-fade-in pb-16">
+    <div className="animate-fade-in-soft pb-16">
 
-      {/* SECTION 1: HERO — llena el viewport con padding uniforme en los 4 lados */}
-      <section className="snap-section relative p-6 bg-transparent h-dvh flex flex-col">
+      {/* SECTION 1: HERO — llena el viewport (h-dvh) con padding uniforme.
+          data-free-scroll: fuera del snap (scroll nativo). data-landing-top:
+          origen del wrap forward (footer ↓ → Hero). */}
+      <section
+        data-free-scroll
+        data-landing-top
+        className="snap-section relative p-6 bg-transparent h-dvh flex flex-col"
+      >
         <div className="w-full flex-1 min-h-0">
           <div className="relative rounded-[32px] md:rounded-[40px] overflow-hidden shadow-sm h-full group">
             <img

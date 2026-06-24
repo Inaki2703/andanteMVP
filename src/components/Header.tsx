@@ -155,7 +155,7 @@ export default function Header({
               </span>
               <motion.span
                 animate={{ rotate: dropdownOpen ? 180 : 0 }}
-                transition={{ duration: 0.25, ease: [0.4, 0, 0.2, 1] }}
+                transition={{ duration: 0.25, ease: [0.22, 1, 0.36, 1] }}
                 className="text-fg"
               >
                 <CaretDown size={17} weight="bold" />
@@ -222,7 +222,7 @@ export default function Header({
             initial={{ opacity: 0, y: -8, scaleY: 0.95 }}
             animate={{ opacity: 1, y: 0, scaleY: 1 }}
             exit={{ opacity: 0, y: -8, scaleY: 0.95 }}
-            transition={{ duration: 0.22, ease: [0.4, 0, 0.2, 1] }}
+            transition={{ duration: 0.22, ease: [0.22, 1, 0.36, 1] }}
             style={{ transformOrigin: 'top', width: W }}
             className="mt-2 bg-[#FAFAF7] dark:bg-[#1A1A1A] border border-[#D0CFC9] dark:border-[#333] rounded-xl overflow-hidden shadow-xl"
           >

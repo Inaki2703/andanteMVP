@@ -40,10 +40,17 @@ const TILES = [
 ];
 
 const BASE_SPEED = 1.4;
-const SLOW_SPEED = 0.35;
-const SCROLL_BOOST_MULT = 3.2;
-const DRIFT_BOOST_MULT = 2.8;
+const SLOW_SPEED = 0.7;
 const BOOST_DECAY = 0.92;
+
+// Reactividad scroll-driven (estilo riseatseven): el scroll inyecta velocidad
+// con signo (dirección) al marquee y al carrusel; nunca se ocultan, sólo cambian
+// de velocidad/dirección con inercia.
+const CAROUSEL_BASE = 0.5; // px/frame: deriva continua del carrusel
+const MARQUEE_SCROLL_K = 0.04; // cuánto inyecta cada gesto de scroll al marquee
+const CAROUSEL_SCROLL_K = 0.05; // cuánto inyecta cada gesto de scroll al carrusel
+const MARQUEE_BOOST_MAX = 12; // tope de velocidad del marquee
+const CAROUSEL_VEL_MAX = 12; // tope de velocidad del carrusel
 
 const PATH_BASE_Y = 145;
 
@@ -150,12 +157,12 @@ function CurvedMarquee({
 
 export default function ExpoActivaSection({ setView }: ExpoActivaSectionProps) {
   const sectionRef = useRef<HTMLElement>(null);
-  const driftRef = useRef<HTMLDivElement>(null);
+  const trackRef = useRef<HTMLDivElement>(null);
   const cursorRef = useRef<HTMLDivElement>(null);
   const [hovering, setHovering] = useState(false);
   const speed = useRef({ cur: BASE_SPEED, target: BASE_SPEED });
-  const scrollBoostRef = useRef(0);
-  const driftBoostRef = useRef(0);
+  const scrollBoostRef = useRef(0); // boost scroll-driven del marquee curvo
+  const carouselVelRef = useRef(0); // boost scroll-driven del carrusel
   const [reducedMotion, setReducedMotion] = useState(
     () => window.matchMedia('(prefers-reduced-motion: reduce)').matches
   );
@@ -167,60 +174,48 @@ export default function ExpoActivaSection({ setView }: ExpoActivaSectionProps) {
     return () => mq.removeEventListener('change', onChange);
   }, []);
 
-  // Drift horizontal + decaimiento del boost por rueda en la fila de fotos.
+  // El scroll inyecta velocidad (con signo = dirección) al marquee y al carrusel.
+  // Listener `wheel` PASIVO: no llama preventDefault → no añade jank al scroll.
   useEffect(() => {
-    let raf = 0;
-    const update = () => {
-      raf = 0;
-      const sec = sectionRef.current;
-      const layer = driftRef.current;
-      if (!sec || !layer) return;
-      const r = sec.getBoundingClientRect();
-      const progress =
-        (window.innerHeight / 2 - (r.top + r.height / 2)) / window.innerHeight;
-      const baseTx = -120 - progress * 100;
-
-      if (!reducedMotion) {
-        driftBoostRef.current *= BOOST_DECAY;
-      } else {
-        driftBoostRef.current = 0;
-      }
-
-      const tx = baseTx + driftBoostRef.current;
-      layer.style.transform = `translate3d(${tx.toFixed(1)}px,0,0)`;
+    const clamp = (v: number, m: number) => Math.max(-m, Math.min(m, v));
+    const onWheel = (e: WheelEvent) => {
+      if (reducedMotion) return;
+      scrollBoostRef.current = clamp(
+        scrollBoostRef.current + e.deltaY * MARQUEE_SCROLL_K,
+        MARQUEE_BOOST_MAX
+      );
+      carouselVelRef.current = clamp(
+        carouselVelRef.current + e.deltaY * CAROUSEL_SCROLL_K,
+        CAROUSEL_VEL_MAX
+      );
     };
-    const tick = () => {
-      if (!raf) raf = requestAnimationFrame(update);
-    };
-    tick();
-    const loop = () => {
-      update();
-      raf = requestAnimationFrame(loop);
-    };
-    raf = requestAnimationFrame(loop);
-    window.addEventListener('scroll', tick, { passive: true });
-    window.addEventListener('resize', tick);
-    return () => {
-      window.removeEventListener('scroll', tick);
-      window.removeEventListener('resize', tick);
-      cancelAnimationFrame(raf);
-    };
+    window.addEventListener('wheel', onWheel, { passive: true });
+    return () => window.removeEventListener('wheel', onWheel);
   }, [reducedMotion]);
 
-  // Boost scroll-driven estilo riseatseven vía pager de App.tsx.
+  // Carrusel: loop continuo por rAF (deriva base + boost de scroll con inercia).
+  // Reemplaza la animación CSS para poder cambiar velocidad y dirección sin que
+  // las imágenes se oculten nunca.
   useEffect(() => {
-    const el = sectionRef.current as (HTMLElement & {
-      __pagerWheel?: (deltaY: number) => void;
-    }) | null;
-    if (!el) return;
-
-    el.__pagerWheel = (deltaY: number) => {
-      if (reducedMotion) return;
-      scrollBoostRef.current += deltaY * SCROLL_BOOST_MULT * 0.01;
-      driftBoostRef.current -= deltaY * DRIFT_BOOST_MULT * 0.4;
+    const track = trackRef.current;
+    if (!track) return;
+    let raf = 0;
+    let x = 0;
+    const step = () => {
+      const half = track.scrollWidth / 2;
+      const boost = reducedMotion ? 0 : carouselVelRef.current;
+      if (!reducedMotion) carouselVelRef.current *= BOOST_DECAY;
+      const base = reducedMotion ? 0 : CAROUSEL_BASE;
+      x -= base + boost;
+      if (half > 0) {
+        if (x <= -half) x += half;
+        if (x > 0) x -= half;
+      }
+      track.style.transform = `translate3d(${x.toFixed(2)}px,0,0)`;
+      raf = requestAnimationFrame(step);
     };
-
-    return () => { delete el.__pagerWheel; };
+    raf = requestAnimationFrame(step);
+    return () => cancelAnimationFrame(raf);
   }, [reducedMotion]);
 
   const moveCursor = useCallback((e: MouseEvent) => {
@@ -235,6 +230,7 @@ export default function ExpoActivaSection({ setView }: ExpoActivaSectionProps) {
   return (
     <section
       ref={sectionRef}
+      data-free-scroll
       onMouseEnter={(e) => {
         setHovering(true);
         moveCursor(e);
@@ -242,7 +238,7 @@ export default function ExpoActivaSection({ setView }: ExpoActivaSectionProps) {
       onMouseLeave={() => setHovering(false)}
       onMouseMove={moveCursor}
       onClick={() => setView('exhibition')}
-      className="snap-section relative min-h-dvh flex flex-col justify-center gap-8 sm:gap-10 py-16 cursor-none select-none"
+      className="relative min-h-dvh flex flex-col justify-center gap-8 sm:gap-10 py-16 cursor-none select-none"
     >
       <div className="px-6 sm:px-10 flex items-center justify-between gap-4 relative z-30">
         <div className="flex items-center gap-3 text-neutral-600 dark:text-neutral-400">
@@ -261,13 +257,17 @@ export default function ExpoActivaSection({ setView }: ExpoActivaSectionProps) {
         </div>
       </div>
 
-      {/* Marquee curvado arriba; carrusel entra en el valle central del arco. */}
-      <div
-        onMouseEnter={() => { speed.current.target = SLOW_SPEED; }}
-        onMouseLeave={() => { speed.current.target = BASE_SPEED; }}
-        className="relative left-1/2 -translate-x-1/2 w-screen"
-      >
-        <div className="pointer-events-none relative z-10">
+      {/* Marquee curvado arriba; carrusel entra en el valle central del arco.
+          Ambos están SIEMPRE visibles (sin fades); el scroll cambia su velocidad
+          y dirección. */}
+      <div className="relative left-1/2 -translate-x-1/2 w-screen">
+        {/* El "slow on hover" se acota SOLO al texto curvo: posar el cursor sobre
+            las fotos del carrusel ya no frena el marquee. */}
+        <div
+          onMouseEnter={() => { speed.current.target = SLOW_SPEED; }}
+          onMouseLeave={() => { speed.current.target = BASE_SPEED; }}
+          className="relative z-10"
+        >
           <CurvedMarquee
             marqueeText="ARTE ✦ MUNDIALISTA ✦ "
             curveAmount={120}
@@ -278,33 +278,32 @@ export default function ExpoActivaSection({ setView }: ExpoActivaSectionProps) {
         </div>
 
         <div className="relative z-20 mt-0 sm:-mt-4 md:-mt-6 overflow-x-clip overflow-y-visible pt-5 pb-7">
-          <div ref={driftRef} className="will-change-transform">
-            <div
-              className="marquee-track"
-              style={{ animation: 'marquee-left 95s linear infinite', alignItems: 'flex-end' }}
-            >
-              {driftImages.map((src, i) => {
-                const t = TILES[i % TILES.length];
-                return (
-                  <div
-                    key={i}
-                    className="shrink-0 mr-5 sm:mr-7 rounded-2xl overflow-hidden"
-                    style={{
-                      width: t.w,
-                      height: t.h,
-                      transform: `translateY(${t.offsetY}px)`,
-                    }}
-                  >
-                    <img
-                      src={src}
-                      alt=""
-                      referrerPolicy="no-referrer"
-                      className="w-full h-full object-cover"
-                    />
-                  </div>
-                );
-              })}
-            </div>
+          <div
+            ref={trackRef}
+            className="marquee-track will-change-transform"
+            style={{ alignItems: 'flex-end' }}
+          >
+            {driftImages.map((src, i) => {
+              const t = TILES[i % TILES.length];
+              return (
+                <div
+                  key={i}
+                  className="shrink-0 mr-5 sm:mr-7 rounded-2xl overflow-hidden"
+                  style={{
+                    width: t.w,
+                    height: t.h,
+                    transform: `translateY(${t.offsetY}px)`,
+                  }}
+                >
+                  <img
+                    src={src}
+                    alt=""
+                    referrerPolicy="no-referrer"
+                    className="w-full h-full object-cover"
+                  />
+                </div>
+              );
+            })}
           </div>
         </div>
       </div>

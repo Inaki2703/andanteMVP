@@ -59,7 +59,7 @@ export default function ArtistsNames({ artists, onSelectArtist }: ArtistsNamesPr
   }, [artists]);
 
   return (
-    <section className="snap-section relative min-h-dvh flex flex-col justify-center py-16 px-6 sm:px-10">
+    <section className="snap-section snap-target relative min-h-dvh flex flex-col justify-center py-16 px-6 sm:px-10">
       <div className="max-w-6xl mx-auto w-full">
         {/* Encabezado */}
         <div className="flex items-center gap-3 text-neutral-600 dark:text-neutral-400 mb-3">
@@ -132,7 +132,7 @@ export default function ArtistsNames({ artists, onSelectArtist }: ArtistsNamesPr
                   clipPath: sh.clipPath,
                   opacity: active ? 1 : 0,
                   transform: `scale(${active ? 1 : 0.82}) rotate(${sh.rotate}deg)`,
-                  transition: 'opacity 0.28s ease, transform 0.45s cubic-bezier(0.22, 1, 0.36, 1)',
+                  transition: 'opacity var(--dur-fast) var(--ease-standard), transform var(--dur-base) var(--ease-standard)',
                 }}
               >
                 <img

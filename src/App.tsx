@@ -19,6 +19,7 @@ import SuccessView from './components/SuccessView';
 import ClickSpark from './components/ClickSpark';
 import SiteFooter from './components/SiteFooter';
 import { absTop, setupSectionPager } from './utils/sectionPager';
+import { setupLandingLoop } from './utils/landingLoop';
 
 export default function App() {
   // Navigation structure
@@ -77,11 +78,14 @@ export default function App() {
     if (currentView !== 'landing' && currentView !== 'exhibition') return;
     if (menuOpen || showManifesto || selectedArtwork || selectedArtistId) return;
 
+    // Home: scroll NATIVO + snap suave por CSS (ver index.css). El único JS es el
+    // bucle footer → Hero, con un listener `wheel` PASIVO que solo actúa al fondo
+    // (no secuestra la rueda → conserva la suavidad). 'Curado a mano' se
+    // autogestiona con su pin sticky scroll-driven.
     if (currentView === 'landing') {
-      return setupSectionPager({
-        getSections: () => Array.from(document.querySelectorAll<HTMLElement>('.snap-section')),
+      return setupLandingLoop({
         pageRef,
-        enableWrap: true,
+        getHero: () => document.querySelector<HTMLElement>('[data-landing-top]'),
       });
     }
 

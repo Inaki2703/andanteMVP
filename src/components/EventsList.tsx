@@ -13,7 +13,7 @@ const EVENTS = [
 
 export default function EventsList({ setView }: EventsListProps) {
   return (
-    <section className="snap-section relative min-h-dvh flex flex-col justify-center py-16 px-6 sm:px-10">
+    <section className="snap-section snap-target relative min-h-dvh flex flex-col justify-center py-16 px-6 sm:px-10">
       <div className="max-w-7xl mx-auto w-full">
         <EditorialHoverList
           label="Qué más anda pasando"

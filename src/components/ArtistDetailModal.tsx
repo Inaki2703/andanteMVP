@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
 import { motion } from 'motion/react';
-import { X, SealCheck, InstagramLogo, Globe, Check } from '@phosphor-icons/react';
+import { X, SealCheck, InstagramLogo, Globe } from '@phosphor-icons/react';
 import { Artist } from '../types';
 import ImageTrail from './ImageTrail';
 
@@ -10,15 +10,6 @@ interface ArtistDetailModalProps {
 }
 
 export default function ArtistDetailModal({ artist, onClose }: ArtistDetailModalProps) {
-  // Seguir: estado optimista local (sin backend)
-  const [following, setFollowing] = useState(false);
-  const [followers, setFollowers] = useState(artist.followers ?? 0);
-
-  const handleToggleFollow = () => {
-    setFollowers((n) => (following ? n - 1 : n + 1));
-    setFollowing((prev) => !prev);
-  };
-
   // Image trail
   const [activeImages, setActiveImages] = useState<string[] | null>(null);
   const [hovered, setHovered] = useState<number | null>(null);
@@ -41,23 +32,24 @@ export default function ArtistDetailModal({ artist, onClose }: ArtistDetailModal
     };
   }, []);
 
-  // Cerrar con Escape + lock de scroll + foco inicial.
+  // Lock de scroll + foco inicial.
   useEffect(() => {
-    const onKey = (e: KeyboardEvent) => {
-      if (e.key === 'Escape') onClose();
-    };
-    window.addEventListener('keydown', onKey);
-    const prevOverflow = document.body.style.overflow;
+    // El scroller real es <html>; bloquear ambos evita que la página de fondo
+    // se desplace mientras el pop-up está abierto.
+    const html = document.documentElement;
+    const prevHtmlOverflow = html.style.overflow;
+    const prevBodyOverflow = document.body.style.overflow;
+    html.style.overflow = 'hidden';
     document.body.style.overflow = 'hidden';
     closeBtnRef.current?.focus();
     return () => {
-      window.removeEventListener('keydown', onKey);
-      document.body.style.overflow = prevOverflow;
+      html.style.overflow = prevHtmlOverflow;
+      document.body.style.overflow = prevBodyOverflow;
     };
-  }, [onClose]);
+  }, []);
 
-  const nf = (n: number) => n.toLocaleString('es-AR');
   const exhibitions = artist.exhibitions ?? [];
+  const hasSocials = artist.socials?.instagram || artist.socials?.website;
 
   return (
     <div className="fixed inset-0 z-55">
@@ -66,7 +58,6 @@ export default function ArtistDetailModal({ artist, onClose }: ArtistDetailModal
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         exit={{ opacity: 0 }}
-        onClick={onClose}
         className="absolute inset-0 bg-neutral-950/70 backdrop-blur-md"
       />
 
@@ -92,22 +83,39 @@ export default function ArtistDetailModal({ artist, onClose }: ArtistDetailModal
           <X className="h-5 w-5" aria-hidden="true" />
         </button>
 
-        {/* Cuerpo con scroll-snap: 2 secciones (identidad / trayectoria) */}
-        <div className="absolute inset-0 overflow-y-auto snap-y snap-mandatory scroll-smooth">
+        {/* Cuerpo con scroll-snap: 2 secciones (identidad / trayectoria).
+            overscroll-contain evita que el scroll se encadene a la página de fondo. */}
+        <div className="absolute inset-0 overflow-y-auto overscroll-contain snap-y snap-mandatory scroll-smooth">
 
-          {/* SNAP 1 — foto, redes, nombre, formato, semblanza + seguir */}
+          {/* SNAP 1 — foto, nombre, formato, semblanza, redes */}
           <section className="snap-start snap-always min-h-full flex flex-col justify-center px-6 sm:px-10 md:px-[64px] py-16 md:py-[80px]">
             <div className="mx-auto w-full max-w-[1100px] flex flex-col gap-10 sm:gap-[52px]">
               <div className="flex flex-col lg:flex-row gap-10 lg:gap-[100px] lg:items-start">
                 <div className="flex-1 min-w-0 flex flex-col gap-5">
-                  <div className="flex items-end justify-between gap-4">
-                    <img
-                      src={artist.portrait || artist.image}
-                      alt={`Retrato de ${artist.name}`}
-                      referrerPolicy="no-referrer"
-                      className="size-[120px] sm:size-[150px] md:size-[178px] rounded-[32px] object-cover shrink-0"
-                    />
-                    <div className="flex gap-3 items-center">
+                  <img
+                    src={artist.portrait || artist.image}
+                    alt={`Retrato de ${artist.name}`}
+                    referrerPolicy="no-referrer"
+                    className="size-[120px] sm:size-[150px] md:size-[178px] rounded-[32px] object-cover shrink-0"
+                  />
+
+                  <div className="flex flex-col gap-2">
+                    {artist.verified && (
+                      <span className="inline-flex w-fit items-center gap-1.5 bg-brand text-on-brand px-3 py-1 rounded-full text-[10px] font-mono font-bold uppercase tracking-wider">
+                        <SealCheck className="h-3.5 w-3.5" aria-hidden="true" />
+                        Artista verificada
+                      </span>
+                    )}
+                    <h2 className="font-mono uppercase text-on-inverse text-[clamp(2.25rem,6vw,4rem)] leading-[1.05] break-words">
+                      {artist.name}
+                    </h2>
+                    {artist.tagline && (
+                      <p className="text-base text-on-inverse/70">{artist.tagline}</p>
+                    )}
+                  </div>
+
+                  {hasSocials && (
+                    <div className="flex flex-wrap items-center gap-3 pt-2">
                       {artist.socials?.instagram && (
                         <a
                           href={artist.socials.instagram}
@@ -131,48 +139,7 @@ export default function ArtistDetailModal({ artist, onClose }: ArtistDetailModal
                         </a>
                       )}
                     </div>
-                  </div>
-
-                  <div className="flex flex-col gap-2">
-                    {artist.verified && (
-                      <span className="inline-flex w-fit items-center gap-1.5 bg-brand text-on-brand px-3 py-1 rounded-full text-[10px] font-mono font-bold uppercase tracking-wider">
-                        <SealCheck className="h-3.5 w-3.5" aria-hidden="true" />
-                        Artista verificada
-                      </span>
-                    )}
-                    <h2 className="font-mono uppercase text-on-inverse text-[clamp(2.25rem,6vw,4rem)] leading-[1.05] break-words">
-                      {artist.name}
-                    </h2>
-                    {artist.tagline && (
-                      <p className="text-base text-on-inverse/70">{artist.tagline}</p>
-                    )}
-                  </div>
-
-                  {/* Seguir + redes */}
-                  <div className="flex flex-wrap items-center gap-x-5 gap-y-3 pt-2">
-                    <button
-                      type="button"
-                      onClick={handleToggleFollow}
-                      aria-pressed={following}
-                      className={`focus-ring inline-flex items-center gap-2 px-6 py-3 rounded-md font-sans font-semibold text-sm transition-colors cursor-pointer ${
-                        following
-                          ? 'bg-white/10 text-on-inverse border border-white/20'
-                          : 'bg-accent hover:bg-accent-hover text-on-accent'
-                      }`}
-                    >
-                      {following ? (
-                        <>
-                          <Check className="h-4 w-4" aria-hidden="true" />
-                          Siguiendo
-                        </>
-                      ) : (
-                        `Seguir a ${artist.name.split(' ')[0]}`
-                      )}
-                    </button>
-                    <span className="font-mono text-xs uppercase tracking-wider text-on-inverse/50 tabular-nums">
-                      {nf(followers)} seguidores
-                    </span>
-                  </div>
+                  )}
                 </div>
 
                 {artist.semblanza && (
@@ -184,13 +151,18 @@ export default function ArtistDetailModal({ artist, onClose }: ArtistDetailModal
                 )}
               </div>
 
-              {/* Hint de scroll a la siguiente sección */}
+              {/* Chip: invita a desplazarse a la trayectoria */}
               {exhibitions.length > 0 && (
-                <div className="flex items-center gap-3 text-on-inverse/50">
-                  <span className="font-mono text-[10px] uppercase tracking-[0.2em]">
-                    Scroll · trayectoria
+                <div
+                  aria-hidden="true"
+                  className="inline-flex w-fit items-center gap-2.5 rounded-full border border-white/25 bg-white/10 px-4 py-2.5 text-on-inverse shadow-[0_0_0_1px_rgba(255,255,255,0.04)_inset]"
+                >
+                  <span className="font-mono text-[11px] font-semibold uppercase tracking-[0.18em]">
+                    Trayectoria
                   </span>
-                  <span aria-hidden="true" className="animate-bounce">↓</span>
+                  <span className="flex h-5 w-5 items-center justify-center rounded-full bg-white/15 text-xs animate-bounce">
+                    ↓
+                  </span>
                 </div>
               )}
             </div>

@@ -75,7 +75,7 @@ export default function App() {
   // ── Pager por secciones (landing + exposición) ─────────────────────────────
   useEffect(() => {
     if (currentView !== 'landing' && currentView !== 'exhibition') return;
-    if (menuOpen || showManifesto || selectedArtwork) return;
+    if (menuOpen || showManifesto || selectedArtwork || selectedArtistId) return;
 
     if (currentView === 'landing') {
       return setupSectionPager({
@@ -108,7 +108,7 @@ export default function App() {
         return center > firstTop && center < lastBottom;
       },
     });
-  }, [currentView, menuOpen, showManifesto, selectedArtwork]);
+  }, [currentView, menuOpen, showManifesto, selectedArtwork, selectedArtistId]);
 
   // ── Reveal homologado de secciones (solo en la landing) ──
   // Cada sección se anima al entrar al viewport; se re-activa cada vez que

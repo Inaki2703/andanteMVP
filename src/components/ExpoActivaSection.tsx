@@ -27,34 +27,41 @@ const IMAGES = [
   'https://images.unsplash.com/photo-1536924940846-227afb31e2a5?auto=format&fit=crop&q=80&w=800',
 ];
 
-// Alturas irregulares (no un carrusel uniforme). Más bajas que la banda del
-// marquee para que el texto ondulado asome arriba, abajo y entre las fotos.
+// Alturas irregulares + offsetY escalonado (patrón del mock: extremos bajos, centro alto).
 const TILES = [
-  { w: 300, h: 240 },
-  { w: 240, h: 190 },
-  { w: 360, h: 260 },
-  { w: 220, h: 200 },
-  { w: 320, h: 175 },
-  { w: 270, h: 250 },
-  { w: 340, h: 205 },
-  { w: 250, h: 220 },
+  { w: 300, h: 240, offsetY: 24 },
+  { w: 240, h: 190, offsetY: 0 },
+  { w: 360, h: 260, offsetY: -16 },
+  { w: 220, h: 200, offsetY: 8 },
+  { w: 320, h: 175, offsetY: 20 },
+  { w: 270, h: 250, offsetY: -8 },
+  { w: 340, h: 205, offsetY: 12 },
+  { w: 250, h: 220, offsetY: -4 },
 ];
 
 const BASE_SPEED = 1.4;
 const SLOW_SPEED = 0.35;
+const SCROLL_BOOST_MULT = 3.2;
+const DRIFT_BOOST_MULT = 2.8;
+const BOOST_DECAY = 0.92;
 
-// ── Marquee curvado (técnica reactbits/CurvedLoop): mide el ancho real del
-//    texto para repetirlo sin costura y lo desliza sobre una curva cuya
-//    profundidad la define `curveAmount`. Driven por rAF con desaceleración
-//    suave al pasar el cursor. ──
+const PATH_BASE_Y = 145;
+
+// ── Marquee curvado: arco convexo hacia arriba (centro más alto que extremos).
+//    Mide el ancho real del texto para repetirlo sin costura; driven por rAF
+//    con desaceleración al hover y boost por gesto de rueda (__pagerWheel). ──
 function CurvedMarquee({
   marqueeText,
   curveAmount,
   speedRef,
+  scrollBoostRef,
+  reducedMotion,
 }: {
   marqueeText: string;
   curveAmount: number;
   speedRef: MutableRefObject<{ cur: number; target: number }>;
+  scrollBoostRef: MutableRefObject<number>;
+  reducedMotion: boolean;
 }) {
   const text = useMemo(() => {
     const hasTrailing = /\s| $/.test(marqueeText);
@@ -67,7 +74,7 @@ function CurvedMarquee({
   const [offset, setOffset] = useState(0);
   const uid = useId();
   const pathId = `curve-${uid.replace(/:/g, '')}`;
-  const pathD = `M-100,40 Q720,${40 + curveAmount} 1540,40`;
+  const pathD = `M-100,${PATH_BASE_Y} C360,${PATH_BASE_Y - curveAmount} 1080,${PATH_BASE_Y - curveAmount} 1540,${PATH_BASE_Y}`;
 
   const ready = spacing > 0;
   const totalText = ready
@@ -79,17 +86,15 @@ function CurvedMarquee({
   const textStyle = {
     fontFamily: '"Syne", sans-serif',
     fontWeight: 700,
-    fontSize: '6rem',
+    fontSize: 'clamp(3.5rem, 8vw, 6.5rem)',
     textTransform: 'uppercase' as const,
     letterSpacing: '0.04em',
   };
 
-  // Medir el ancho real del texto para el bucle sin costura.
   useEffect(() => {
     if (measureRef.current) setSpacing(measureRef.current.getComputedTextLength());
   }, [text]);
 
-  // Posición inicial.
   useEffect(() => {
     if (spacing && tpRef.current) {
       tpRef.current.setAttribute('startOffset', -spacing + 'px');
@@ -97,17 +102,20 @@ function CurvedMarquee({
     }
   }, [spacing]);
 
-  // Animación + desaceleración suave.
   useEffect(() => {
     if (!spacing) return;
     let raf = 0;
     const step = () => {
       const s = speedRef.current;
       s.cur += (s.target - s.cur) * 0.08;
+
+      const boost = reducedMotion ? 0 : scrollBoostRef.current;
+      if (!reducedMotion) scrollBoostRef.current *= BOOST_DECAY;
+
       const el = tpRef.current;
       if (el) {
         const cur = parseFloat(el.getAttribute('startOffset') || '0');
-        let n = cur - s.cur;
+        let n = cur - s.cur - boost;
         if (n <= -spacing) n += spacing;
         if (n > 0) n -= spacing;
         el.setAttribute('startOffset', n + 'px');
@@ -116,12 +124,12 @@ function CurvedMarquee({
     };
     raf = requestAnimationFrame(step);
     return () => cancelAnimationFrame(raf);
-  }, [spacing, speedRef]);
+  }, [spacing, speedRef, scrollBoostRef, reducedMotion]);
 
   return (
     <svg
-      className="w-full overflow-visible block aspect-[100/12] leading-none"
-      viewBox="0 0 1440 120"
+      className="w-full overflow-visible block aspect-[100/18] leading-none"
+      viewBox="0 0 1440 240"
     >
       <text ref={measureRef} xmlSpace="preserve" style={{ ...textStyle, visibility: 'hidden', opacity: 0, pointerEvents: 'none' }}>
         {text}
@@ -131,7 +139,7 @@ function CurvedMarquee({
       </defs>
       {ready && (
         <text xmlSpace="preserve" style={textStyle} className="fill-fg">
-          <textPath ref={tpRef} href={`#${pathId}`} startOffset={offset + 'px'} xmlSpace="preserve">
+          <textPath ref={tpRef} href={`#${pathId}`} startOffset={offset + 'px'} dy="-0.9em" xmlSpace="preserve">
             {totalText}
           </textPath>
         </text>
@@ -146,8 +154,20 @@ export default function ExpoActivaSection({ setView }: ExpoActivaSectionProps) {
   const cursorRef = useRef<HTMLDivElement>(null);
   const [hovering, setHovering] = useState(false);
   const speed = useRef({ cur: BASE_SPEED, target: BASE_SPEED });
+  const scrollBoostRef = useRef(0);
+  const driftBoostRef = useRef(0);
+  const [reducedMotion, setReducedMotion] = useState(
+    () => window.matchMedia('(prefers-reduced-motion: reduce)').matches
+  );
 
-  // Drift horizontal sutil ligado al scroll en la fila de fotos.
+  useEffect(() => {
+    const mq = window.matchMedia('(prefers-reduced-motion: reduce)');
+    const onChange = () => setReducedMotion(mq.matches);
+    mq.addEventListener('change', onChange);
+    return () => mq.removeEventListener('change', onChange);
+  }, []);
+
+  // Drift horizontal + decaimiento del boost por rueda en la fila de fotos.
   useEffect(() => {
     let raf = 0;
     const update = () => {
@@ -158,23 +178,51 @@ export default function ExpoActivaSection({ setView }: ExpoActivaSectionProps) {
       const r = sec.getBoundingClientRect();
       const progress =
         (window.innerHeight / 2 - (r.top + r.height / 2)) / window.innerHeight;
-      const tx = -120 - progress * 100;
+      const baseTx = -120 - progress * 100;
+
+      if (!reducedMotion) {
+        driftBoostRef.current *= BOOST_DECAY;
+      } else {
+        driftBoostRef.current = 0;
+      }
+
+      const tx = baseTx + driftBoostRef.current;
       layer.style.transform = `translate3d(${tx.toFixed(1)}px,0,0)`;
     };
-    const onScroll = () => {
+    const tick = () => {
       if (!raf) raf = requestAnimationFrame(update);
     };
-    update();
-    window.addEventListener('scroll', onScroll, { passive: true });
-    window.addEventListener('resize', onScroll);
+    tick();
+    const loop = () => {
+      update();
+      raf = requestAnimationFrame(loop);
+    };
+    raf = requestAnimationFrame(loop);
+    window.addEventListener('scroll', tick, { passive: true });
+    window.addEventListener('resize', tick);
     return () => {
-      window.removeEventListener('scroll', onScroll);
-      window.removeEventListener('resize', onScroll);
+      window.removeEventListener('scroll', tick);
+      window.removeEventListener('resize', tick);
       cancelAnimationFrame(raf);
     };
-  }, []);
+  }, [reducedMotion]);
 
-  // Cursor-badge personalizado que sigue al puntero dentro de la sección
+  // Boost scroll-driven estilo riseatseven vía pager de App.tsx.
+  useEffect(() => {
+    const el = sectionRef.current as (HTMLElement & {
+      __pagerWheel?: (deltaY: number) => void;
+    }) | null;
+    if (!el) return;
+
+    el.__pagerWheel = (deltaY: number) => {
+      if (reducedMotion) return;
+      scrollBoostRef.current += deltaY * SCROLL_BOOST_MULT * 0.01;
+      driftBoostRef.current -= deltaY * DRIFT_BOOST_MULT * 0.4;
+    };
+
+    return () => { delete el.__pagerWheel; };
+  }, [reducedMotion]);
+
   const moveCursor = useCallback((e: MouseEvent) => {
     const c = cursorRef.current;
     if (c) {
@@ -196,8 +244,7 @@ export default function ExpoActivaSection({ setView }: ExpoActivaSectionProps) {
       onClick={() => setView('exhibition')}
       className="snap-section relative min-h-dvh flex flex-col justify-center gap-8 sm:gap-10 py-16 cursor-none select-none"
     >
-      {/* Fila superior: label (izquierda) + badge Expo activa (derecha) */}
-      <div className="px-6 sm:px-10 flex items-center justify-between gap-4 relative z-20">
+      <div className="px-6 sm:px-10 flex items-center justify-between gap-4 relative z-30">
         <div className="flex items-center gap-3 text-neutral-600 dark:text-neutral-400">
           <span className="h-0.5 w-12 bg-brand" />
           <span className="text-[10px] sm:text-xs font-mono font-bold tracking-widest uppercase">
@@ -214,26 +261,27 @@ export default function ExpoActivaSection({ setView }: ExpoActivaSectionProps) {
         </div>
       </div>
 
-      {/* Composición: marquee curvado arriba; debajo el carrusel de fotos, que
-          sólo oculta la parte baja de la curva (el centro de la curva se mete
-          por detrás de las imágenes). Al pasar el cursor, el texto se ralentiza. */}
+      {/* Marquee curvado arriba; carrusel entra en el valle central del arco. */}
       <div
         onMouseEnter={() => { speed.current.target = SLOW_SPEED; }}
         onMouseLeave={() => { speed.current.target = BASE_SPEED; }}
         className="relative left-1/2 -translate-x-1/2 w-screen"
       >
-        {/* Marquee curvado, full-width, arriba */}
-        <div className="pointer-events-none relative z-0">
-          <CurvedMarquee marqueeText="ARTE ✦ MUNDIALISTA ✦ " curveAmount={250} speedRef={speed} />
+        <div className="pointer-events-none relative z-10">
+          <CurvedMarquee
+            marqueeText="ARTE ✦ MUNDIALISTA ✦ "
+            curveAmount={120}
+            speedRef={speed}
+            scrollBoostRef={scrollBoostRef}
+            reducedMotion={reducedMotion}
+          />
         </div>
 
-        {/* Carrusel de fotos, claramente debajo de la curva: sólo la punta más
-            baja del texto curvado las roza. z-10 → pasa por delante del texto. */}
-        <div className="relative z-10 mt-4 sm:mt-8 overflow-hidden">
+        <div className="relative z-20 mt-0 sm:-mt-4 md:-mt-6 overflow-x-clip overflow-y-visible pt-5 pb-7">
           <div ref={driftRef} className="will-change-transform">
             <div
               className="marquee-track"
-              style={{ animation: 'marquee-left 95s linear infinite', alignItems: 'center' }}
+              style={{ animation: 'marquee-left 95s linear infinite', alignItems: 'flex-end' }}
             >
               {driftImages.map((src, i) => {
                 const t = TILES[i % TILES.length];
@@ -241,7 +289,11 @@ export default function ExpoActivaSection({ setView }: ExpoActivaSectionProps) {
                   <div
                     key={i}
                     className="shrink-0 mr-5 sm:mr-7 rounded-2xl overflow-hidden"
-                    style={{ width: t.w, height: t.h }}
+                    style={{
+                      width: t.w,
+                      height: t.h,
+                      transform: `translateY(${t.offsetY}px)`,
+                    }}
                   >
                     <img
                       src={src}
@@ -257,8 +309,6 @@ export default function ExpoActivaSection({ setView }: ExpoActivaSectionProps) {
         </div>
       </div>
 
-      {/* Cursor-badge tipo riseatseven ("Send Us Your Brief ↗").
-          Portal a <body> para que `position: fixed` sea relativo al viewport. */}
       {createPortal(
         <div
           ref={cursorRef}

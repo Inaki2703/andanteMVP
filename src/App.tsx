@@ -184,6 +184,13 @@ export default function App() {
 
     const onWheel = (e: WheelEvent) => {
       e.preventDefault();
+
+      // Secciones activas pueden reaccionar al delta (p.ej. boost del marquee).
+      const activeSection = getSections()[index] as HTMLElement & {
+        __pagerWheel?: (deltaY: number) => void;
+      };
+      activeSection?.__pagerWheel?.(e.deltaY);
+
       if (locked) { accum = 0; return; }
 
       // Acumula la intención del gesto; se reinicia si el usuario pausa.

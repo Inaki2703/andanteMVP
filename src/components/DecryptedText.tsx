@@ -1,6 +1,8 @@
 import { useEffect, useState } from 'react';
 
 const GLYPHS = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%&*';
+const TOTAL_MS = 2000;
+const MIN_INTERVAL_MS = 8;
 
 function randomGlyph(): string {
   return GLYPHS[Math.floor(Math.random() * GLYPHS.length)] ?? 'X';
@@ -35,14 +37,12 @@ export default function DecryptedText({ text, active, className = '' }: Decrypte
     }
 
     const chars = text.split('');
+    const lockable = chars.filter((c) => c !== ' ' && c !== '\n').length;
+    const intervalMs = Math.max(MIN_INTERVAL_MS, TOTAL_MS / Math.max(lockable, 1));
     let revealed = 0;
-    let tick = 0;
-    const cyclesPerChar = 4;
 
     const id = window.setInterval(() => {
-      tick += 1;
-
-      if (tick % cyclesPerChar === 0 && revealed < chars.length) {
+      if (revealed < chars.length) {
         do {
           revealed += 1;
         } while (
@@ -65,7 +65,7 @@ export default function DecryptedText({ text, active, className = '' }: Decrypte
         window.clearInterval(id);
         setDisplay(text);
       }
-    }, 35);
+    }, intervalMs);
 
     return () => window.clearInterval(id);
   }, [active, text, reducedMotion]);

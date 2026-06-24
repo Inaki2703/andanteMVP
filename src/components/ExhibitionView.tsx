@@ -1,4 +1,3 @@
-import { Shield, Medal } from '@phosphor-icons/react';
 import { EXHIBITION_DATA, ARTISTS_DATA, ARTWORKS_DATA } from '../data';
 import { Artwork } from '../types';
 import CurvedLoop from './CurvedLoop';
@@ -35,13 +34,12 @@ export default function ExhibitionView({ onSelectArtwork, setView, onSelectArtis
   const sedeLabel = `SEDE DIRECTAL EN ${EXHIBITION_DATA.locationName.toUpperCase()} — ${EXHIBITION_DATA.address}`;
 
   return (
-    <div className="animate-fade-in space-y-16 sm:space-y-24 pb-20 bg-transparent text-fg">
+    <div className="animate-fade-in pb-20 bg-transparent text-fg">
 
       {/* 1. NAV + MARQUEE */}
-      <section className="px-6 pt-5 sm:pt-8 bg-transparent">
+      <section className="px-6 pt-5 sm:pt-8 mb-16 sm:mb-24 bg-transparent">
         <div className="max-w-7xl mx-auto space-y-4">
 
-          {/* Fila 1: breadcrumbs + ticket */}
           <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-3">
             <div className="flex flex-col gap-2 min-w-0">
               <div className="flex flex-wrap items-center gap-2 sm:gap-3 text-neutral-500 dark:text-neutral-400 text-[10px] sm:text-xs font-mono font-black uppercase tracking-wider select-none">
@@ -82,57 +80,25 @@ export default function ExhibitionView({ onSelectArtwork, setView, onSelectArtis
       </section>
 
       {/* 2. HERO CON OBRAS FLOTANTES */}
-      <ExhibitionFloatingWorks
-        artworks={activeExhibitionWorks}
-        backgroundImage={EXHIBITION_DATA.image}
-        onSelectArtwork={onSelectArtwork}
-      />
+      <div className="mb-16 sm:mb-24">
+        <ExhibitionFloatingWorks
+          artworks={activeExhibitionWorks}
+          backgroundImage={EXHIBITION_DATA.image}
+          onSelectArtwork={onSelectArtwork}
+        />
+      </div>
 
       {/* 3. CONCEPTO CURATORIAL — snap + decrypt */}
       <CuratorialConceptSection />
 
       {/* 4. ARTISTAS — lista hover homologada con Home */}
-      <section className="px-6 bg-transparent">
-        <div className="max-w-7xl mx-auto border-b border-neutral-300/40 dark:border-neutral-800/40 pb-16 pt-8">
+      <section className="exhibition-snap-section min-h-dvh flex flex-col justify-center px-6 bg-transparent">
+        <div className="max-w-7xl mx-auto w-full border-b border-neutral-300/40 dark:border-neutral-800/40 pb-16 pt-8">
           <EditorialHoverList
             label="Creadores de la muestra"
             variant="nameFirst"
             items={artistListItems}
           />
-        </div>
-      </section>
-
-      {/* 5. GARANTÍAS */}
-      <section className="px-6 bg-transparent">
-        <div className="max-w-4xl mx-auto border-t border-neutral-300/40 dark:border-neutral-800/40 pt-16">
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-12">
-            <div className="flex gap-4 items-start">
-              <div className="h-10 w-10 bg-accent-soft rounded-full flex items-center justify-center text-accent flex-shrink-0">
-                <Shield className="h-5 w-5" weight="regular" />
-              </div>
-              <div className="space-y-1">
-                <h4 className="font-mono text-xs font-black text-neutral-800 dark:text-neutral-200 uppercase tracking-widest">
-                  Garantía de Coleccionista Andante
-                </h4>
-                <p className="font-sans text-xs text-neutral-500 leading-relaxed">
-                  Todas las obras de la colección son piezas únicas respaldadas por un certificado de autenticidad firmado por el autor y su respectivo registro inalterable.
-                </p>
-              </div>
-            </div>
-            <div className="flex gap-4 items-start">
-              <div className="h-10 w-10 bg-accent-soft rounded-full flex items-center justify-center text-accent flex-shrink-0">
-                <Medal className="h-5 w-5" />
-              </div>
-              <div className="space-y-1">
-                <h4 className="font-mono text-xs font-black text-neutral-800 dark:text-neutral-200 uppercase tracking-widest">
-                  Sostén del Ecosistema
-                </h4>
-                <p className="font-sans text-xs text-neutral-500 leading-relaxed">
-                  El 85% de los fondos de venta se depositan de manera directa al autor, impulsando e impactando directamente en su taller y labor creativa de producción.
-                </p>
-              </div>
-            </div>
-          </div>
         </div>
       </section>
 

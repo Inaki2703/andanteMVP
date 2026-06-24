@@ -17,6 +17,8 @@ import CartView from './components/CartView';
 import CheckoutView from './components/CheckoutView';
 import SuccessView from './components/SuccessView';
 import ClickSpark from './components/ClickSpark';
+import SiteFooter from './components/SiteFooter';
+import { absTop, setupSectionPager } from './utils/sectionPager';
 
 export default function App() {
   // Navigation structure
@@ -60,13 +62,6 @@ export default function App() {
     root.classList.toggle('light', theme === 'light');
   }, [theme]);
 
-  // Scroll-snap suave en la vista de exposición (concepto curatorial)
-  useEffect(() => {
-    const root = window.document.documentElement;
-    root.classList.toggle('exhibition-snap', currentView === 'exhibition');
-    return () => root.classList.remove('exhibition-snap');
-  }, [currentView]);
-
   // Page title syncer
   useEffect(() => {
     document.title = "Andante — Galería Itinerante Digital";
@@ -77,173 +72,38 @@ export default function App() {
     window.scrollTo({ top: 0, behavior: 'instant' });
   }, [currentView]);
 
-  // ── Pager por secciones (solo en la landing) ──────────────────────────────
-  // Cada gesto de scroll avanza exactamente UNA sección, animada y bloqueada,
-  // para que se sienta como bloques que encajan al viewport (no scroll libre).
-  // En los extremos hace un "wrap" orgánico: al bajar desde el footer, el hero
-  // se desliza desde abajo (sensación de seguir bajando) y luego resetea sin
-  // costura; al subir desde el hero, el footer entra desde arriba.
+  // ── Pager por secciones (landing + exposición) ─────────────────────────────
   useEffect(() => {
-    if (currentView !== 'landing') return;
-    // No interceptar cuando hay overlays que necesitan scroll propio.
+    if (currentView !== 'landing' && currentView !== 'exhibition') return;
     if (menuOpen || showManifesto || selectedArtwork) return;
 
-    let index = 0;
-    let locked = false;
-    let accum = 0;            // delta acumulado del gesto en curso
-    let resetTimer = 0;       // limpia el acumulado si el usuario pausa
-    let peekEl: HTMLElement | null = null;
-    const THRESHOLD = 420;    // intención requerida (más permisivo que antes)
-    const MAX_PEEK = 70;      // px máximos del adelanto/“peek” de la sección
-    const DUR = 760; // ms de la animación de wrap
-    const EASE = 'cubic-bezier(0.65, 0, 0.35, 1)';
-
-    const getSections = () =>
-      Array.from(document.querySelectorAll<HTMLElement>('.snap-section'));
-
-    // Posición de layout (ignora transforms del reveal/peek) para centrar bien.
-    const absTop = (el: HTMLElement) => {
-      let y = 0;
-      let n: HTMLElement | null = el;
-      while (n) { y += n.offsetTop; n = n.offsetParent as HTMLElement | null; }
-      return y;
-    };
-    const centerScroll = (el: HTMLElement, behavior: ScrollBehavior) => {
-      const top = absTop(el) + el.offsetHeight / 2 - window.innerHeight / 2;
-      window.scrollTo({ top: Math.max(0, top), behavior });
-    };
-
-    // “Peek”: desplaza un poco la sección activa en la dirección del scroll para
-    // sugerir que se puede continuar; al pausar o cambiar de sección, regresa.
-    // Se omite en secciones que manejan su propio scroll interno (p.ej. el stack
-    // curado), para que el gesto sólo afecte a sus elementos, no a toda la sección.
-    const applyPeek = (dir: 1 | -1, mag: number) => {
-      const el = getSections()[index] as HTMLElement & { __pagerStep?: unknown };
-      if (!el || typeof el.__pagerStep === 'function') return;
-      peekEl = el;
-      const y = -dir * Math.min(mag, MAX_PEEK);
-      el.style.transition = 'transform 100ms linear';
-      el.style.transform = `translateY(${y}px)`;
-    };
-    const clearPeek = () => {
-      if (!peekEl) return;
-      peekEl.style.transition = ''; // vuelve a la transición de reveal (0.7s)
-      peekEl.style.transform = '';
-      peekEl = null;
-    };
-
-    const goTo = (i: number) => {
-      const el = getSections()[i];
-      if (!el) return;
-      clearPeek();
-      locked = true;
-      index = i;
-      centerScroll(el, 'smooth');
-      window.setTimeout(() => { locked = false; }, 720);
-    };
-
-    // Clona una sección a pantalla completa fija y la desliza desde un borde,
-    // mientras la página se desplaza en paralelo. Al terminar, reset sin costura.
-    const wrap = (dir: 1 | -1) => {
-      const page = pageRef.current;
-      const sections = getSections();
-      if (!page || sections.length === 0) return;
-      locked = true;
-
-      clearPeek();
-      const source = dir === 1 ? sections[0] : sections[sections.length - 1];
-      const clone = source.cloneNode(true) as HTMLElement;
-      Object.assign(clone.style, {
-        position: 'fixed',
-        top: '0',
-        left: '0',
-        width: '100%',
-        height: '100vh',
-        margin: '0',
-        zIndex: '60',
-        pointerEvents: 'none',
-        transform: dir === 1 ? 'translateY(100%)' : 'translateY(-100%)',
+    if (currentView === 'landing') {
+      return setupSectionPager({
+        getSections: () => Array.from(document.querySelectorAll<HTMLElement>('.snap-section')),
+        pageRef,
+        enableWrap: true,
       });
-      document.body.appendChild(clone);
-      void clone.offsetHeight; // reflow para que la transición arranque
+    }
 
-      page.style.transition = `transform ${DUR}ms ${EASE}`;
-      page.style.transform = dir === 1 ? 'translateY(-100vh)' : 'translateY(100vh)';
-      clone.style.transition = `transform ${DUR}ms ${EASE}`;
-      clone.style.transform = 'translateY(0)';
-
-      window.setTimeout(() => {
-        page.style.transition = 'none';
-        page.style.transform = 'none';
-        const now = getSections();
-        if (dir === 1) {
-          window.scrollTo({ top: 0, behavior: 'instant' as ScrollBehavior });
-          index = 0;
-        } else {
-          const last = now.length - 1;
-          if (now[last]) centerScroll(now[last], 'instant' as ScrollBehavior);
-          index = last;
-        }
-        clone.remove();
-        requestAnimationFrame(() => { locked = false; });
-      }, DUR + 30);
-    };
-
-    const onWheel = (e: WheelEvent) => {
-      e.preventDefault();
-
-      // Secciones activas pueden reaccionar al delta (p.ej. boost del marquee).
-      const activeSection = getSections()[index] as HTMLElement & {
-        __pagerWheel?: (deltaY: number) => void;
-      };
-      activeSection?.__pagerWheel?.(e.deltaY);
-
-      if (locked) { accum = 0; return; }
-
-      // Acumula la intención del gesto; se reinicia si el usuario pausa.
-      accum += e.deltaY;
-      window.clearTimeout(resetTimer);
-      resetTimer = window.setTimeout(() => { accum = 0; clearPeek(); }, 160);
-
-      const dir: 1 | -1 = accum > 0 ? 1 : -1;
-
-      if (Math.abs(accum) < THRESHOLD) {
-        // Aún no hay intención suficiente: sólo “asoma” la sección como pista.
-        applyPeek(dir, Math.abs(accum) * 0.22);
-        return;
-      }
-
-      accum = 0;
-      const sections = getSections();
-
-      // La sección activa puede "consumir" el gesto (p.ej. el stack curado baraja
-      // una carta). Sólo si no lo consume, el pager cambia de sección.
-      const cur = sections[index] as HTMLElement & { __pagerStep?: (d: 1 | -1) => boolean };
-      if (typeof cur?.__pagerStep === 'function' && cur.__pagerStep(dir)) {
-        clearPeek();
-        locked = true;
-        window.setTimeout(() => { locked = false; }, 620);
-        return;
-      }
-
-      const n = sections.length;
-      const target = index + dir;
-
-      if (target < 0) wrap(-1);
-      else if (target >= n) wrap(1);
-      else {
-        goTo(target);
-        (sections[target] as HTMLElement & { __pagerEnter?: (d: 1 | -1) => void })
-          ?.__pagerEnter?.(dir);
-      }
-    };
-
-    window.addEventListener('wheel', onWheel, { passive: false });
-    return () => {
-      window.clearTimeout(resetTimer);
-      clearPeek();
-      window.removeEventListener('wheel', onWheel);
-    };
+    return setupSectionPager({
+      getSections: () =>
+        Array.from(document.querySelectorAll<HTMLElement>('.exhibition-snap-section')),
+      pageRef,
+      enableWrap: false,
+      shouldIntercept: () => {
+        const sections = Array.from(
+          document.querySelectorAll<HTMLElement>('.exhibition-snap-section')
+        );
+        if (sections.length === 0) return false;
+        const firstTop = absTop(sections[0]!);
+        const last = sections[sections.length - 1]!;
+        const lastBottom = absTop(last) + last.offsetHeight;
+        // Solo paginar cuando el centro del viewport ya entró a la zona snap.
+        // Arriba (hero con cards) y abajo queda el scroll nativo libre.
+        const center = window.scrollY + window.innerHeight / 2;
+        return center > firstTop && center < lastBottom;
+      },
+    });
   }, [currentView, menuOpen, showManifesto, selectedArtwork]);
 
   // ── Reveal homologado de secciones (solo en la landing) ──
@@ -420,89 +280,9 @@ export default function App() {
         )}
       </main>
 
-      {/* 4. Elegant Editorial Footer (Design System v3.0 standard) */}
-      {currentView !== 'checkout' && currentView !== 'cart' && currentView !== 'success' && (
-        <footer
-          className={`flex-shrink-0 transition-colors duration-400 ${
-            currentView === 'landing'
-              ? 'snap-section p-6 min-h-dvh flex flex-col justify-center'
-              : ''
-          }`}
-        >
-          <div
-            className={`bg-footer text-on-inverse text-xs font-sans transition-colors duration-400 overflow-hidden ${
-              currentView === 'landing'
-                ? 'rounded-[32px] md:rounded-[40px] w-full py-16 px-6 sm:px-10'
-                : 'py-20 px-4 sm:px-6 lg:px-8 shadow-inner'
-            }`}
-          >
-          <div className="max-w-7xl mx-auto space-y-12 sm:space-y-16">
-
-            {/* Top: tarjetas de valor (bullets integrados al footer) */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-              {[
-                { t: 'Curaduría con criterio', d: 'Seleccionamos cada pieza para que cuente una historia real.' },
-                { t: 'Envío y enmarcado claros', d: 'Todo listo para colgar. Sin sorpresas logísticas.' },
-                { t: 'Pago seguro', d: 'Transacciones encriptadas y múltiples métodos de pago.' },
-                { t: 'Comisión justa', d: 'Apoyamos directamente a los artistas sin sobreprecios ocultos.' },
-              ].map((v) => (
-                <div key={v.t} className="rounded-2xl border border-neutral-700 p-5 flex flex-col gap-3">
-                  <h3 className="font-mono text-[11px] font-bold uppercase tracking-wider text-on-inverse leading-snug">
-                    {v.t}
-                  </h3>
-                  <p className="text-[11px] text-neutral-400 leading-relaxed">
-                    {v.d}
-                  </p>
-                </div>
-              ))}
-            </div>
-
-            {/* Medio: párrafo de marca + suscripción/redes */}
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 lg:gap-12 items-start">
-              <p className="font-mono text-[11px] sm:text-xs uppercase tracking-wider text-neutral-300 leading-relaxed max-w-md">
-                Un proyecto sobre la descentralización del arte. Curamos espacios físicos, articulando miradas, cultura local y obras originales de creadores independientes.
-              </p>
-
-              <div className="space-y-4 w-full lg:max-w-sm lg:justify-self-end">
-                <span className="text-[10px] font-mono tracking-widest text-brand font-bold block uppercase text-right">
-                  Suscripción
-                </span>
-                <div className="relative border-b border-neutral-600 pb-3 flex items-center justify-between">
-                  <input
-                    type="email"
-                    placeholder="TU EMAIL AQUÍ"
-                    className="bg-transparent border-none outline-none font-sans font-bold text-sm text-on-inverse placeholder-neutral-500 w-full uppercase focus:ring-0 focus:outline-none"
-                  />
-                  <button
-                    type="button"
-                    onClick={() => alert("¡Gracias por suscribirte a Andante!")}
-                    className="p-1 text-brand hover:text-brand-hover font-bold text-lg cursor-pointer"
-                  >
-                    ↗
-                  </button>
-                </div>
-                <div className="flex gap-6 text-[10px] font-mono text-neutral-400 justify-end pt-2">
-                  <a href="#instagram" className="hover:text-on-inverse transition-colors">INSTAGRAM</a>
-                  <a href="#twitter" className="hover:text-on-inverse transition-colors">TWITTER</a>
-                  <a href="#behance" className="hover:text-on-inverse transition-colors">BEHANCE</a>
-                </div>
-              </div>
-            </div>
-
-            {/* Disclaimer */}
-            <div className="border-t border-neutral-800 pt-6 flex flex-col sm:flex-row items-center justify-between gap-3 text-[10px] font-mono uppercase tracking-wider text-neutral-500">
-              <span>© 2026 Andante | Arte Itinerante</span>
-              <span>Hecho con calma</span>
-            </div>
-
-            {/* Wordmark gigante */}
-            <h2 className="font-sans font-black text-brand select-none leading-[0.8] tracking-tighter whitespace-nowrap text-[clamp(4rem,15vw,10rem)]">
-              ANDANTE :)
-            </h2>
-
-          </div>
-          </div>
-        </footer>
+      {/* 4. Footer editorial compartido (Home + Exposición) */}
+      {(currentView === 'landing' || currentView === 'exhibition') && (
+        <SiteFooter variant={currentView === 'landing' ? 'home' : 'exhibition'} />
       )}
 
       {/* 5. Floating Action Strip helper for mobile screens */}

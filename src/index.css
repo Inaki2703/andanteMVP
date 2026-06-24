@@ -224,15 +224,6 @@ html.landing-reveal .snap-section.reveal-in {
   }
 }
 
-/* Scroll-snap en vista exposición: el concepto curatorial encaja al centro */
-html.exhibition-snap {
-  scroll-snap-type: y proximity;
-}
-html.exhibition-snap .exhibition-snap-section {
-  scroll-snap-align: center;
-  scroll-snap-stop: normal;
-}
-
 ::-webkit-scrollbar {
   width: 8px;
   height: 8px;

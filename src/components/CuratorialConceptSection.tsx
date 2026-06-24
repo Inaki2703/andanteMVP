@@ -15,12 +15,12 @@ export default function CuratorialConceptSection() {
 
     const io = new IntersectionObserver(
       ([entry]) => {
-        if (entry?.isIntersecting) {
+        if (entry?.isIntersecting && entry.intersectionRatio >= 0.45) {
           setActive(true);
           io.disconnect();
         }
       },
-      { threshold: 0.55 }
+      { threshold: [0.45, 0.55, 0.65] }
     );
 
     io.observe(el);

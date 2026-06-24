@@ -553,7 +553,7 @@ export default function CheckoutView({
         </div>
 
         {/* Right Column: "BOLSA DE ADQUISICIONES" dark mode panel fully replicated & scrollable if overflowing */}
-        <div id="checkout-sidebar-container" className="lg:col-span-5 h-full bg-page text-white border border-neutral-800 rounded-[28px] p-5 sm:p-6 flex flex-col justify-between overflow-y-auto space-y-5 select-none">
+        <div id="checkout-sidebar-container" className="lg:col-span-5 h-full bg-[var(--black)] text-white border border-neutral-800 rounded-[28px] p-5 sm:p-6 flex flex-col justify-between overflow-y-auto space-y-5 select-none">
           
           <div className="space-y-5">
             
@@ -576,7 +576,7 @@ export default function CheckoutView({
                   />
                   
                   <div className="min-w-0 flex-grow text-left">
-                    <h3 className="font-sans font-black text-xs text-neutral-150 tracking-tight leading-none uppercase truncate pr-2">
+                    <h3 className="font-sans font-black text-xs text-neutral-100 tracking-tight leading-none uppercase truncate pr-2">
                       {item.artwork.title}
                     </h3>
                     
@@ -597,7 +597,7 @@ export default function CheckoutView({
                     <button
                       type="button"
                       onClick={() => onRemoveItem(item.artwork.id)}
-                      className="focus-ring p-1 text-neutral-500 hover:text-red-400 hover:bg-elevated rounded transition-colors cursor-pointer"
+                      className="focus-ring p-1 text-neutral-500 hover:text-red-400 hover:bg-neutral-800 rounded transition-colors cursor-pointer"
                       title="Eliminar de la bolsa"
                       aria-label={`Eliminar ${item.artwork.title} de la bolsa`}
                     >

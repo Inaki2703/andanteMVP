@@ -61,7 +61,7 @@ export default function CurvedLoop({
             <textPath
               href="#curved-loop-path"
               startOffset={`${offset}%`}
-              className="fill-neutral-900 dark:fill-neutral-100 transition-colors duration-300"
+              className="fill-neutral-900 dark:fill-neutral-100 transition-[fill] duration-[var(--dur-base)] ease-[var(--ease-standard)]"
             >
               {repeatedText}
             </textPath>
@@ -70,7 +70,7 @@ export default function CurvedLoop({
 
         {/* Decorative central accent badge mirroring a premium contemporary ticket seal */}
         <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 pointer-events-none flex flex-col items-center">
-          <div className="px-5 py-2 bg-neutral-900 dark:bg-tab border border-neutral-700/60 dark:border-neutral-800 rounded-full shadow-2xl backdrop-blur-md flex items-center gap-2 transform hover:scale-105 transition-transform duration-350">
+          <div className="px-5 py-2 bg-neutral-900 dark:bg-tab border border-neutral-700/60 dark:border-neutral-800 rounded-full shadow-2xl backdrop-blur-md flex items-center gap-2 transform hover:scale-105 transition-transform duration-[var(--dur-base)] ease-[var(--ease-standard)]">
             <span className="w-2 h-2 rounded-full bg-brand animate-ping" />
             <span className="text-[10px] sm:text-xs font-mono font-extrabold text-white tracking-[0.2em] uppercase">
               {centerBadgeText}

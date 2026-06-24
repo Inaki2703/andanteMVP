@@ -18,8 +18,7 @@ import CheckoutView from './components/CheckoutView';
 import SuccessView from './components/SuccessView';
 import ClickSpark from './components/ClickSpark';
 import SiteFooter from './components/SiteFooter';
-import { absTop, setupSectionPager } from './utils/sectionPager';
-import { setupLandingLoop } from './utils/landingLoop';
+import { setupForwardLoop } from './utils/landingLoop';
 
 export default function App() {
   // Navigation structure
@@ -73,46 +72,29 @@ export default function App() {
     window.scrollTo({ top: 0, behavior: 'instant' });
   }, [currentView]);
 
-  // ── Pager por secciones (landing + exposición) ─────────────────────────────
+  // ── Bucle forward-only footer → inicio (landing + exposición) ─────────────
   useEffect(() => {
     if (currentView !== 'landing' && currentView !== 'exhibition') return;
     if (menuOpen || showManifesto || selectedArtwork || selectedArtistId) return;
 
-    // Home: scroll NATIVO + snap suave por CSS (ver index.css). El único JS es el
-    // bucle footer → Hero, con un listener `wheel` PASIVO que solo actúa al fondo
-    // (no secuestra la rueda → conserva la suavidad). 'Curado a mano' se
-    // autogestiona con su pin sticky scroll-driven.
-    if (currentView === 'landing') {
-      return setupLandingLoop({
-        pageRef,
-        getHero: () => document.querySelector<HTMLElement>('[data-landing-top]'),
-      });
-    }
+    // Scroll NATIVO + snap suave por CSS (ver index.css). El único JS es el
+    // bucle footer → inicio, con un listener `wheel` PASIVO que solo actúa al fondo
+    // (no secuestra la rueda → conserva la suavidad).
+    const getTopElement =
+      currentView === 'landing'
+        ? () => document.querySelector<HTMLElement>('[data-landing-top]')
+        : () => document.querySelector<HTMLElement>('[data-exhibition-top]');
 
-    return setupSectionPager({
-      getSections: () =>
-        Array.from(document.querySelectorAll<HTMLElement>('.exhibition-snap-section')),
-      pageRef,
-      enableWrap: false,
-      wrapForward: true,
-      loopUpAtTop: true,
-      wrapForwardCloneSource: () =>
-        document.querySelector<HTMLElement>('[data-exhibition-top]'),
-      shouldIntercept: () => {
-        const sections = Array.from(
-          document.querySelectorAll<HTMLElement>('.exhibition-snap-section')
-        );
-        if (sections.length === 0) return false;
-        const firstTop = absTop(sections[0]!);
-        const last = sections[sections.length - 1]!;
-        const lastBottom = absTop(last) + last.offsetHeight;
-        // Solo paginar cuando el centro del viewport ya entró a la zona snap.
-        // Arriba (hero con cards) y abajo queda el scroll nativo libre.
-        const center = window.scrollY + window.innerHeight / 2;
-        return center > firstTop && center < lastBottom;
-      },
-    });
+    return setupForwardLoop({ pageRef, getTopElement });
   }, [currentView, menuOpen, showManifesto, selectedArtwork, selectedArtistId]);
+
+  // ── Snap CSS proximity en exposición ───────────────────────────────────────
+  useEffect(() => {
+    if (currentView !== 'exhibition') return;
+    const root = window.document.documentElement;
+    root.classList.add('exhibition-scroll');
+    return () => root.classList.remove('exhibition-scroll');
+  }, [currentView]);
 
   // ── Reveal homologado de secciones (solo en la landing) ──
   // Cada sección se anima al entrar al viewport; se re-activa cada vez que

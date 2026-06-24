@@ -34,10 +34,10 @@ export default function ExhibitionView({ onSelectArtwork, setView, onSelectArtis
   const sedeLabel = `SEDE DIRECTAL EN ${EXHIBITION_DATA.locationName.toUpperCase()} — ${EXHIBITION_DATA.address}`;
 
   return (
-    <div className="animate-fade-in pb-20 bg-transparent text-fg">
+    <div className="animate-fade-in-soft pb-20 bg-transparent text-fg">
 
-      {/* Zona superior (inicio real): se clona para el wrap hacia adelante */}
-      <div data-exhibition-top>
+      {/* Zona superior (inicio real): scroll nativo; se clona para el bucle footer → inicio */}
+      <div data-exhibition-top data-free-scroll>
 
       {/* 1. NAV + MARQUEE */}
       <section className="px-6 pt-5 sm:pt-8 mb-16 sm:mb-24 bg-transparent">
@@ -48,7 +48,7 @@ export default function ExhibitionView({ onSelectArtwork, setView, onSelectArtis
               <div className="flex flex-wrap items-center gap-2 sm:gap-3 text-neutral-500 dark:text-neutral-400 text-[10px] sm:text-xs font-mono font-black uppercase tracking-wider select-none">
                 <button
                   onClick={() => setView('landing')}
-                  className="focus-ring hover:text-accent transition-colors flex items-center gap-1 cursor-pointer"
+                  className="focus-ring hover:text-accent transition-smooth flex items-center gap-1 cursor-pointer"
                 >
                   <span><span aria-hidden="true">🏠</span> Sala Principal</span>
                 </button>
@@ -63,7 +63,7 @@ export default function ExhibitionView({ onSelectArtwork, setView, onSelectArtis
                 href={EXHIBITION_DATA.mapsUrl}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="inline-block w-fit border border-accent text-accent px-3 py-1 text-[11px] sm:text-xs font-mono font-extrabold tracking-[0.12em] rounded-sm uppercase leading-snug hover:bg-accent-soft transition-colors cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 dark:focus-visible:ring-offset-page"
+                className="inline-block w-fit border border-accent text-accent px-3 py-1 text-[11px] sm:text-xs font-mono font-extrabold tracking-[0.12em] rounded-sm uppercase leading-snug hover:bg-accent-soft transition-smooth cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 dark:focus-visible:ring-offset-page"
               >
                 {sedeLabel}
               </a>
@@ -80,7 +80,7 @@ export default function ExhibitionView({ onSelectArtwork, setView, onSelectArtis
 
           <CurvedLoop
             marqueeText="ARTE ✦ MUNDIALISTA"
-            centerBadgeText="MÉXICO - JAPÓN - 1700 HRS."
+            centerBadgeText="MÉXICO - JAPÓN - 17:00 HRS."
           />
         </div>
       </section>

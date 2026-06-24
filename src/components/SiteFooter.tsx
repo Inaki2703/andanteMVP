@@ -121,12 +121,12 @@ export default function SiteFooter({ variant }: SiteFooterProps) {
 
   return (
     <footer
-      className={`snap-section flex-shrink-0 p-6 flex flex-col justify-center transition-colors duration-400${
+      className={`snap-section flex-shrink-0 p-6 flex flex-col justify-center transition-colors duration-[var(--dur-base)]${
         variant === 'exhibition' ? ' exhibition-snap-section' : ' snap-target-end'
       }`}
     >
       <div className="mx-auto w-full max-w-[1210px]">
-        <div className="bg-footer text-on-inverse text-xs font-sans transition-colors duration-400 overflow-x-hidden overflow-y-visible rounded-[24px] md:rounded-[32px] w-full flex flex-col px-5 sm:px-8 md:px-10 py-12 sm:py-16 md:py-[80px]">
+        <div className="bg-footer text-on-inverse text-xs font-sans transition-colors duration-[var(--dur-base)] overflow-x-hidden overflow-y-visible rounded-[24px] md:rounded-[32px] w-full flex flex-col px-5 sm:px-8 md:px-10 py-12 sm:py-16 md:py-[80px]">
           <div className="flex flex-col gap-[60px] w-full">
 
             {/* Fila de tarjetas */}

@@ -12,19 +12,19 @@ const OVERSCROLL_THRESHOLD = 900;
 // debe ser continuo, no toques sueltos.
 const WHEEL_GAP = 220;
 
-interface LandingLoopOptions {
+export interface ForwardLoopOptions {
   pageRef: RefObject<HTMLDivElement | null>;
-  /** Elemento "inicio" (Hero) que entra desde abajo al completar el bucle. */
-  getHero: () => HTMLElement | null;
+  /** Elemento superior (hero/inicio) que entra desde abajo al completar el bucle. */
+  getTopElement: () => HTMLElement | null;
 }
 
-// Bucle infinito SUAVE footer → Hero, sin secuestrar la rueda. Un único listener
+// Bucle infinito SUAVE footer → inicio, sin secuestrar la rueda. Un único listener
 // `wheel` PASIVO (no llama preventDefault, así no añade jank al scroll) detecta
-// el gesto hacia abajo cuando ya estás al fondo (footer) y anima el Hero
+// el gesto hacia abajo cuando ya estás al fondo (footer) y anima el inicio
 // entrando desde abajo —como si siguieras bajando—, en vez de saltar de jalón al
-// top. La técnica clona el Hero, lo desliza hacia arriba mientras la página sube,
-// y al terminar reposiciona el scroll en 0 bajo el clon.
-export function setupLandingLoop({ pageRef, getHero }: LandingLoopOptions): () => void {
+// top. La técnica clona la zona superior, la desliza hacia arriba mientras la
+// página sube, y al terminar reposiciona el scroll en 0 bajo el clon.
+export function setupForwardLoop({ pageRef, getTopElement }: ForwardLoopOptions): () => void {
   let animating = false;
   let lastScrollTime = 0;
   let overscroll = 0;
@@ -39,10 +39,10 @@ export function setupLandingLoop({ pageRef, getHero }: LandingLoopOptions): () =
   const onScroll = () => { lastScrollTime = performance.now(); };
   const settled = () => performance.now() - lastScrollTime > 140;
 
-  const loopToHero = () => {
+  const loopToTop = () => {
     const page = pageRef.current;
-    const hero = getHero();
-    if (!page || !hero) return;
+    const topEl = getTopElement();
+    if (!page || !topEl) return;
     animating = true;
 
     const prefersReducedMotion =
@@ -54,8 +54,8 @@ export function setupLandingLoop({ pageRef, getHero }: LandingLoopOptions): () =
       return;
     }
 
-    // Clon del Hero, fijo y posicionado justo debajo del viewport.
-    const clone = hero.cloneNode(true) as HTMLElement;
+    // Clon de la zona superior, fijo y posicionado justo debajo del viewport.
+    const clone = topEl.cloneNode(true) as HTMLElement;
     Object.assign(clone.style, {
       position: 'fixed',
       top: '0',
@@ -71,7 +71,7 @@ export function setupLandingLoop({ pageRef, getHero }: LandingLoopOptions): () =
     document.body.appendChild(clone);
     void clone.offsetHeight; // fuerza reflow para que la transición arranque
 
-    // La página (footer a la vista) sube; el Hero entra desde abajo.
+    // La página (footer a la vista) sube; el inicio entra desde abajo.
     page.style.transition = `transform ${DUR}ms ${EASE}`;
     page.style.transform = 'translateY(-100vh)';
     clone.style.transition = `transform ${DUR}ms ${EASE}`;
@@ -109,7 +109,7 @@ export function setupLandingLoop({ pageRef, getHero }: LandingLoopOptions): () =
     overscroll += e.deltaY;
     if (overscroll >= OVERSCROLL_THRESHOLD) {
       overscroll = 0;
-      loopToHero();
+      loopToTop();
     }
   };
 
@@ -119,4 +119,12 @@ export function setupLandingLoop({ pageRef, getHero }: LandingLoopOptions): () =
     window.removeEventListener('scroll', onScroll);
     window.removeEventListener('wheel', onWheel);
   };
+}
+
+/** @deprecated Usar setupForwardLoop */
+export function setupLandingLoop(options: {
+  pageRef: RefObject<HTMLDivElement | null>;
+  getHero: () => HTMLElement | null;
+}): () => void {
+  return setupForwardLoop({ pageRef: options.pageRef, getTopElement: options.getHero });
 }

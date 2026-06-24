@@ -48,7 +48,7 @@ export default function EditorialHoverList({
             className={`group border-b border-border ${item.onClick ? 'cursor-pointer' : ''}`}
             style={{
               opacity: hovered !== null && hovered !== i ? 0.28 : 1,
-              transition: 'opacity 0.35s ease',
+              transition: 'opacity var(--dur-base) var(--ease-standard)',
             }}
           >
             <div className="flex items-center justify-between gap-6 py-5 sm:py-7">
@@ -60,7 +60,7 @@ export default function EditorialHoverList({
                     {item.left}
                   </span>
                 )}
-                <h3 className="font-sans font-black uppercase tracking-tight text-fg text-2xl sm:text-4xl lg:text-5xl leading-none truncate transition-transform duration-300 group-hover:translate-x-2 sm:group-hover:translate-x-5">
+                <h3 className="font-sans font-black uppercase tracking-tight text-fg text-2xl sm:text-4xl lg:text-5xl leading-none truncate transition-transform duration-[var(--dur-base)] ease-[var(--ease-standard)] group-hover:translate-x-2 sm:group-hover:translate-x-5">
                   {item.title}
                 </h3>
               </div>
@@ -75,7 +75,7 @@ export default function EditorialHoverList({
                   {item.right}
                 </span>
                 {item.onClick && (
-                  <ArrowUpRight className="h-5 w-5 sm:h-6 sm:w-6 text-neutral-400 group-hover:text-accent dark:group-hover:text-sky-300 group-hover:translate-x-1 group-hover:-translate-y-1 transition-all shrink-0" />
+                  <ArrowUpRight className="h-5 w-5 sm:h-6 sm:w-6 text-neutral-400 group-hover:text-accent dark:group-hover:text-sky-300 group-hover:translate-x-1 group-hover:-translate-y-1 transition-all duration-[var(--dur-fast)] ease-[var(--ease-standard)] shrink-0" />
                 )}
               </div>
             </div>

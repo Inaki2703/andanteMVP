@@ -212,9 +212,8 @@ html, body {
   overflow-x: clip;
   scrollbar-gutter: stable;
   transition: background-color 0.4s ease, color 0.4s ease;
-  /* El pager JS (sectionPager.ts) gestiona su propia animación de scroll; un
-     scroll-behavior:smooth global competía con scrollTo() y agravaba el "doble
-     desplazamiento". Lo dejamos en auto para que el snap se sienta firme. */
+  /* El bucle forward-only (landingLoop.ts) anima con transform; scroll-behavior
+     global en auto evita competir con scrollTo() y mantiene el snap CSS firme. */
   scroll-behavior: auto;
 }
 
@@ -231,6 +230,14 @@ html.landing-reveal {
 }
 .snap-target-end {
   scroll-snap-align: end;
+}
+
+/* Snap suave en exposición: concepto, artistas y footer (no el hero superior). */
+html.exhibition-scroll {
+  scroll-snap-type: y proximity;
+}
+html.exhibition-scroll .exhibition-snap-section {
+  scroll-snap-align: start;
 }
 
 /* Reveal homologado: cada sección entra con un leve fade + lift. Sólo activo

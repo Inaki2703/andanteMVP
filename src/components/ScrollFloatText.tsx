@@ -34,9 +34,9 @@ function FloatChar({
         reducedMotion
           ? { duration: 0 }
           : {
-              duration: 0.8,
+              duration: 0.6,
               delay: index * 0.03,
-              ease: [0.34, 1.56, 0.64, 1],
+              ease: [0.22, 1, 0.36, 1],
             }
       }
     >

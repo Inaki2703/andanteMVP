@@ -57,7 +57,7 @@ function FloatingCard({
               y: {
                 duration: 4.2,
                 repeat: Infinity,
-                ease: 'easeInOut',
+                ease: [0.22, 1, 0.36, 1],
                 delay: layout.floatDelay,
               },
             }

@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 
 const GLYPHS = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%&*';
-const TOTAL_MS = 2000;
+const TOTAL_MS = 1800;
 const MIN_INTERVAL_MS = 8;
 
 function randomGlyph(): string {

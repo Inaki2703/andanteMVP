@@ -423,38 +423,51 @@ export default function App() {
           }`}
         >
           <div
-            className={`bg-footer text-on-inverse text-xs font-sans transition-colors duration-400 ${
+            className={`bg-footer text-on-inverse text-xs font-sans transition-colors duration-400 overflow-hidden ${
               currentView === 'landing'
                 ? 'rounded-[32px] md:rounded-[40px] w-full py-16 px-6 sm:px-10'
                 : 'py-20 px-4 sm:px-6 lg:px-8 shadow-inner'
             }`}
           >
-          <div className="max-w-7xl mx-auto space-y-16">
+          <div className="max-w-7xl mx-auto space-y-12 sm:space-y-16">
 
-            {/* Top Row: Brand & Subscription */}
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-start border-b border-neutral-800 pb-16">
-              <div className="space-y-4">
-                <h2 className="font-sans font-black text-4xl sm:text-5xl tracking-tighter text-brand select-none">
-                  ANDANTE :)
-                </h2>
-                <p className="text-neutral-400 max-w-sm text-sm leading-relaxed">
-                  Un proyecto vanguardista de descentralización artística. Curamos espacios físicos, articulando miradas, cultura local y obras originales de creadores independientes.
-                </p>
-              </div>
+            {/* Top: tarjetas de valor (bullets integrados al footer) */}
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+              {[
+                { t: 'Curaduría con criterio', d: 'Seleccionamos cada pieza para que cuente una historia real.' },
+                { t: 'Envío y enmarcado claros', d: 'Todo listo para colgar. Sin sorpresas logísticas.' },
+                { t: 'Pago seguro', d: 'Transacciones encriptadas y múltiples métodos de pago.' },
+                { t: 'Comisión justa', d: 'Apoyamos directamente a los artistas sin sobreprecios ocultos.' },
+              ].map((v) => (
+                <div key={v.t} className="rounded-2xl border border-neutral-700 p-5 flex flex-col gap-3">
+                  <h3 className="font-mono text-[11px] font-bold uppercase tracking-wider text-on-inverse leading-snug">
+                    {v.t}
+                  </h3>
+                  <p className="text-[11px] text-neutral-400 leading-relaxed">
+                    {v.d}
+                  </p>
+                </div>
+              ))}
+            </div>
 
-              {/* Subscribe form aligned beautifully */}
-              <div className="space-y-4">
-                <span className="text-[10px] font-mono tracking-widest text-brand font-bold block uppercase">
-                  SUSCRIPCIÓN
+            {/* Medio: párrafo de marca + suscripción/redes */}
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 lg:gap-12 items-start">
+              <p className="font-mono text-[11px] sm:text-xs uppercase tracking-wider text-neutral-300 leading-relaxed max-w-md">
+                Un proyecto sobre la descentralización del arte. Curamos espacios físicos, articulando miradas, cultura local y obras originales de creadores independientes.
+              </p>
+
+              <div className="space-y-4 w-full lg:max-w-sm lg:justify-self-end">
+                <span className="text-[10px] font-mono tracking-widest text-brand font-bold block uppercase text-right">
+                  Suscripción
                 </span>
                 <div className="relative border-b border-neutral-600 pb-3 flex items-center justify-between">
-                  <input 
-                    type="email" 
-                    placeholder="TU EMAIL AQUÍ" 
-                    className="bg-transparent border-none outline-none font-sans font-bold text-sm text-white placeholder-neutral-500 w-full uppercase focus:ring-0 focus:outline-none"
+                  <input
+                    type="email"
+                    placeholder="TU EMAIL AQUÍ"
+                    className="bg-transparent border-none outline-none font-sans font-bold text-sm text-on-inverse placeholder-neutral-500 w-full uppercase focus:ring-0 focus:outline-none"
                   />
-                  <button 
-                    type="button" 
+                  <button
+                    type="button"
                     onClick={() => alert("¡Gracias por suscribirte a Andante!")}
                     className="p-1 text-brand hover:text-brand-hover font-bold text-lg cursor-pointer"
                   >
@@ -462,56 +475,23 @@ export default function App() {
                   </button>
                 </div>
                 <div className="flex gap-6 text-[10px] font-mono text-neutral-400 justify-end pt-2">
-                  <a href="#instagram" className="hover:text-white transition-colors">INSTAGRAM</a>
-                  <a href="#twitter" className="hover:text-white transition-colors">TWITTER</a>
-                  <a href="#behance" className="hover:text-white transition-colors">BEHANCE</a>
+                  <a href="#instagram" className="hover:text-on-inverse transition-colors">INSTAGRAM</a>
+                  <a href="#twitter" className="hover:text-on-inverse transition-colors">TWITTER</a>
+                  <a href="#behance" className="hover:text-on-inverse transition-colors">BEHANCE</a>
                 </div>
               </div>
             </div>
 
-            {/* Middle Row: Links Columns */}
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-8 text-left">
-              <div className="space-y-3">
-                <h4 className="font-mono text-[10px] text-neutral-500 font-bold uppercase tracking-widest">Explora</h4>
-                <ul className="space-y-2 text-sm text-neutral-300 font-medium">
-                  <li><button onClick={() => setView('exhibition')} className="hover:text-white transition-colors">Galería</button></li>
-                  <li><button onClick={() => setView('landing')} className="hover:text-white transition-colors">Artistas</button></li>
-                  <li><button onClick={() => setView('landing')} className="hover:text-white transition-colors">Eventos</button></li>
-                </ul>
-              </div>
-
-              <div className="space-y-3">
-                <h4 className="font-mono text-[10px] text-neutral-500 font-bold uppercase tracking-widest">Únete</h4>
-                <ul className="space-y-2 text-sm text-neutral-300 font-medium">
-                  <li><a href="#portales" className="hover:text-white transition-colors">Portales</a></li>
-                  <li><a href="#espacios" className="hover:text-white transition-colors">Espacios</a></li>
-                  <li><a href="#prensa" className="hover:text-white transition-colors">Prensa</a></li>
-                </ul>
-              </div>
-
-              <div className="space-y-3">
-                <h4 className="font-mono text-[10px] text-neutral-500 font-bold uppercase tracking-widest">Legal</h4>
-                <ul className="space-y-2 text-sm text-neutral-300 font-medium">
-                  <li><button onClick={() => setShowManifesto(true)} className="hover:text-white transition-colors">Términos</button></li>
-                  <li><button onClick={() => setShowManifesto(true)} className="hover:text-white transition-colors">Privacidad</button></li>
-                  <li><button onClick={() => setShowManifesto(true)} className="hover:text-white transition-colors">Cookies</button></li>
-                </ul>
-              </div>
-
-              <div className="space-y-3">
-                <h4 className="font-mono text-[10px] text-neutral-500 font-bold uppercase tracking-widest">Contacto</h4>
-                <ul className="space-y-2 text-sm text-neutral-300 font-medium">
-                  <li><a href="mailto:hola@andante.art" className="hover:text-white transition-colors text-xs">hola@andante.art</a></li>
-                  <li><a href="tel:+34900080808" className="hover:text-white transition-colors text-xs">+34 900 080 808</a></li>
-                </ul>
-              </div>
+            {/* Disclaimer */}
+            <div className="border-t border-neutral-800 pt-6 flex flex-col sm:flex-row items-center justify-between gap-3 text-[10px] font-mono uppercase tracking-wider text-neutral-500">
+              <span>© 2026 Andante | Arte Itinerante</span>
+              <span>Hecho con calma</span>
             </div>
 
-            {/* Bottom Row: Disclaimer */}
-            <div className="border-t border-neutral-800 pt-8 flex flex-col sm:flex-row items-center justify-between gap-4 text-[10px] text-neutral-500">
-              <span>© 2026 ANDANTE ITINERANT GALLERY</span>
-              <span className="font-mono">HECHO CON CALMA :)</span>
-            </div>
+            {/* Wordmark gigante */}
+            <h2 className="font-sans font-black text-brand select-none leading-[0.8] tracking-tighter whitespace-nowrap text-[clamp(4rem,15vw,10rem)]">
+              ANDANTE :)
+            </h2>
 
           </div>
           </div>

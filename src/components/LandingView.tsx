@@ -1,4 +1,3 @@
-import { CheckCircle, ShieldCheck, Sparkle, Truck } from '@phosphor-icons/react';
 import { ARTWORKS_DATA, ARTISTS_DATA } from '../data';
 import { Artwork } from '../types';
 import ExpoActivaSection from './ExpoActivaSection';
@@ -59,67 +58,6 @@ export default function LandingView({ setView, onSelectArtwork }: LandingViewPro
 
       {/* SECTION 5: QUÉ MÁS ANDA PASANDO — lista grande de eventos */}
       <EventsList setView={setView} />
-
-      {/* SECTION 6: FOUR VALUE PROPOSITIONS */}
-      <section className="snap-section bg-transparent px-4 sm:px-6 lg:px-8 min-h-dvh flex flex-col justify-center py-16">
-        <div className="max-w-7xl mx-auto border-t border-border pt-16">
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
-            
-            {/* Proposition 1 */}
-            <div className="flex flex-col items-center lg:items-start text-center lg:text-left space-y-3">
-              <div className="h-10 w-10 bg-sky-50 dark:bg-sky-950/40 rounded-full flex items-center justify-center font-bold text-accent">
-                <CheckCircle className="h-5 w-5" />
-              </div>
-              <h3 className="font-sans font-black text-sm text-fg">
-                Curaduría con criterio
-              </h3>
-              <p className="font-sans text-xs text-neutral-500 leading-relaxed max-w-xs">
-                Seleccionamos cada pieza para que cuente una historia real.
-              </p>
-            </div>
-
-            {/* Proposition 2 */}
-            <div className="flex flex-col items-center lg:items-start text-center lg:text-left space-y-3">
-              <div className="h-10 w-10 bg-sky-50 dark:bg-sky-950/40 rounded-full flex items-center justify-center font-bold text-accent">
-                <ShieldCheck className="h-5 w-5" />
-              </div>
-              <h3 className="font-sans font-black text-sm text-fg">
-                Pago seguro
-              </h3>
-              <p className="font-sans text-xs text-neutral-500 leading-relaxed max-w-xs">
-                Transacciones encriptadas y múltiples métodos de pago.
-              </p>
-            </div>
-
-            {/* Proposition 3 */}
-            <div className="flex flex-col items-center lg:items-start text-center lg:text-left space-y-3">
-              <div className="h-10 w-10 bg-sky-50 dark:bg-sky-950/40 rounded-full flex items-center justify-center font-bold text-accent">
-                <Truck className="h-5 w-5" />
-              </div>
-              <h3 className="font-sans font-black text-sm text-fg">
-                Envío y enmarcado claros
-              </h3>
-              <p className="font-sans text-xs text-neutral-500 leading-relaxed max-w-xs">
-                Todo listo para colgar. Sin sorpresas logísticas.
-              </p>
-            </div>
-
-            {/* Proposition 4 */}
-            <div className="flex flex-col items-center lg:items-start text-center lg:text-left space-y-3">
-              <div className="h-10 w-10 bg-sky-50 dark:bg-sky-950/40 rounded-full flex items-center justify-center font-bold text-accent">
-                <Sparkle className="h-5 w-5" />
-              </div>
-              <h3 className="font-sans font-black text-sm text-fg">
-                Comisión justa
-              </h3>
-              <p className="font-sans text-xs text-neutral-500 leading-relaxed max-w-xs">
-                Apoyamos directamente a los artistas sin sobreprecios ocultos.
-              </p>
-            </div>
-
-          </div>
-        </div>
-      </section>
 
     </div>
   );

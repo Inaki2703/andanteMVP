@@ -24,7 +24,7 @@ export const MEDIA = {
     'geo-vacuo': '/images/artworks/geo-vacuo.webp',
     'frag-urbano': '/images/artworks/frag-urbano.webp',
     'prisma-suspendido': '/images/artworks/prisma-suspendido.webp',
-    'umbral-cromatico': '/images/artworks/umbral-cromatico.png',
+    'umbral-cromatico': '/images/artworks/umbral-cromatico.jpg',
     'eco-de-luz': '/images/artworks/eco-de-luz.png',
   },
   venues: {

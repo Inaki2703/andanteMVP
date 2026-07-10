@@ -46,8 +46,8 @@ export default function ExhibitionView({
       {/* Zona superior (inicio real): scroll nativo; se clona para el bucle footer → inicio */}
       <div data-exhibition-top data-free-scroll>
 
-      {/* 1. NAV + MARQUEE */}
-      <section className="px-6 pt-6 md:pt-8 mb-16 sm:mb-24 bg-transparent">
+      {/* 1. NAV */}
+      <section className="px-6 pt-6 md:pt-8 bg-transparent">
         <div className="max-w-7xl mx-auto space-y-4">
           <div className="flex items-center justify-between gap-4 min-w-0">
             <ExhibitionBreadcrumbs setView={setView} />
@@ -70,12 +70,15 @@ export default function ExhibitionView({
 
           <div className="border-b border-neutral-300/40 dark:border-neutral-800/40 pb-4" />
         </div>
+      </section>
 
+      {/* Marquee full-bleed: fuera de cualquier px-* para evitar recorte lateral */}
+      <div className="w-full overflow-visible mb-16 sm:mb-24">
         <CurvedLoop
           marqueeText="ARTE ✦ MUNDIALISTA"
           centerBadgeText="EXPOSICIÓN ACTIVA"
         />
-      </section>
+      </div>
 
       {/* 2. HERO CON OBRAS FLOTANTES */}
       <div className="mb-16 sm:mb-24">

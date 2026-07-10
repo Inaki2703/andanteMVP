@@ -1,5 +1,5 @@
-import { motion } from 'motion/react';
-import { X, ShieldCheck, Heartbeat, PaperPlaneTilt, Check, MapPin, ShoppingBag, Trash } from '@phosphor-icons/react';
+import { useEffect, useRef } from 'react';
+import { X, MapPin, ShoppingBag } from '@phosphor-icons/react';
 import { Artwork } from '../types';
 import { EXHIBITION_DATA } from '../data';
 import { formatPrice } from '../utils/formatPrice';
@@ -17,51 +17,50 @@ export default function ArtworkDetailModal({
   artwork,
   onClose,
   onAddToCart,
-  onRemoveFromCart,
   onCheckoutDirectly,
-  isInCart
+  isInCart,
 }: ArtworkDetailModalProps) {
+  const closeBtnRef = useRef<HTMLButtonElement>(null);
+
+  useEffect(() => {
+    if (!artwork) return;
+    const html = document.documentElement;
+    const prevHtmlOverflow = html.style.overflow;
+    const prevBodyOverflow = document.body.style.overflow;
+    html.style.overflow = 'hidden';
+    document.body.style.overflow = 'hidden';
+    closeBtnRef.current?.focus();
+    return () => {
+      html.style.overflow = prevHtmlOverflow;
+      document.body.style.overflow = prevBodyOverflow;
+    };
+  }, [artwork]);
+
   if (!artwork) return null;
 
   return (
     <div className="fixed inset-0 z-55 flex items-center justify-center p-4">
-      {/* Backdrop cover with soft responsive ambient opacity */}
       <div
         onClick={onClose}
         className="absolute inset-0 bg-neutral-950/70 backdrop-blur-md transition-opacity duration-300"
       />
 
-      {/* Centered responsive dialog container with 1pt white border and more compact sizing */}
-      <div 
-        className="relative w-full max-w-[840px] bg-surface rounded-[32px] overflow-hidden shadow-2xl z-10 flex flex-col md:grid md:grid-cols-12 max-h-[90vh] md:h-[574px] border border-white transition-colors duration-300"
+      <div
+        role="dialog"
+        aria-modal="true"
+        aria-label={`Detalle de ${artwork.title}`}
+        className="relative w-full max-w-[840px] max-h-[90vh] overflow-y-auto overscroll-contain bg-surface rounded-[32px] shadow-2xl z-10 flex flex-col md:grid md:grid-cols-12 border border-white transition-colors duration-300"
         onClick={(e) => e.stopPropagation()}
       >
-        
-        {/* Floating circular Close button on upper right corner */}
-        <button
-          onClick={onClose}
-          className="focus-ring absolute top-5 right-5 sm:top-6 sm:right-6 z-20 h-9 w-9 rounded-full bg-black/90 hover:bg-black text-white dark:bg-neutral-800 dark:hover:bg-neutral-700 flex items-center justify-center shadow-lg transition-transform hover:scale-105 active:scale-95 cursor-pointer border border-white/10"
-          title="Cerrar vista"
-          aria-label="Cerrar vista de la obra"
-        >
-          {/* Custom double diagonal arrows or clean exit icon mapping Siena's style */}
-          <svg className="h-4 w-4 stroke-white fill-none" viewBox="0 0 24 24" strokeWidth="2.5" aria-hidden="true">
-            <path strokeLinecap="round" strokeLinejoin="round" d="M3.75 3.75v4.5m0-4.5h4.5m-4.5 0L9 9M20.25 20.25v-4.5m0 4.5h-4.5m4.5 0L15 15" />
-          </svg>
-        </button>
-
-        {/* Column 1: Image container with overlay information */}
-        <div className="relative md:col-span-6 h-[260px] md:h-full w-full bg-neutral-900 border-b md:border-b-0 md:border-r border-neutral-200 dark:border-neutral-800 flex-shrink-0">
+        {/* Columna imagen: object-contain sobre grid de puntos */}
+        <div className="relative md:col-span-6 h-[260px] md:min-h-[420px] md:h-auto w-full bg-page grid-dot-pattern border-b md:border-b-0 md:border-r border-neutral-200 dark:border-neutral-800 flex-shrink-0">
           <img
             src={artwork.image}
             alt={artwork.title}
             referrerPolicy="no-referrer"
-            className="w-full h-full object-cover"
+            className="absolute inset-0 w-full h-full object-contain object-center"
           />
-          {/* Curved gradient layer to ensure year badge readability */}
-          <div className="absolute inset-x-0 bottom-0 h-32 bg-gradient-to-t from-black/80 via-black/20 to-transparent pointer-events-none" />
-          
-          {/* Year pill on bottom left panel */}
+
           <div className="absolute bottom-6 left-6 z-10">
             <span className="text-[9px] sm:text-[10px] font-mono font-black tracking-widest text-brand bg-neutral-900/80 backdrop-blur-md border border-neutral-700/50 px-3.5 py-1.5 rounded-full uppercase">
               AÑO {artwork.year}
@@ -69,51 +68,59 @@ export default function ArtworkDetailModal({
           </div>
         </div>
 
-        {/* Column 2: Metadata specs and details info board */}
-        <div className="md:col-span-6 p-6 sm:p-7 md:p-8 flex flex-col justify-between h-full bg-surface text-neutral-800 dark:text-neutral-200 overflow-y-auto select-none">
-          
-          <div className="space-y-4">
-            {/* Title & Technique - Inverted structural stack with reduced casing/size */}
-            <div>
-              {/* Casing: normal title case (Altas y bajas) with reduced font-size */}
-              <h2 className="font-sans font-black text-lg sm:text-xl md:text-2xl leading-[1.1] text-neutral-900 dark:text-white tracking-tight">
+        {/* Columna ficha */}
+        <div className="md:col-span-6 p-6 sm:p-7 md:p-8 flex flex-col gap-6 bg-surface text-neutral-800 dark:text-neutral-200 select-none">
+          {/* Cerrar en su propia fila */}
+          <div className="flex justify-end -mt-1 -mr-1">
+            <button
+              ref={closeBtnRef}
+              onClick={onClose}
+              className="focus-ring h-10 w-10 rounded-full bg-fg/10 hover:bg-fg/20 text-fg flex items-center justify-center transition-colors cursor-pointer border border-fg/10"
+              title="Cerrar vista"
+              aria-label="Cerrar vista de la obra"
+            >
+              <X className="h-5 w-5" aria-hidden="true" />
+            </button>
+          </div>
+
+          <div className="flex flex-col gap-6 flex-1">
+            <div className="space-y-3">
+              <h2 className="font-sans font-black text-lg sm:text-xl md:text-2xl leading-[1.15] text-neutral-900 dark:text-white tracking-tight pr-2">
                 {artwork.title}
               </h2>
-              
-              {/* Technique/medium is now loaded below the main title heading */}
-              <span className="text-[10px] font-mono tracking-[0.16em] text-accent font-black uppercase block mt-1.5">
+              <span className="text-[10px] font-mono tracking-[0.16em] text-accent font-black uppercase block">
                 {artwork.medium.toUpperCase()}
               </span>
-              
-              {/* Author subtitle label */}
-              <p className="font-sans text-xs italic text-neutral-500 dark:text-neutral-400 mt-1">
+              <p className="font-sans text-xs italic text-neutral-500 dark:text-neutral-400">
                 Por {artwork.artistName}
               </p>
             </div>
 
-            {/* Structured Specifications Table with optimized heights */}
-            <div className="border-t border-b border-neutral-200/60 dark:border-neutral-800/60 py-2.5 my-1.5 space-y-2 font-sans text-xs sm:text-sm">
-              <div className="flex justify-between items-center py-0.5">
+            <div className="border-t border-b border-neutral-200/60 dark:border-neutral-800/60 py-3 space-y-2.5 font-sans text-xs sm:text-sm">
+              <div className="flex justify-between items-center gap-3">
                 <span className="text-neutral-400 dark:text-neutral-500 font-medium">Dimensiones</span>
-                <span className="font-mono font-black text-neutral-800 dark:text-neutral-200">{artwork.dimensions}</span>
+                <span className="font-mono font-black text-neutral-800 dark:text-neutral-200 text-right">
+                  {artwork.dimensions}
+                </span>
               </div>
-              
-              <div className="flex justify-between items-center py-0.5">
+
+              <div className="flex justify-between items-center gap-3">
                 <span className="text-neutral-400 dark:text-neutral-500 font-medium">Ubicación Actual</span>
-                <span className="font-mono font-bold text-accent flex items-center gap-1">
-                  <MapPin className="h-3.5 w-3.5" />
+                <span className="font-mono font-bold text-accent flex items-center gap-1 shrink-0">
+                  <MapPin className="h-3.5 w-3.5" aria-hidden="true" />
                   <span>{EXHIBITION_DATA.locationName}</span>
                 </span>
               </div>
 
-              <div className="flex justify-between items-center py-0.5">
+              <div className="flex justify-between items-center gap-3">
                 <span className="text-neutral-400 dark:text-neutral-500 font-medium">Certificado</span>
-                <span className="font-mono font-black text-neutral-800 dark:text-neutral-200">Físico Incluido</span>
+                <span className="font-mono font-black text-neutral-800 dark:text-neutral-200">
+                  Físico Incluido
+                </span>
               </div>
             </div>
 
-            {/* Curatorial feedback description */}
-            <div className="space-y-1.5 text-left">
+            <div className="space-y-2 text-left">
               <span className="text-[9px] font-mono font-black tracking-widest text-fg-muted uppercase block">
                 RESEÑA CURATORIAL
               </span>
@@ -123,10 +130,9 @@ export default function ArtworkDetailModal({
             </div>
           </div>
 
-          {/* Footer Action segment */}
-          <div className="border-t border-neutral-200/60 dark:border-neutral-800/60 pt-4 mt-4 flex items-center justify-between gap-4">
-            
-            <div className="text-left">
+          {/* Footer: precio + CTA en una línea */}
+          <div className="border-t border-neutral-200/60 dark:border-neutral-800/60 pt-5 flex items-center justify-between gap-4">
+            <div className="text-left min-w-0">
               <span className="text-[9px] font-mono text-neutral-400 dark:text-neutral-500 block uppercase font-bold tracking-wider">
                 ADQUISICIÓN ÚNICA
               </span>
@@ -137,6 +143,7 @@ export default function ArtworkDetailModal({
 
             {artwork.status === 'Disponible' ? (
               <button
+                type="button"
                 onClick={() => {
                   if (isInCart) {
                     onCheckoutDirectly(artwork);
@@ -144,38 +151,22 @@ export default function ArtworkDetailModal({
                     onAddToCart(artwork);
                   }
                 }}
-                className="btn-primary px-5 py-2.5 text-[10px] sm:text-xs uppercase tracking-wider flex items-center justify-center gap-1.5 min-w-[150px] overflow-hidden"
+                className="btn-primary shrink-0 px-5 py-2.5 text-[10px] sm:text-xs uppercase tracking-wider flex items-center justify-center gap-1.5 whitespace-nowrap"
               >
-                <ShoppingBag className="h-3.5 w-3.5 shrink-0" />
-                {isInCart ? (
-                  <div className="relative overflow-hidden w-24 sm:w-28 h-4 flex items-center">
-                    <motion.div
-                      initial={{ x: "0%" }}
-                      animate={{ x: "-50%" }}
-                      transition={{ ease: "linear", duration: 4, repeat: Infinity }}
-                      className="flex whitespace-nowrap"
-                    >
-                      <span className="pr-2">Ver mi bolsa •&nbsp;</span>
-                      <span className="pr-2">Ver mi bolsa •&nbsp;</span>
-                    </motion.div>
-                  </div>
-                ) : (
-                  <span>Añadir a Bolsa</span>
-                )}
+                <ShoppingBag className="h-3.5 w-3.5 shrink-0" aria-hidden="true" />
+                <span>{isInCart ? 'Ver mi bolsa' : 'Añadir a Bolsa'}</span>
               </button>
             ) : (
               <button
+                type="button"
                 disabled
-                className="px-5 py-2.5 rounded-full bg-neutral-200 dark:bg-neutral-800 text-neutral-450 dark:text-neutral-500 font-sans text-[10px] sm:text-xs uppercase tracking-wider font-extrabold cursor-not-allowed"
+                className="shrink-0 px-5 py-2.5 rounded-full bg-neutral-200 dark:bg-neutral-800 text-neutral-450 dark:text-neutral-500 font-sans text-[10px] sm:text-xs uppercase tracking-wider font-extrabold cursor-not-allowed whitespace-nowrap"
               >
                 {artwork.status === 'Reservado' ? 'Reservado' : 'Vendido'}
               </button>
             )}
-
           </div>
-
         </div>
-
       </div>
     </div>
   );

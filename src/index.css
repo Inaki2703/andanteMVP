@@ -27,7 +27,7 @@
   /* Azul accesible: variante oscura para texto/iconos y fondos con texto blanco
      (AA ≥4.5:1 sobre humo-warm/white y con texto blanco encima). */
   --azul-accessible: #0067CC;
-  --azul-hover: #005FB8;
+  --azul-hover: #006FD6;
   --azul-soft: #E8F5FF;
   --azul-dark: #3D9DFF;
   --azul-dark-hover: #0084FF;
@@ -90,7 +90,7 @@
 .light {
   --ds-brand: var(--lima);
   --ds-brand-hover: var(--lima-hover);
-  --ds-accent: var(--azul-accessible);
+  --ds-accent: var(--azul);
   --ds-accent-hover: var(--azul-hover);
   --ds-accent-soft: var(--azul-soft);
   --ds-fg: var(--carbon);

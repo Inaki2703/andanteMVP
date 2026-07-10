@@ -70,5 +70,12 @@ export default function DecryptedText({ text, active, className = '' }: Decrypte
     return () => window.clearInterval(id);
   }, [active, text, reducedMotion]);
 
-  return <span className={className}>{display}</span>;
+  return (
+    <span className={`relative block ${className}`}>
+      <span aria-hidden="true" className="invisible whitespace-pre-line">
+        {text}
+      </span>
+      <span className="absolute inset-0 whitespace-pre-line">{display}</span>
+    </span>
+  );
 }

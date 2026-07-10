@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 
 interface CurvedLoopProps {
   marqueeText?: string;
@@ -10,10 +10,13 @@ export default function CurvedLoop({
   centerBadgeText = "MUESTRA SANTIAGO",
 }: CurvedLoopProps) {
   const [offset, setOffset] = useState(0);
+  const wrapperRef = useRef<HTMLDivElement>(null);
 
   // Animate the text sliding along the path using requestAnimationFrame for pristine frame rates
   // Reduced step from 0.25 to 0.06 for a slower, more sophisticated, and premium kinetic pace
   useEffect(() => {
+    if (wrapperRef.current?.closest('[data-loop-clone]')) return;
+
     let animationId: number;
     const animate = () => {
       setOffset((prev) => (prev - 0.05) % 100);
@@ -27,7 +30,7 @@ export default function CurvedLoop({
   const repeatedText = `${marqueeText} ✦ ${marqueeText} ✦ ${marqueeText} ✦ ${marqueeText} ✦ ${marqueeText} ✦ ${marqueeText} ✦ ${marqueeText} ✦ ${marqueeText} ✦ `;
 
   return (
-    <div className="relative left-1/2 -translate-x-1/2 w-screen flex justify-center py-6 select-none overflow-hidden" id="curved-marquee-wrapper">
+    <div ref={wrapperRef} className="relative left-1/2 -translate-x-1/2 w-screen flex justify-center py-6 select-none overflow-visible" id="curved-marquee-wrapper">
       <div className="relative w-full h-[160px] sm:h-[180px] md:h-[220px] lg:h-[250px]">
         <svg
           viewBox="0 0 1000 240"

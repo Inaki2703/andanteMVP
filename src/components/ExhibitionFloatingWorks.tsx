@@ -22,6 +22,9 @@ const CARD_LAYOUTS = [
   { top: '58%', left: '62%', floatDelay: 4.0, rotate: 1 },
 ];
 
+/** Mínimo de px para considerar el gesto un drag (no un clic). */
+const DRAG_CLICK_THRESHOLD = 8;
+
 function statusClass(status: Artwork['status']) {
   return status === 'Disponible'
     ? 'bg-brand text-on-brand'
@@ -84,6 +87,7 @@ function FloatingCard({
   onDragChange,
 }: FloatingCardProps) {
   const canAnimate = !reducedMotion && !isClone;
+  const didDrag = useRef(false);
 
   return (
     <motion.div
@@ -94,9 +98,22 @@ function FloatingCard({
       dragElastic={0}
       dragMomentum={false}
       whileDrag={{ scale: 1.04, zIndex: 50, boxShadow: '0 24px 48px rgba(0,0,0,0.25)' }}
-      onDragStart={() => onDragChange(true)}
-      onDragEnd={() => onDragChange(false)}
-      onTap={() => onSelectArtwork(artwork)}
+      onDragStart={() => {
+        didDrag.current = false;
+        onDragChange(true);
+      }}
+      onDrag={(_, info) => {
+        if (Math.hypot(info.offset.x, info.offset.y) > DRAG_CLICK_THRESHOLD) {
+          didDrag.current = true;
+        }
+      }}
+      onDragEnd={() => {
+        onDragChange(false);
+      }}
+      onTap={() => {
+        if (didDrag.current) return;
+        onSelectArtwork(artwork);
+      }}
     >
       <motion.div
         animate={

@@ -5,7 +5,7 @@ import CurvedLoop from './CurvedLoop';
 import ExhibitionFloatingWorks from './ExhibitionFloatingWorks';
 import EditorialHoverList from './EditorialHoverList';
 import CuratorialConceptSection from './CuratorialConceptSection';
-import ExhibitionNavTicket from './ExhibitionNavTicket';
+import ExhibitionNavTicket, { ExhibitionBreadcrumbs } from './ExhibitionNavTicket';
 
 interface ExhibitionViewProps {
   onSelectArtwork: (artwork: Artwork) => void;
@@ -49,33 +49,32 @@ export default function ExhibitionView({
       {/* 1. NAV + MARQUEE */}
       <section className="px-6 pt-6 md:pt-8 mb-16 sm:mb-24 bg-transparent">
         <div className="max-w-7xl mx-auto space-y-4">
-
-          <div className="flex flex-col gap-3 min-w-0">
+          <div className="flex items-center justify-between gap-4 min-w-0">
+            <ExhibitionBreadcrumbs setView={setView} />
             <ExhibitionNavTicket
-              setView={setView}
               menuOpen={menuOpen}
               setMenuOpen={setMenuOpen}
             />
-
-            <h1 className="sr-only">{EXHIBITION_DATA.title}</h1>
-
-            <a
-              href={EXHIBITION_DATA.mapsUrl}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-block w-fit border border-accent text-accent px-3 py-1 text-[11px] sm:text-xs font-mono font-extrabold tracking-[0.12em] rounded-sm uppercase leading-snug hover:bg-accent-soft transition-smooth cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 dark:focus-visible:ring-offset-page"
-            >
-              {sedeLabel}
-            </a>
           </div>
 
-          <div className="border-b border-neutral-300/40 dark:border-neutral-800/40 pb-4" />
+          <h1 className="sr-only">{EXHIBITION_DATA.title}</h1>
 
-          <CurvedLoop
-            marqueeText="ARTE ✦ MUNDIALISTA"
-            centerBadgeText="MÉXICO - JAPÓN - 17:00 HRS."
-          />
+          <a
+            href={EXHIBITION_DATA.mapsUrl}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-block w-fit border border-accent text-accent px-3 py-1 text-[11px] sm:text-xs font-mono font-extrabold tracking-[0.12em] rounded-sm uppercase leading-snug hover:bg-accent-soft transition-smooth cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2 dark:focus-visible:ring-offset-page"
+          >
+            {sedeLabel}
+          </a>
+
+          <div className="border-b border-neutral-300/40 dark:border-neutral-800/40 pb-4" />
         </div>
+
+        <CurvedLoop
+          marqueeText="ARTE ✦ MUNDIALISTA"
+          centerBadgeText="EXPOSICIÓN ACTIVA"
+        />
       </section>
 
       {/* 2. HERO CON OBRAS FLOTANTES */}

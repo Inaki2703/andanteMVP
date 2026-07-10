@@ -54,26 +54,31 @@ export function setupForwardLoop({ pageRef, getTopElement }: ForwardLoopOptions)
       return;
     }
 
+    const entryHeight = Math.min(topEl.offsetHeight, window.innerHeight);
+
     // Clon de la zona superior, fijo y posicionado justo debajo del viewport.
     const clone = topEl.cloneNode(true) as HTMLElement;
+    clone.setAttribute('data-loop-clone', '');
+    clone.setAttribute('aria-hidden', 'true');
     Object.assign(clone.style, {
       position: 'fixed',
       top: '0',
       left: '0',
       width: '100%',
-      height: '100vh',
+      height: `${entryHeight}px`,
       margin: '0',
       overflow: 'hidden',
       zIndex: '60',
       pointerEvents: 'none',
       transform: 'translateY(100%)',
     });
+    document.documentElement.classList.add('loop-animating');
     document.body.appendChild(clone);
     void clone.offsetHeight; // fuerza reflow para que la transición arranque
 
     // La página (footer a la vista) sube; el inicio entra desde abajo.
     page.style.transition = `transform ${DUR}ms ${EASE}`;
-    page.style.transform = 'translateY(-100vh)';
+    page.style.transform = `translateY(-${entryHeight}px)`;
     clone.style.transition = `transform ${DUR}ms ${EASE}`;
     clone.style.transform = 'translateY(0)';
 
@@ -81,8 +86,11 @@ export function setupForwardLoop({ pageRef, getTopElement }: ForwardLoopOptions)
       page.style.transition = 'none';
       page.style.transform = 'none';
       window.scrollTo({ top: 0 });
-      clone.remove();
-      requestAnimationFrame(() => { animating = false; });
+      requestAnimationFrame(() => {
+        clone.remove();
+        document.documentElement.classList.remove('loop-animating');
+        animating = false;
+      });
     }, DUR + 30);
   };
 

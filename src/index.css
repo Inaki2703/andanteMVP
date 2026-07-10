@@ -240,6 +240,11 @@ html.exhibition-scroll .exhibition-snap-section {
   scroll-snap-align: start;
 }
 
+/* Desactiva snap durante el bucle footer → inicio para evitar tirones. */
+html.loop-animating {
+  scroll-snap-type: none !important;
+}
+
 /* Reveal homologado: cada sección entra con un leve fade + lift. Sólo activo
    en la landing (clase .landing-reveal en <html>) para no afectar otras vistas. */
 html.landing-reveal .snap-section {

@@ -1,4 +1,4 @@
-import { useRef, RefObject, Fragment } from 'react';
+import { useRef, RefObject, Fragment, useEffect, useState } from 'react';
 import { motion, useReducedMotion } from 'motion/react';
 import { Artwork } from '../types';
 import { formatPrice } from '../utils/formatPrice';
@@ -11,15 +11,15 @@ interface ExhibitionFloatingWorksProps {
 }
 
 const CARD_LAYOUTS = [
-  { top: '8%', left: '4%', floatDelay: 0 },
-  { top: '14%', left: '36%', floatDelay: 0.5 },
-  { top: '10%', left: '66%', floatDelay: 1.0 },
-  { top: '32%', left: '10%', floatDelay: 1.5 },
-  { top: '28%', left: '48%', floatDelay: 2.0 },
-  { top: '36%', left: '72%', floatDelay: 2.5 },
-  { top: '52%', left: '20%', floatDelay: 3.0 },
-  { top: '50%', left: '44%', floatDelay: 3.5 },
-  { top: '58%', left: '62%', floatDelay: 4.0 },
+  { top: '8%', left: '4%', floatDelay: 0, rotate: 1 },
+  { top: '14%', left: '36%', floatDelay: 0.5, rotate: -1 },
+  { top: '10%', left: '66%', floatDelay: 1.0, rotate: 1 },
+  { top: '32%', left: '10%', floatDelay: 1.5, rotate: -1 },
+  { top: '28%', left: '48%', floatDelay: 2.0, rotate: 1 },
+  { top: '36%', left: '72%', floatDelay: 2.5, rotate: -1 },
+  { top: '52%', left: '20%', floatDelay: 3.0, rotate: 1 },
+  { top: '50%', left: '44%', floatDelay: 3.5, rotate: -1 },
+  { top: '58%', left: '62%', floatDelay: 4.0, rotate: 1 },
 ];
 
 function statusClass(status: Artwork['status']) {
@@ -72,6 +72,7 @@ interface FloatingCardProps {
   containerRef: RefObject<HTMLDivElement | null>;
   onSelectArtwork: (artwork: Artwork) => void;
   reducedMotion: boolean;
+  isClone: boolean;
 }
 
 function FloatingCard({
@@ -80,41 +81,43 @@ function FloatingCard({
   containerRef,
   onSelectArtwork,
   reducedMotion,
+  isClone,
 }: FloatingCardProps) {
-  const dragMoved = useRef(false);
+  const canAnimate = !reducedMotion && !isClone;
 
   return (
     <motion.div
       className="absolute z-10 w-[min(72vw,240px)] sm:w-[260px] cursor-grab active:cursor-grabbing touch-none"
       style={{ top: layout.top, left: layout.left }}
-      drag={!reducedMotion}
+      drag={canAnimate}
       dragConstraints={containerRef}
       dragElastic={0.12}
       dragMomentum={false}
       whileDrag={{ scale: 1.04, zIndex: 20, boxShadow: '0 24px 48px rgba(0,0,0,0.25)' }}
-      onDragStart={() => { dragMoved.current = true; }}
-      animate={reducedMotion ? undefined : { y: [0, -10, 0] }}
-      transition={
-        reducedMotion
-          ? undefined
-          : {
-              y: {
-                duration: 4.2,
-                repeat: Infinity,
-                ease: [0.22, 1, 0.36, 1],
-                delay: layout.floatDelay,
-              },
-            }
-      }
-      onClick={() => {
-        if (dragMoved.current) {
-          dragMoved.current = false;
-          return;
-        }
-        onSelectArtwork(artwork);
-      }}
+      onTap={() => onSelectArtwork(artwork)}
     >
-      <ArtworkCardFace artwork={artwork} />
+      <motion.div
+        animate={
+          canAnimate
+            ? { y: [0, -10, 0], rotate: layout.rotate }
+            : { rotate: layout.rotate }
+        }
+        transition={
+          canAnimate
+            ? {
+                y: {
+                  duration: 4.2,
+                  repeat: Infinity,
+                  ease: [0.22, 1, 0.36, 1],
+                  delay: layout.floatDelay,
+                },
+                rotate: { duration: 0 },
+              }
+            : undefined
+        }
+      >
+        <ArtworkCardFace artwork={artwork} />
+      </motion.div>
     </motion.div>
   );
 }
@@ -125,28 +128,38 @@ export default function ExhibitionFloatingWorks({
   onSelectArtwork,
 }: ExhibitionFloatingWorksProps) {
   const containerRef = useRef<HTMLDivElement>(null);
+  const rootRef = useRef<HTMLDivElement>(null);
+  const [isClone, setIsClone] = useState(false);
   const reducedMotion = useReducedMotion();
   const coarsePointer = useCoarsePointer();
   const isMobileLayout = coarsePointer;
 
+  useEffect(() => {
+    if (rootRef.current?.closest('[data-loop-clone]')) {
+      setIsClone(true);
+    }
+  }, []);
+
   return (
-    <section className="px-6 bg-transparent">
+    <section ref={rootRef} className="px-6 bg-transparent">
       <div className="max-w-7xl mx-auto">
         <div
           ref={containerRef}
-          className={`relative rounded-[32px] md:rounded-[40px] overflow-hidden shadow-sm ${
+          className={`relative overflow-visible ${
             isMobileLayout
               ? 'h-[min(72vh,560px)] min-h-[360px]'
               : 'h-[75vh] min-h-[400px] max-h-[850px]'
           }`}
         >
-          <img
-            src={backgroundImage}
-            alt=""
-            referrerPolicy="no-referrer"
-            className="absolute inset-0 w-full h-full object-cover"
-          />
-          <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/15 to-transparent pointer-events-none" />
+          <div className="absolute inset-0 rounded-[32px] md:rounded-[40px] overflow-hidden shadow-sm">
+            <img
+              src={backgroundImage}
+              alt=""
+              referrerPolicy="no-referrer"
+              className="absolute inset-0 w-full h-full object-cover"
+            />
+            <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/15 to-transparent pointer-events-none" />
+          </div>
 
           {/* Desktop: cards flotantes arrastrables */}
           {!isMobileLayout && (
@@ -159,6 +172,7 @@ export default function ExhibitionFloatingWorks({
                     containerRef={containerRef}
                     onSelectArtwork={onSelectArtwork}
                     reducedMotion={!!reducedMotion}
+                    isClone={isClone}
                   />
                 </Fragment>
               ))}

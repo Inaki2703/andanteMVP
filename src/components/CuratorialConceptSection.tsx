@@ -36,7 +36,7 @@ export default function CuratorialConceptSection() {
         <h3 className="font-mono text-[10px] sm:text-xs font-black tracking-[0.25em] text-neutral-600 dark:text-neutral-400 uppercase">
           Concepto curatorial
         </h3>
-        <p className="font-sans text-sm sm:text-base md:text-lg text-neutral-800 dark:text-neutral-200 leading-relaxed whitespace-pre-line">
+        <p className="relative font-sans text-sm sm:text-base md:text-lg text-neutral-800 dark:text-neutral-200 leading-relaxed">
           <DecryptedText text={CONCEPT_TEXT} active={active} />
         </p>
       </div>

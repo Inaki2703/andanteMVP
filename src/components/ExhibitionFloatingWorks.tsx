@@ -1,4 +1,4 @@
-import { useRef, RefObject, Fragment, useEffect, useState } from 'react';
+import { useRef, Fragment, useEffect, useState } from 'react';
 import { motion, useReducedMotion } from 'motion/react';
 import { Artwork } from '../types';
 import { formatPrice } from '../utils/formatPrice';
@@ -69,19 +69,19 @@ function ArtworkCardFace({ artwork }: { artwork: Artwork }) {
 interface FloatingCardProps {
   artwork: Artwork;
   layout: (typeof CARD_LAYOUTS)[number];
-  containerRef: RefObject<HTMLDivElement | null>;
   onSelectArtwork: (artwork: Artwork) => void;
   reducedMotion: boolean;
   isClone: boolean;
+  onDragChange: (dragging: boolean) => void;
 }
 
 function FloatingCard({
   artwork,
   layout,
-  containerRef,
   onSelectArtwork,
   reducedMotion,
   isClone,
+  onDragChange,
 }: FloatingCardProps) {
   const canAnimate = !reducedMotion && !isClone;
 
@@ -90,10 +90,12 @@ function FloatingCard({
       className="absolute z-10 w-[min(72vw,240px)] sm:w-[260px] cursor-grab active:cursor-grabbing touch-none"
       style={{ top: layout.top, left: layout.left }}
       drag={canAnimate}
-      dragConstraints={containerRef}
-      dragElastic={0.12}
+      dragConstraints={false}
+      dragElastic={0}
       dragMomentum={false}
-      whileDrag={{ scale: 1.04, zIndex: 20, boxShadow: '0 24px 48px rgba(0,0,0,0.25)' }}
+      whileDrag={{ scale: 1.04, zIndex: 50, boxShadow: '0 24px 48px rgba(0,0,0,0.25)' }}
+      onDragStart={() => onDragChange(true)}
+      onDragEnd={() => onDragChange(false)}
       onTap={() => onSelectArtwork(artwork)}
     >
       <motion.div
@@ -130,6 +132,7 @@ export default function ExhibitionFloatingWorks({
   const containerRef = useRef<HTMLDivElement>(null);
   const rootRef = useRef<HTMLDivElement>(null);
   const [isClone, setIsClone] = useState(false);
+  const [isDragging, setIsDragging] = useState(false);
   const reducedMotion = useReducedMotion();
   const coarsePointer = useCoarsePointer();
   const isMobileLayout = coarsePointer;
@@ -141,8 +144,11 @@ export default function ExhibitionFloatingWorks({
   }, []);
 
   return (
-    <section ref={rootRef} className="px-6 bg-transparent">
-      <div className="max-w-7xl mx-auto">
+    <section
+      ref={rootRef}
+      className={`px-6 bg-transparent overflow-visible ${isDragging ? 'relative z-40' : ''}`}
+    >
+      <div className="max-w-7xl mx-auto overflow-visible">
         <div
           ref={containerRef}
           className={`relative overflow-visible ${
@@ -169,10 +175,10 @@ export default function ExhibitionFloatingWorks({
                   <FloatingCard
                     artwork={artwork}
                     layout={CARD_LAYOUTS[i] ?? CARD_LAYOUTS[0]}
-                    containerRef={containerRef}
                     onSelectArtwork={onSelectArtwork}
                     reducedMotion={!!reducedMotion}
                     isClone={isClone}
+                    onDragChange={setIsDragging}
                   />
                 </Fragment>
               ))}

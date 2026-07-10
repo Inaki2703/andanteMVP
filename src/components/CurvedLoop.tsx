@@ -30,10 +30,11 @@ export default function CurvedLoop({
   const repeatedText = `${marqueeText} ✦ ${marqueeText} ✦ ${marqueeText} ✦ ${marqueeText} ✦ ${marqueeText} ✦ ${marqueeText} ✦ ${marqueeText} ✦ ${marqueeText} ✦ `;
 
   return (
-    <div ref={wrapperRef} className="relative left-1/2 -translate-x-1/2 w-screen flex justify-center py-6 select-none overflow-visible" id="curved-marquee-wrapper">
-      <div className="relative w-full h-[160px] sm:h-[180px] md:h-[220px] lg:h-[250px]">
+    <div ref={wrapperRef} className="w-full py-6 select-none overflow-visible" id="curved-marquee-wrapper">
+      <div className="relative w-full h-[160px] sm:h-[180px] md:h-[220px] lg:h-[250px] overflow-visible">
         <svg
           viewBox="0 0 1000 240"
+          overflow="visible"
           className="absolute inset-0 w-full h-full overflow-visible"
           id="curved-marquee-svg"
         >
